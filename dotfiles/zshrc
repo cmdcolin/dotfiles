@@ -1,0 +1,61 @@
+eval `keychain --eval --agents ssh --inherit any id_rsa`
+source ~/.config/antigen.zsh
+antigen use oh-my-zsh
+#
+# Bundles from the default repo (robbyrussell's oh-my-zsh).
+antigen bundle git
+antigen bundle heroku
+antigen bundle pip
+antigen bundle lein
+antigen bundle command-not-found
+#
+# Syntax highlighting bundle.
+antigen bundle zsh-users/zsh-syntax-highlighting
+#
+# Load the theme.
+antigen theme robbyrussell
+#
+# Tell Antigen that you're done.
+antigen apply
+
+export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH":"/home/linuxbrew/.linuxbrew/sbin":$PATH
+export EDITOR=vim
+
+alias stp="git subtree push --prefix dist origin gh-pages"
+alias stpf="git push origin `git subtree split --prefix dist master`:gh-pages --force"
+alias rtp="git subtree push --prefix inst/doc origin gh-pages"
+alias e=vim
+alias g="git status"
+alias pserver='python -m RangeHTTPServer'
+alias parallel='parallel --no-notice'
+alias ll="ls -l"
+alias ii='Rscript -e "devtools::install()"'
+alias kk="Rscript -e 'devtools::load_all(); tdmsviewer::tdmsviewer(dev=T)'"
+alias ydl=youtube-dl
+alias smaller="parallel convert -resize 50% {} resized.{} ::: *.jpg"
+
+# tmux no longer used
+#[[ $- != *i* ]] && return
+#[[ -z "$TMUX" ]] && exec tmux
+
+# check for dead links on a given wikipedia URL, excluding some stuff that tends to be always alive are not receptive to bot hits
+alias blcc="blc --exclude creativecommons.org --exclude mediawiki.org --exclude wikimedia.org --exclude wikimediafoundation.org --exclude jstor.org --exclude wikipedia.org --exclude doi.org --exclude nih.gov --follow"
+
+
+#http://seqanswers.com/forums/showthread.php?t=23166
+function sortblast {
+    sort -k1,1 -k12,12gr -k11,11g -k3,3gr $1 | sort -u -k1,1 --merge > $2
+}
+
+
+
+HISTFILE="$HOME/.zsh_history"
+HISTSIZE=10000000
+SAVEHIST=10000000
+
+PATH="/home/cdiesh/perl5/bin${PATH:+:${PATH}}"; export PATH;
+PERL5LIB="/home/cdiesh/perl5/lib/perl5${PERL5LIB:+:${PERL5LIB}}"; export PERL5LIB;
+PERL_LOCAL_LIB_ROOT="/home/cdiesh/perl5${PERL_LOCAL_LIB_ROOT:+:${PERL_LOCAL_LIB_ROOT}}"; export PERL_LOCAL_LIB_ROOT;
+PERL_MB_OPT="--install_base \"/home/cdiesh/perl5\""; export PERL_MB_OPT;
+PERL_MM_OPT="INSTALL_BASE=/home/cdiesh/perl5"; export PERL_MM_OPT;
+

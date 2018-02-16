@@ -1,0 +1,1080 @@
+[WRN][1518743416.7730321884] /home/cdiesh/.config/antigen.zsh:266
+[WRN][1518743416.7730321884] -antigen-interactive-mode: toplevel:file:file:shfunc:shfunc $_ANTIGEN_INTERACTIVE = 
+[TRA][1518743416.7779362202] /home/cdiesh/.config/antigen.zsh:475
+[TRA][1518743416.7779362202] Gonna create compdump file @ env-setup COMPDUMP
+[TRA][1518743416.7779362202] TRACE
+-antigen-env-setup
+/home/cdiesh/.config/antigen.zsh
+/home/cdiesh/.zshrc
+[TRA][1518743421.8254375458] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743421.8254375458] Called antigen-bundle with --loc=lib BUNDLE
+[TRA][1518743421.8254375458] TRACE
+antigen-bundle
+-antigen-use-oh-my-zsh
+antigen-use
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743444.4350526333] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743444.4350526333] Called antigen-bundle with git BUNDLE
+[TRA][1518743444.4350526333] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743444.4659202099] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743444.4659202099] Called antigen-bundle with heroku BUNDLE
+[TRA][1518743444.4659202099] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743444.4735422134] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743444.4735422134] Called antigen-bundle with pip BUNDLE
+[TRA][1518743444.4735422134] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743444.4877216816] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743444.4877216816] Called antigen-bundle with lein BUNDLE
+[TRA][1518743444.4877216816] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743444.4998714924] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743444.4998714924] Called antigen-bundle with command-not-found BUNDLE
+[TRA][1518743444.4998714924] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743451.1504473686] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743451.1504473686] Called antigen-bundle with zsh-users/zsh-syntax-highlighting BUNDLE
+[TRA][1518743451.1504473686] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743470.3506364822] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743470.3506364822] Called antigen-bundle with --loc=themes/robbyrussell --btype=theme BUNDLE
+[TRA][1518743470.3506364822] TRACE
+antigen-bundle
+antigen-theme
+antigen
+/home/cdiesh/.zshrc
+[LOG][1518743470.4112639427] /home/cdiesh/.config/antigen.zsh:785
+[LOG][1518743470.4112639427] Called antigen-apply
+[TRA][1518743470.4200043678] /home/cdiesh/.config/antigen.zsh:789
+[TRA][1518743470.4200043678] Gonna create compdump file @ apply COMPDUMP
+[TRA][1518743470.4200043678] TRACE
+antigen-apply
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743485.6173551083] /home/cdiesh/.config/antigen.zsh:266
+[WRN][1518743485.6173551083] -antigen-interactive-mode: toplevel:file:file:shfunc:shfunc $_ANTIGEN_INTERACTIVE = 
+[TRA][1518743485.6217255592] /home/cdiesh/.config/antigen.zsh:475
+[TRA][1518743485.6217255592] Gonna create compdump file @ env-setup COMPDUMP
+[TRA][1518743485.6217255592] TRACE
+-antigen-env-setup
+/home/cdiesh/.config/antigen.zsh
+/home/cdiesh/.zshrc
+[TRA][1518743487.2286756039] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743487.2286756039] Called antigen-bundle with --loc=lib BUNDLE
+[TRA][1518743487.2286756039] TRACE
+antigen-bundle
+-antigen-use-oh-my-zsh
+antigen-use
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743487.2346587181] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743487.2346587181] Called antigen-bundle with git BUNDLE
+[TRA][1518743487.2346587181] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743487.2406048775] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743487.2406048775] Called antigen-bundle with heroku BUNDLE
+[TRA][1518743487.2406048775] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743487.2458240986] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743487.2458240986] Called antigen-bundle with pip BUNDLE
+[TRA][1518743487.2458240986] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743487.2508795261] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743487.2508795261] Called antigen-bundle with lein BUNDLE
+[TRA][1518743487.2508795261] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743487.2571067810] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743487.2571067810] Called antigen-bundle with command-not-found BUNDLE
+[TRA][1518743487.2571067810] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743487.2645506859] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743487.2645506859] Called antigen-bundle with zsh-users/zsh-syntax-highlighting BUNDLE
+[TRA][1518743487.2645506859] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743487.2775044441] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743487.2775044441] Called antigen-bundle with --loc=themes/robbyrussell --btype=theme BUNDLE
+[TRA][1518743487.2775044441] TRACE
+antigen-bundle
+antigen-theme
+antigen
+/home/cdiesh/.zshrc
+[LOG][1518743487.2839806080] /home/cdiesh/.config/antigen.zsh:785
+[LOG][1518743487.2839806080] Called antigen-apply
+[TRA][1518743487.2887620926] /home/cdiesh/.config/antigen.zsh:789
+[TRA][1518743487.2887620926] Gonna create compdump file @ apply COMPDUMP
+[TRA][1518743487.2887620926] TRACE
+antigen-apply
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743545.2314746380] /home/cdiesh/.config/antigen.zsh:266
+[WRN][1518743545.2314746380] -antigen-interactive-mode: file:file:shfunc:shfunc $_ANTIGEN_INTERACTIVE = 
+[WRN][1518743545.2385838032] /home/cdiesh/.config/antigen.zsh:1572
+[WRN][1518743545.2385838032] -antigen-lock-init return code was 0
+[LOG][1518743545.2434034348] /home/cdiesh/.config/antigen.zsh:1574
+[LOG][1518743545.2434034348] LOADED EXTENSION lock EXT
+[WRN][1518743545.2574841976] /home/cdiesh/.config/antigen.zsh:1684
+[WRN][1518743545.2574841976] Init parallel extension PARALLEL
+[WRN][1518743545.2631280422] /home/cdiesh/.config/antigen.zsh:266
+[WRN][1518743545.2631280422] -antigen-interactive-mode: file:file:shfunc:shfunc:shfunc:eval:shfunc:shfunc $_ANTIGEN_INTERACTIVE = 
+[WRN][1518743545.2732949257] /home/cdiesh/.config/antigen.zsh:1572
+[WRN][1518743545.2732949257] -antigen-parallel-init return code was 0
+[LOG][1518743545.2780661583] /home/cdiesh/.config/antigen.zsh:1574
+[LOG][1518743545.2780661583] LOADED EXTENSION parallel EXT
+[WRN][1518743545.2833788395] /home/cdiesh/.config/antigen.zsh:1692
+[WRN][1518743545.2833788395] Exec parallel extension PARALLEL
+[WRN][1518743545.2890963554] /home/cdiesh/.config/antigen.zsh:266
+[WRN][1518743545.2890963554] -antigen-interactive-mode: file:file:shfunc:shfunc:shfunc:eval:shfunc:shfunc $_ANTIGEN_INTERACTIVE = 
+[WRN][1518743545.2942917347] /home/cdiesh/.config/antigen.zsh:1572
+[WRN][1518743545.2942917347] -antigen-defer-init return code was 0
+[LOG][1518743545.3004484177] /home/cdiesh/.config/antigen.zsh:1574
+[LOG][1518743545.3004484177] LOADED EXTENSION defer EXT
+[WRN][1518743545.3096265793] /home/cdiesh/.config/antigen.zsh:266
+[WRN][1518743545.3096265793] -antigen-interactive-mode: file:file:shfunc:shfunc:shfunc:eval:shfunc:shfunc $_ANTIGEN_INTERACTIVE = 
+[WRN][1518743545.3152608871] /home/cdiesh/.config/antigen.zsh:1572
+[WRN][1518743545.3152608871] -antigen-cache-init return code was 0
+[LOG][1518743545.3200185299] /home/cdiesh/.config/antigen.zsh:1574
+[LOG][1518743545.3200185299] LOADED EXTENSION cache EXT
+[WRN][1518743545.3347961903] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.3347961903] Updated meta: target antigen mode once type pre called 1
+[WRN][1518743545.3405132294] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.3405132294] Processing hooks: antigen-lock
+[WRN][1518743545.3453562260] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.3453562260] Pre hook: antigen-lock use oh-my-zsh
+[LOG][1518743545.3506944180] /home/cdiesh/.config/antigen.zsh:4
+[LOG][1518743545.3506944180] antigen-lock called
+[WRN][1518743545.3573021889] /home/cdiesh/.config/antigen.zsh:15
+[WRN][1518743545.3573021889] Creating antigen-lock file at /home/cdiesh/.antigen/.lock
+[WRN][1518743545.3751940727] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743545.3751940727] -antigen-hook-antigen use oh-my-zsh
+[WRN][1518743545.3900187016] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.3900187016] Updated meta: target antigen-bundle mode repeat type replace called 1
+[WRN][1518743545.3955841064] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.3955841064] Updated meta: target antigen-bundle mode repeat type pre called 1
+[WRN][1518743545.4024486542] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.4024486542] Processing hooks: antigen-bundle-defer antigen-bundle-cached
+[WRN][1518743545.4095880985] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.4095880985] Pre hook: antigen-bundle-cached --loc=lib
+[WRN][1518743545.4144957066] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743545.4144957066] Replace hook: antigen-bundle-defer --loc=lib
+[WRN][1518743545.4218490124] /home/cdiesh/.config/antigen.zsh:1500
+[WRN][1518743545.4218490124] antigen-bundle-defer shortcircuited
+[LOG][1518743545.4280028343] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743545.4280028343] Return from hook antigen with 0
+[WRN][1518743545.4342584610] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743545.4342584610] Ignoring hook due to mode once: antigen-lock
+[WRN][1518743545.4401674271] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.4401674271] Processing hooks: antigen-lock
+[WRN][1518743545.4456048012] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743545.4456048012] -antigen-hook-antigen bundle git
+[WRN][1518743545.4518764019] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.4518764019] Updated meta: target antigen-bundle mode repeat type replace called 2
+[WRN][1518743545.4571359158] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.4571359158] Updated meta: target antigen-bundle mode repeat type pre called 2
+[WRN][1518743545.4623098373] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.4623098373] Processing hooks: antigen-bundle-defer antigen-bundle-cached
+[WRN][1518743545.4675271511] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.4675271511] Pre hook: antigen-bundle-cached git
+[WRN][1518743545.4722635746] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743545.4722635746] Replace hook: antigen-bundle-defer git
+[WRN][1518743545.4779736996] /home/cdiesh/.config/antigen.zsh:1500
+[WRN][1518743545.4779736996] antigen-bundle-defer shortcircuited
+[LOG][1518743545.4843611717] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743545.4843611717] Return from hook antigen with 0
+[WRN][1518743545.4896755219] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743545.4896755219] Ignoring hook due to mode once: antigen-lock
+[WRN][1518743545.4943289757] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.4943289757] Processing hooks: antigen-lock
+[WRN][1518743545.4996457100] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743545.4996457100] -antigen-hook-antigen bundle heroku
+[WRN][1518743545.5047035217] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.5047035217] Updated meta: target antigen-bundle mode repeat type replace called 3
+[WRN][1518743545.5114924908] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.5114924908] Updated meta: target antigen-bundle mode repeat type pre called 3
+[WRN][1518743545.5173728466] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.5173728466] Processing hooks: antigen-bundle-defer antigen-bundle-cached
+[WRN][1518743545.5226488113] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.5226488113] Pre hook: antigen-bundle-cached heroku
+[WRN][1518743545.5278224945] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743545.5278224945] Replace hook: antigen-bundle-defer heroku
+[WRN][1518743545.5332317352] /home/cdiesh/.config/antigen.zsh:1500
+[WRN][1518743545.5332317352] antigen-bundle-defer shortcircuited
+[LOG][1518743545.5402970314] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743545.5402970314] Return from hook antigen with 0
+[WRN][1518743545.5469436646] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743545.5469436646] Ignoring hook due to mode once: antigen-lock
+[WRN][1518743545.5525922775] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.5525922775] Processing hooks: antigen-lock
+[WRN][1518743545.5579314232] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743545.5579314232] -antigen-hook-antigen bundle pip
+[WRN][1518743545.5629937649] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.5629937649] Updated meta: target antigen-bundle mode repeat type replace called 4
+[WRN][1518743545.5702724457] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.5702724457] Updated meta: target antigen-bundle mode repeat type pre called 4
+[WRN][1518743545.5758244991] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.5758244991] Processing hooks: antigen-bundle-defer antigen-bundle-cached
+[WRN][1518743545.5810184479] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.5810184479] Pre hook: antigen-bundle-cached pip
+[WRN][1518743545.5867679119] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743545.5867679119] Replace hook: antigen-bundle-defer pip
+[WRN][1518743545.5923926830] /home/cdiesh/.config/antigen.zsh:1500
+[WRN][1518743545.5923926830] antigen-bundle-defer shortcircuited
+[LOG][1518743545.5981452465] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743545.5981452465] Return from hook antigen with 0
+[WRN][1518743545.6049284935] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743545.6049284935] Ignoring hook due to mode once: antigen-lock
+[WRN][1518743545.6103570461] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.6103570461] Processing hooks: antigen-lock
+[WRN][1518743545.6159617901] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743545.6159617901] -antigen-hook-antigen bundle lein
+[WRN][1518743545.6214597225] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.6214597225] Updated meta: target antigen-bundle mode repeat type replace called 5
+[WRN][1518743545.6271719933] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.6271719933] Updated meta: target antigen-bundle mode repeat type pre called 5
+[WRN][1518743545.6336905956] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.6336905956] Processing hooks: antigen-bundle-defer antigen-bundle-cached
+[WRN][1518743545.6395745277] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.6395745277] Pre hook: antigen-bundle-cached lein
+[WRN][1518743545.6450831890] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743545.6450831890] Replace hook: antigen-bundle-defer lein
+[WRN][1518743545.6509716511] /home/cdiesh/.config/antigen.zsh:1500
+[WRN][1518743545.6509716511] antigen-bundle-defer shortcircuited
+[LOG][1518743545.6574254036] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743545.6574254036] Return from hook antigen with 0
+[WRN][1518743545.6655130386] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743545.6655130386] Ignoring hook due to mode once: antigen-lock
+[WRN][1518743545.6717107296] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.6717107296] Processing hooks: antigen-lock
+[WRN][1518743545.6777105331] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743545.6777105331] -antigen-hook-antigen bundle command-not-found
+[WRN][1518743545.6847937107] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.6847937107] Updated meta: target antigen-bundle mode repeat type replace called 6
+[WRN][1518743545.6909162998] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.6909162998] Updated meta: target antigen-bundle mode repeat type pre called 6
+[WRN][1518743545.6984486580] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.6984486580] Processing hooks: antigen-bundle-defer antigen-bundle-cached
+[WRN][1518743545.7045409679] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.7045409679] Pre hook: antigen-bundle-cached command-not-found
+[WRN][1518743545.7106204033] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743545.7106204033] Replace hook: antigen-bundle-defer command-not-found
+[WRN][1518743545.7165718079] /home/cdiesh/.config/antigen.zsh:1500
+[WRN][1518743545.7165718079] antigen-bundle-defer shortcircuited
+[LOG][1518743545.7222814560] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743545.7222814560] Return from hook antigen with 0
+[WRN][1518743545.7304742336] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743545.7304742336] Ignoring hook due to mode once: antigen-lock
+[WRN][1518743545.7373418808] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.7373418808] Processing hooks: antigen-lock
+[WRN][1518743545.7431814671] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743545.7431814671] -antigen-hook-antigen bundle zsh-users/zsh-syntax-highlighting
+[WRN][1518743545.7498559952] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.7498559952] Updated meta: target antigen-bundle mode repeat type replace called 7
+[WRN][1518743545.7566976547] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.7566976547] Updated meta: target antigen-bundle mode repeat type pre called 7
+[WRN][1518743545.7725148201] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.7725148201] Processing hooks: antigen-bundle-defer antigen-bundle-cached
+[WRN][1518743545.7812747955] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.7812747955] Pre hook: antigen-bundle-cached zsh-users/zsh-syntax-highlighting
+[WRN][1518743545.7876737118] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743545.7876737118] Replace hook: antigen-bundle-defer zsh-users/zsh-syntax-highlighting
+[WRN][1518743545.7949604988] /home/cdiesh/.config/antigen.zsh:1500
+[WRN][1518743545.7949604988] antigen-bundle-defer shortcircuited
+[LOG][1518743545.8019840717] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743545.8019840717] Return from hook antigen with 0
+[WRN][1518743545.8108599186] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743545.8108599186] Ignoring hook due to mode once: antigen-lock
+[WRN][1518743545.8202183247] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.8202183247] Processing hooks: antigen-lock
+[WRN][1518743545.8260886669] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743545.8260886669] -antigen-hook-antigen theme robbyrussell
+[WRN][1518743545.8460574150] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.8460574150] Updated meta: target antigen-bundle mode repeat type replace called 8
+[WRN][1518743545.8529927731] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.8529927731] Updated meta: target antigen-bundle mode repeat type pre called 8
+[WRN][1518743545.8606388569] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.8606388569] Processing hooks: antigen-bundle-defer antigen-bundle-cached
+[WRN][1518743545.8679625988] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.8679625988] Pre hook: antigen-bundle-cached --loc=themes/robbyrussell --btype=theme
+[WRN][1518743545.8790268898] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743545.8790268898] Replace hook: antigen-bundle-defer --loc=themes/robbyrussell --btype=theme
+[WRN][1518743545.8875670433] /home/cdiesh/.config/antigen.zsh:1500
+[WRN][1518743545.8875670433] antigen-bundle-defer shortcircuited
+[LOG][1518743545.8946089745] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743545.8946089745] Return from hook antigen with 0
+[WRN][1518743545.9022154808] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743545.9022154808] Ignoring hook due to mode once: antigen-lock
+[WRN][1518743545.9105975628] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.9105975628] Processing hooks: antigen-lock
+[WRN][1518743545.9205467701] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743545.9205467701] -antigen-hook-antigen apply
+[WRN][1518743545.9267868996] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.9267868996] Updated meta: target antigen-apply mode once type post called 1
+[WRN][1518743545.9333016872] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.9333016872] Updated meta: target antigen-apply mode once type pre called 1
+[WRN][1518743545.9411606789] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.9411606789] Updated meta: target antigen-apply mode once type replace called 1
+[WRN][1518743545.9473919868] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.9473919868] Updated meta: target antigen-apply mode once type pre called 1
+[WRN][1518743545.9545497894] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743545.9545497894] Updated meta: target antigen-apply mode once type post called 1
+[WRN][1518743545.9615087509] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743545.9615087509] Processing hooks: antigen-apply-lock antigen-apply-parallel antigen-apply-parallel-execute antigen-apply-defer antigen-apply-cached
+[WRN][1518743545.9709427357] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.9709427357] Pre hook: antigen-apply-parallel
+[WRN][1518743545.9814293385] /home/cdiesh/.config/antigen.zsh:53
+[WRN][1518743545.9814293385] Parallel pre-apply PARALLEL PRE-APPLY
+[WRN][1518743545.9890563488] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743545.9890563488] Pre hook: antigen-apply-defer
+[WRN][1518743545.9967687130] /home/cdiesh/.config/antigen.zsh:10
+[WRN][1518743545.9967687130] Defer pre-apply DEFER PRE-APPLY
+[LOG][1518743546.0061831474] /home/cdiesh/.config/antigen.zsh:16
+[LOG][1518743546.0061831474] Processing deferred bundle: --loc=lib DEFER
+[WRN][1518743546.0173764229] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.0173764229] Updated meta: target antigen-bundle mode repeat type pre called 9
+[WRN][1518743546.0261862278] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.0261862278] Updated meta: target antigen-bundle mode repeat type replace called 1
+[WRN][1518743546.0344119072] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743546.0344119072] Processing hooks: antigen-bundle-cached antigen-bundle-parallel
+[WRN][1518743546.0422811508] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743546.0422811508] Pre hook: antigen-bundle-cached --loc=lib
+[WRN][1518743546.0492374897] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743546.0492374897] Replace hook: antigen-bundle-parallel --loc=lib
+[TRA][1518743546.0560967922] /home/cdiesh/.zshrc:5
+[TRA][1518743546.0560967922] antigen-bundle-parallel: --loc=lib PARALLEL
+[TRA][1518743546.0560967922] TRACE
+antigen-bundle-parallel
+-antigen-hook-handler
+antigen-bundle
+antigen-apply-defer
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743546.0644392967] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743546.0644392967] Replaced hooked function.
+[LOG][1518743546.0730965137] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743546.0730965137] Return from hook antigen-bundle with 0
+[LOG][1518743546.0856959820] /home/cdiesh/.config/antigen.zsh:16
+[LOG][1518743546.0856959820] Processing deferred bundle: git DEFER
+[WRN][1518743546.0939819813] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.0939819813] Updated meta: target antigen-bundle mode repeat type pre called 10
+[WRN][1518743546.1034228802] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.1034228802] Updated meta: target antigen-bundle mode repeat type replace called 2
+[WRN][1518743546.1121916771] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743546.1121916771] Processing hooks: antigen-bundle-cached antigen-bundle-parallel
+[WRN][1518743546.1223609447] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743546.1223609447] Pre hook: antigen-bundle-cached git
+[WRN][1518743546.1303668022] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743546.1303668022] Replace hook: antigen-bundle-parallel git
+[TRA][1518743546.1412863731] /home/cdiesh/.zshrc:5
+[TRA][1518743546.1412863731] antigen-bundle-parallel: git PARALLEL
+[TRA][1518743546.1412863731] TRACE
+antigen-bundle-parallel
+-antigen-hook-handler
+antigen-bundle
+antigen-apply-defer
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743546.1490705013] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743546.1490705013] Replaced hooked function.
+[LOG][1518743546.1567621231] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743546.1567621231] Return from hook antigen-bundle with 0
+[LOG][1518743546.1638462543] /home/cdiesh/.config/antigen.zsh:16
+[LOG][1518743546.1638462543] Processing deferred bundle: heroku DEFER
+[WRN][1518743546.1734542847] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.1734542847] Updated meta: target antigen-bundle mode repeat type pre called 11
+[WRN][1518743546.1832699776] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.1832699776] Updated meta: target antigen-bundle mode repeat type replace called 3
+[WRN][1518743546.1969769001] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743546.1969769001] Processing hooks: antigen-bundle-cached antigen-bundle-parallel
+[WRN][1518743546.2050600052] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743546.2050600052] Pre hook: antigen-bundle-cached heroku
+[WRN][1518743546.2125523090] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743546.2125523090] Replace hook: antigen-bundle-parallel heroku
+[TRA][1518743546.2251887321] /home/cdiesh/.zshrc:5
+[TRA][1518743546.2251887321] antigen-bundle-parallel: heroku PARALLEL
+[TRA][1518743546.2251887321] TRACE
+antigen-bundle-parallel
+-antigen-hook-handler
+antigen-bundle
+antigen-apply-defer
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743546.2391798496] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743546.2391798496] Replaced hooked function.
+[LOG][1518743546.2477183342] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743546.2477183342] Return from hook antigen-bundle with 0
+[LOG][1518743546.2582361698] /home/cdiesh/.config/antigen.zsh:16
+[LOG][1518743546.2582361698] Processing deferred bundle: pip DEFER
+[WRN][1518743546.2712202072] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.2712202072] Updated meta: target antigen-bundle mode repeat type pre called 12
+[WRN][1518743546.2832996845] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.2832996845] Updated meta: target antigen-bundle mode repeat type replace called 4
+[WRN][1518743546.2955813408] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743546.2955813408] Processing hooks: antigen-bundle-cached antigen-bundle-parallel
+[WRN][1518743546.3103122711] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743546.3103122711] Pre hook: antigen-bundle-cached pip
+[WRN][1518743546.3218145370] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743546.3218145370] Replace hook: antigen-bundle-parallel pip
+[TRA][1518743546.3353276253] /home/cdiesh/.zshrc:5
+[TRA][1518743546.3353276253] antigen-bundle-parallel: pip PARALLEL
+[TRA][1518743546.3353276253] TRACE
+antigen-bundle-parallel
+-antigen-hook-handler
+antigen-bundle
+antigen-apply-defer
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743546.3430345058] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743546.3430345058] Replaced hooked function.
+[LOG][1518743546.3521063328] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743546.3521063328] Return from hook antigen-bundle with 0
+[LOG][1518743546.3648386002] /home/cdiesh/.config/antigen.zsh:16
+[LOG][1518743546.3648386002] Processing deferred bundle: lein DEFER
+[WRN][1518743546.3748781681] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.3748781681] Updated meta: target antigen-bundle mode repeat type pre called 13
+[WRN][1518743546.3950467110] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.3950467110] Updated meta: target antigen-bundle mode repeat type replace called 5
+[WRN][1518743546.4034125805] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743546.4034125805] Processing hooks: antigen-bundle-cached antigen-bundle-parallel
+[WRN][1518743546.4110274315] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743546.4110274315] Pre hook: antigen-bundle-cached lein
+[WRN][1518743546.4219622612] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743546.4219622612] Replace hook: antigen-bundle-parallel lein
+[TRA][1518743546.4290225506] /home/cdiesh/.zshrc:5
+[TRA][1518743546.4290225506] antigen-bundle-parallel: lein PARALLEL
+[TRA][1518743546.4290225506] TRACE
+antigen-bundle-parallel
+-antigen-hook-handler
+antigen-bundle
+antigen-apply-defer
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743546.4393935204] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743546.4393935204] Replaced hooked function.
+[LOG][1518743546.4467628002] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743546.4467628002] Return from hook antigen-bundle with 0
+[LOG][1518743546.4555294514] /home/cdiesh/.config/antigen.zsh:16
+[LOG][1518743546.4555294514] Processing deferred bundle: command-not-found DEFER
+[WRN][1518743546.4628317356] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.4628317356] Updated meta: target antigen-bundle mode repeat type pre called 14
+[WRN][1518743546.4735150337] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.4735150337] Updated meta: target antigen-bundle mode repeat type replace called 6
+[WRN][1518743546.4818458557] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743546.4818458557] Processing hooks: antigen-bundle-cached antigen-bundle-parallel
+[WRN][1518743546.4901731014] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743546.4901731014] Pre hook: antigen-bundle-cached command-not-found
+[WRN][1518743546.5018255711] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743546.5018255711] Replace hook: antigen-bundle-parallel command-not-found
+[TRA][1518743546.5092957020] /home/cdiesh/.zshrc:5
+[TRA][1518743546.5092957020] antigen-bundle-parallel: command-not-found PARALLEL
+[TRA][1518743546.5092957020] TRACE
+antigen-bundle-parallel
+-antigen-hook-handler
+antigen-bundle
+antigen-apply-defer
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743546.5201804638] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743546.5201804638] Replaced hooked function.
+[LOG][1518743546.5288786888] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743546.5288786888] Return from hook antigen-bundle with 0
+[LOG][1518743546.5376567841] /home/cdiesh/.config/antigen.zsh:16
+[LOG][1518743546.5376567841] Processing deferred bundle: zsh-users/zsh-syntax-highlighting DEFER
+[WRN][1518743546.5469594002] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.5469594002] Updated meta: target antigen-bundle mode repeat type pre called 15
+[WRN][1518743546.5575845242] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.5575845242] Updated meta: target antigen-bundle mode repeat type replace called 7
+[WRN][1518743546.5671107769] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743546.5671107769] Processing hooks: antigen-bundle-cached antigen-bundle-parallel
+[WRN][1518743546.5762171745] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743546.5762171745] Pre hook: antigen-bundle-cached zsh-users/zsh-syntax-highlighting
+[WRN][1518743546.5872597694] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743546.5872597694] Replace hook: antigen-bundle-parallel zsh-users/zsh-syntax-highlighting
+[TRA][1518743546.5984737873] /home/cdiesh/.zshrc:5
+[TRA][1518743546.5984737873] antigen-bundle-parallel: zsh-users/zsh-syntax-highlighting PARALLEL
+[TRA][1518743546.5984737873] TRACE
+antigen-bundle-parallel
+-antigen-hook-handler
+antigen-bundle
+antigen-apply-defer
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743546.6074299812] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743546.6074299812] Replaced hooked function.
+[LOG][1518743546.6162180901] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743546.6162180901] Return from hook antigen-bundle with 0
+[LOG][1518743546.6249706745] /home/cdiesh/.config/antigen.zsh:16
+[LOG][1518743546.6249706745] Processing deferred bundle: --loc=themes/robbyrussell --btype=theme DEFER
+[WRN][1518743546.6357922554] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.6357922554] Updated meta: target antigen-bundle mode repeat type pre called 16
+[WRN][1518743546.6440382004] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.6440382004] Updated meta: target antigen-bundle mode repeat type replace called 8
+[WRN][1518743546.6561517715] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743546.6561517715] Processing hooks: antigen-bundle-cached antigen-bundle-parallel
+[WRN][1518743546.6653079987] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743546.6653079987] Pre hook: antigen-bundle-cached --loc=themes/robbyrussell --btype=theme
+[WRN][1518743546.6753394604] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743546.6753394604] Replace hook: antigen-bundle-parallel --loc=themes/robbyrussell --btype=theme
+[TRA][1518743546.6849446297] /home/cdiesh/.zshrc:5
+[TRA][1518743546.6849446297] antigen-bundle-parallel: --loc=themes/robbyrussell --btype=theme PARALLEL
+[TRA][1518743546.6849446297] TRACE
+antigen-bundle-parallel
+-antigen-hook-handler
+antigen-bundle
+antigen-apply-defer
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743546.6932370663] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743546.6932370663] Replaced hooked function.
+[LOG][1518743546.7033002377] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743546.7033002377] Return from hook antigen-bundle with 0
+[WRN][1518743546.7139682770] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743546.7139682770] Replace hook: antigen-apply-parallel-execute
+[WRN][1518743546.7264497280] /home/cdiesh/.config/antigen.zsh:65
+[WRN][1518743546.7264497280] Parallel replace-apply PARALLEL REPLACE-APPLY
+[WRN][1518743546.7359802723] /home/cdiesh/.config/antigen.zsh:4
+[WRN][1518743546.7359802723] Parallel antigen-bundle-parallel-execute PARALLEL
+[WRN][1518743546.7487668991] /home/cdiesh/.config/antigen.zsh:8
+[WRN][1518743546.7487668991] Gonna install in parallel 8 bundles. PARALLEL
+[WRN][1518743546.7576820850] /home/cdiesh/.config/antigen.zsh:10
+[WRN][1518743546.7576820850] --loc=lib git heroku pip lein command-not-found zsh-users/zsh-syntax-highlighting --loc=themes/robbyrussell --btype=theme PARALLEL
+[WRN][1518743546.7716317177] /home/cdiesh/.config/antigen.zsh:24
+[WRN][1518743546.7716317177] Bundle robbyrussell/oh-my-zsh already cloned locally. PARALLEL
+[WRN][1518743546.7830543518] /home/cdiesh/.config/antigen.zsh:24
+[WRN][1518743546.7830543518] Bundle robbyrussell/oh-my-zsh already cloned locally. PARALLEL
+[WRN][1518743546.8050181866] /home/cdiesh/.config/antigen.zsh:24
+[WRN][1518743546.8050181866] Bundle robbyrussell/oh-my-zsh already cloned locally. PARALLEL
+[WRN][1518743546.8170492649] /home/cdiesh/.config/antigen.zsh:24
+[WRN][1518743546.8170492649] Bundle robbyrussell/oh-my-zsh already cloned locally. PARALLEL
+[WRN][1518743546.8298599720] /home/cdiesh/.config/antigen.zsh:24
+[WRN][1518743546.8298599720] Bundle robbyrussell/oh-my-zsh already cloned locally. PARALLEL
+[WRN][1518743546.8427429199] /home/cdiesh/.config/antigen.zsh:24
+[WRN][1518743546.8427429199] Bundle robbyrussell/oh-my-zsh already cloned locally. PARALLEL
+[WRN][1518743546.8576557636] /home/cdiesh/.config/antigen.zsh:24
+[WRN][1518743546.8576557636] Bundle zsh-users/zsh-syntax-highlighting already cloned locally. PARALLEL
+[WRN][1518743546.8694913387] /home/cdiesh/.config/antigen.zsh:24
+[WRN][1518743546.8694913387] Bundle robbyrussell/oh-my-zsh already cloned locally. PARALLEL
+[WRN][1518743546.8825755119] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.8825755119] Updated meta: target antigen-bundle mode repeat type pre called 17
+[WRN][1518743546.9003705978] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743546.9003705978] Processing hooks: antigen-bundle-cached
+[WRN][1518743546.9177014828] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743546.9177014828] Pre hook: antigen-bundle-cached --loc=lib
+[WRN][1518743546.9316258430] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743546.9316258430] -antigen-hook-antigen-bundle --loc=lib
+[TRA][1518743546.9492061138] /home/cdiesh/.config/antigen.zsh:2
+[TRA][1518743546.9492061138] Called antigen-bundle with --loc=lib BUNDLE
+[TRA][1518743546.9492061138] TRACE
+-antigen-hook-antigen-bundle
+-antigen-hook-handler
+antigen-bundle
+antigen-bundle-parallel-execute
+antigen-apply-parallel-execute
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743546.9704051018] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743546.9704051018] Updated meta: target -antigen-load-env mode repeat type replace called 1
+[WRN][1518743546.9937145710] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743546.9937145710] Processing hooks: -antigen-load-env-cached
+[WRN][1518743547.0154798031] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.0154798031] Replace hook: -antigen-load-env-cached dir /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh btype plugin url https://github.com/robbyrussell/oh-my-zsh.git loc lib name robbyrussell/oh-my-zsh make_local_clone true
+[WRN][1518743547.0382351875] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743547.0382351875] Replaced hooked function.
+[LOG][1518743547.0528414249] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.0528414249] Return from hook -antigen-load-env with 0
+[WRN][1518743547.0671432018] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.0671432018] Updated meta: target -antigen-load-source mode repeat type replace called 1
+[WRN][1518743547.0803010464] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.0803010464] Processing hooks: -antigen-load-source-cached
+[WRN][1518743547.0929994583] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.0929994583] Replace hook: -antigen-load-source-cached /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/bzr.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/clipboard.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/compfix.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/completion.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/correction.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/diagnostics.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/directories.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/functions.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/git.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/grep.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/history.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/key-bindings.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/misc.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/nvm.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/prompt_info_functions.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/spectrum.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/termsupport.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/theme-and-appearance.zsh
+[WRN][1518743547.1025400162] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743547.1025400162] Replaced hooked function.
+[LOG][1518743547.1139049530] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.1139049530] Return from hook -antigen-load-source with 0
+[LOG][1518743547.1283814907] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.1283814907] Return from hook antigen-bundle with 0
+[WRN][1518743547.1429886818] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.1429886818] Updated meta: target antigen-bundle mode repeat type pre called 18
+[WRN][1518743547.1548585892] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.1548585892] Processing hooks: antigen-bundle-cached
+[WRN][1518743547.1657145023] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743547.1657145023] Pre hook: antigen-bundle-cached git
+[WRN][1518743547.1793632507] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743547.1793632507] -antigen-hook-antigen-bundle git
+[TRA][1518743547.1889719963] /home/cdiesh/.config/antigen.zsh:2
+[TRA][1518743547.1889719963] Called antigen-bundle with git BUNDLE
+[TRA][1518743547.1889719963] TRACE
+-antigen-hook-antigen-bundle
+-antigen-hook-handler
+antigen-bundle
+antigen-bundle-parallel-execute
+antigen-apply-parallel-execute
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743547.2016506195] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.2016506195] Updated meta: target -antigen-load-env mode repeat type replace called 2
+[WRN][1518743547.2134215832] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.2134215832] Processing hooks: -antigen-load-env-cached
+[WRN][1518743547.2267405987] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.2267405987] Replace hook: -antigen-load-env-cached dir /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh btype plugin url https://github.com/robbyrussell/oh-my-zsh.git loc plugins/git name robbyrussell/oh-my-zsh make_local_clone true
+[WRN][1518743547.2380011082] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743547.2380011082] Replaced hooked function.
+[LOG][1518743547.2500278950] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.2500278950] Return from hook -antigen-load-env with 0
+[WRN][1518743547.2619192600] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.2619192600] Updated meta: target -antigen-load-source mode repeat type replace called 2
+[WRN][1518743547.2746875286] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.2746875286] Processing hooks: -antigen-load-source-cached
+[WRN][1518743547.2838757038] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.2838757038] Replace hook: -antigen-load-source-cached /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/git/git.plugin.zsh
+[WRN][1518743547.2952880859] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743547.2952880859] Replaced hooked function.
+[LOG][1518743547.3051903248] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.3051903248] Return from hook -antigen-load-source with 0
+[LOG][1518743547.3198366165] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.3198366165] Return from hook antigen-bundle with 0
+[WRN][1518743547.3310036659] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.3310036659] Updated meta: target antigen-bundle mode repeat type pre called 19
+[WRN][1518743547.3416490555] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.3416490555] Processing hooks: antigen-bundle-cached
+[WRN][1518743547.3517060280] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743547.3517060280] Pre hook: antigen-bundle-cached heroku
+[WRN][1518743547.3640794754] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743547.3640794754] -antigen-hook-antigen-bundle heroku
+[TRA][1518743547.3750486374] /home/cdiesh/.config/antigen.zsh:2
+[TRA][1518743547.3750486374] Called antigen-bundle with heroku BUNDLE
+[TRA][1518743547.3750486374] TRACE
+-antigen-hook-antigen-bundle
+-antigen-hook-handler
+antigen-bundle
+antigen-bundle-parallel-execute
+antigen-apply-parallel-execute
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743547.3912825584] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.3912825584] Updated meta: target -antigen-load-env mode repeat type replace called 3
+[WRN][1518743547.4017663002] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.4017663002] Processing hooks: -antigen-load-env-cached
+[WRN][1518743547.4176912308] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.4176912308] Replace hook: -antigen-load-env-cached dir /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh btype plugin url https://github.com/robbyrussell/oh-my-zsh.git loc plugins/heroku name robbyrussell/oh-my-zsh make_local_clone true
+[WRN][1518743547.4291930199] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743547.4291930199] Replaced hooked function.
+[LOG][1518743547.4455730915] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.4455730915] Return from hook -antigen-load-env with 0
+[WRN][1518743547.4591367245] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.4591367245] Updated meta: target -antigen-load-source mode repeat type replace called 3
+[WRN][1518743547.4722588062] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.4722588062] Processing hooks: -antigen-load-source-cached
+[WRN][1518743547.4830780029] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.4830780029] Replace hook: -antigen-load-source-cached
+[WRN][1518743547.4958503246] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743547.4958503246] Replaced hooked function.
+[LOG][1518743547.5063564777] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.5063564777] Return from hook -antigen-load-source with 0
+[LOG][1518743547.5183703899] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.5183703899] Return from hook antigen-bundle with 0
+[WRN][1518743547.5316922665] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.5316922665] Updated meta: target antigen-bundle mode repeat type pre called 20
+[WRN][1518743547.5432522297] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.5432522297] Processing hooks: antigen-bundle-cached
+[WRN][1518743547.5528318882] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743547.5528318882] Pre hook: antigen-bundle-cached pip
+[WRN][1518743547.5622000694] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743547.5622000694] -antigen-hook-antigen-bundle pip
+[TRA][1518743547.5734612942] /home/cdiesh/.config/antigen.zsh:2
+[TRA][1518743547.5734612942] Called antigen-bundle with pip BUNDLE
+[TRA][1518743547.5734612942] TRACE
+-antigen-hook-antigen-bundle
+-antigen-hook-handler
+antigen-bundle
+antigen-bundle-parallel-execute
+antigen-apply-parallel-execute
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743547.5850038528] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.5850038528] Updated meta: target -antigen-load-env mode repeat type replace called 4
+[WRN][1518743547.5938756466] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.5938756466] Processing hooks: -antigen-load-env-cached
+[WRN][1518743547.6035571098] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.6035571098] Replace hook: -antigen-load-env-cached dir /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh btype plugin url https://github.com/robbyrussell/oh-my-zsh.git loc plugins/pip name robbyrussell/oh-my-zsh make_local_clone true
+[WRN][1518743547.6127672195] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743547.6127672195] Replaced hooked function.
+[LOG][1518743547.6223561764] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.6223561764] Return from hook -antigen-load-env with 0
+[WRN][1518743547.6341857910] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.6341857910] Updated meta: target -antigen-load-source mode repeat type replace called 4
+[WRN][1518743547.6453218460] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.6453218460] Processing hooks: -antigen-load-source-cached
+[WRN][1518743547.6601073742] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.6601073742] Replace hook: -antigen-load-source-cached /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/pip/pip.plugin.zsh
+[WRN][1518743547.6692547798] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743547.6692547798] Replaced hooked function.
+[LOG][1518743547.6786394119] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.6786394119] Return from hook -antigen-load-source with 0
+[LOG][1518743547.6879460812] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.6879460812] Return from hook antigen-bundle with 0
+[WRN][1518743547.6965649128] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.6965649128] Updated meta: target antigen-bundle mode repeat type pre called 21
+[WRN][1518743547.7093558311] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.7093558311] Processing hooks: antigen-bundle-cached
+[WRN][1518743547.7216007710] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743547.7216007710] Pre hook: antigen-bundle-cached lein
+[WRN][1518743547.7316753864] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743547.7316753864] -antigen-hook-antigen-bundle lein
+[TRA][1518743547.7395796776] /home/cdiesh/.config/antigen.zsh:2
+[TRA][1518743547.7395796776] Called antigen-bundle with lein BUNDLE
+[TRA][1518743547.7395796776] TRACE
+-antigen-hook-antigen-bundle
+-antigen-hook-handler
+antigen-bundle
+antigen-bundle-parallel-execute
+antigen-apply-parallel-execute
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743547.7496094704] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.7496094704] Updated meta: target -antigen-load-env mode repeat type replace called 5
+[WRN][1518743547.7613036633] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.7613036633] Processing hooks: -antigen-load-env-cached
+[WRN][1518743547.7724602222] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.7724602222] Replace hook: -antigen-load-env-cached dir /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh btype plugin url https://github.com/robbyrussell/oh-my-zsh.git loc plugins/lein name robbyrussell/oh-my-zsh make_local_clone true
+[WRN][1518743547.7861692905] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743547.7861692905] Replaced hooked function.
+[LOG][1518743547.7978250980] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.7978250980] Return from hook -antigen-load-env with 0
+[WRN][1518743547.8091263771] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.8091263771] Updated meta: target -antigen-load-source mode repeat type replace called 5
+[WRN][1518743547.8180329800] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.8180329800] Processing hooks: -antigen-load-source-cached
+[WRN][1518743547.8283603191] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.8283603191] Replace hook: -antigen-load-source-cached /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/lein/lein.plugin.zsh
+[WRN][1518743547.8377375603] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743547.8377375603] Replaced hooked function.
+[LOG][1518743547.8461980820] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.8461980820] Return from hook -antigen-load-source with 0
+[LOG][1518743547.8556063175] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743547.8556063175] Return from hook antigen-bundle with 0
+[WRN][1518743547.8653447628] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.8653447628] Updated meta: target antigen-bundle mode repeat type pre called 22
+[WRN][1518743547.8829922676] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.8829922676] Processing hooks: antigen-bundle-cached
+[WRN][1518743547.8962824345] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743547.8962824345] Pre hook: antigen-bundle-cached command-not-found
+[WRN][1518743547.9191257954] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743547.9191257954] -antigen-hook-antigen-bundle command-not-found
+[TRA][1518743547.9391553402] /home/cdiesh/.config/antigen.zsh:2
+[TRA][1518743547.9391553402] Called antigen-bundle with command-not-found BUNDLE
+[TRA][1518743547.9391553402] TRACE
+-antigen-hook-antigen-bundle
+-antigen-hook-handler
+antigen-bundle
+antigen-bundle-parallel-execute
+antigen-apply-parallel-execute
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743547.9578361511] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743547.9578361511] Updated meta: target -antigen-load-env mode repeat type replace called 6
+[WRN][1518743547.9755594730] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743547.9755594730] Processing hooks: -antigen-load-env-cached
+[WRN][1518743547.9896144867] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743547.9896144867] Replace hook: -antigen-load-env-cached dir /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh btype plugin url https://github.com/robbyrussell/oh-my-zsh.git loc plugins/command-not-found name robbyrussell/oh-my-zsh make_local_clone true
+[WRN][1518743548.0015387535] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743548.0015387535] Replaced hooked function.
+[LOG][1518743548.0204186440] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743548.0204186440] Return from hook -antigen-load-env with 0
+[WRN][1518743548.0373175144] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743548.0373175144] Updated meta: target -antigen-load-source mode repeat type replace called 6
+[WRN][1518743548.0544888973] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743548.0544888973] Processing hooks: -antigen-load-source-cached
+[WRN][1518743548.0706157684] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743548.0706157684] Replace hook: -antigen-load-source-cached /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/command-not-found/command-not-found.plugin.zsh
+[WRN][1518743548.0855619907] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743548.0855619907] Replaced hooked function.
+[LOG][1518743548.1156306267] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743548.1156306267] Return from hook -antigen-load-source with 0
+[LOG][1518743548.1272494793] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743548.1272494793] Return from hook antigen-bundle with 0
+[WRN][1518743548.1400730610] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743548.1400730610] Updated meta: target antigen-bundle mode repeat type pre called 23
+[WRN][1518743548.1531729698] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743548.1531729698] Processing hooks: antigen-bundle-cached
+[WRN][1518743548.1681768894] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743548.1681768894] Pre hook: antigen-bundle-cached zsh-users/zsh-syntax-highlighting
+[WRN][1518743548.1830649376] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743548.1830649376] -antigen-hook-antigen-bundle zsh-users/zsh-syntax-highlighting
+[TRA][1518743548.1966447830] /home/cdiesh/.config/antigen.zsh:2
+[TRA][1518743548.1966447830] Called antigen-bundle with zsh-users/zsh-syntax-highlighting BUNDLE
+[TRA][1518743548.1966447830] TRACE
+-antigen-hook-antigen-bundle
+-antigen-hook-handler
+antigen-bundle
+antigen-bundle-parallel-execute
+antigen-apply-parallel-execute
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743548.2135012150] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743548.2135012150] Updated meta: target -antigen-load-env mode repeat type replace called 7
+[WRN][1518743548.2291188240] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743548.2291188240] Processing hooks: -antigen-load-env-cached
+[WRN][1518743548.2448635101] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743548.2448635101] Replace hook: -antigen-load-env-cached dir /home/cdiesh/.antigen/bundles/zsh-users/zsh-syntax-highlighting btype plugin url https://github.com/zsh-users/zsh-syntax-highlighting.git loc / name zsh-users/zsh-syntax-highlighting make_local_clone true
+[WRN][1518743548.2578647137] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743548.2578647137] Replaced hooked function.
+[LOG][1518743548.2699871063] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743548.2699871063] Return from hook -antigen-load-env with 0
+[WRN][1518743548.2790265083] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743548.2790265083] Updated meta: target -antigen-load-source mode repeat type replace called 7
+[WRN][1518743548.2878024578] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743548.2878024578] Processing hooks: -antigen-load-source-cached
+[WRN][1518743548.2977445126] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743548.2977445126] Replace hook: -antigen-load-source-cached /home/cdiesh/.antigen/bundles/zsh-users/zsh-syntax-highlighting///zsh-syntax-highlighting.plugin.zsh
+[WRN][1518743548.3070387840] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743548.3070387840] Replaced hooked function.
+[LOG][1518743548.3178608418] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743548.3178608418] Return from hook -antigen-load-source with 0
+[LOG][1518743548.3290710449] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743548.3290710449] Return from hook antigen-bundle with 0
+[WRN][1518743548.3428933620] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743548.3428933620] Updated meta: target antigen-bundle mode repeat type pre called 24
+[WRN][1518743548.3652346134] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743548.3652346134] Processing hooks: antigen-bundle-cached
+[WRN][1518743548.3792297840] /home/cdiesh/.config/antigen.zsh:1487
+[WRN][1518743548.3792297840] Pre hook: antigen-bundle-cached --loc=themes/robbyrussell --btype=theme
+[WRN][1518743548.3952434063] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743548.3952434063] -antigen-hook-antigen-bundle --loc=themes/robbyrussell --btype=theme
+[TRA][1518743548.4156022072] /home/cdiesh/.config/antigen.zsh:2
+[TRA][1518743548.4156022072] Called antigen-bundle with --loc=themes/robbyrussell --btype=theme BUNDLE
+[TRA][1518743548.4156022072] TRACE
+-antigen-hook-antigen-bundle
+-antigen-hook-handler
+antigen-bundle
+antigen-bundle-parallel-execute
+antigen-apply-parallel-execute
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[WRN][1518743548.4290201664] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743548.4290201664] Updated meta: target -antigen-load-env mode repeat type replace called 8
+[WRN][1518743548.4412112236] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743548.4412112236] Processing hooks: -antigen-load-env-cached
+[WRN][1518743548.4541926384] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743548.4541926384] Replace hook: -antigen-load-env-cached dir /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh btype theme url https://github.com/robbyrussell/oh-my-zsh.git loc themes/robbyrussell.zsh-theme name robbyrussell/oh-my-zsh make_local_clone true
+[WRN][1518743548.4682338238] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743548.4682338238] Replaced hooked function.
+[LOG][1518743548.4812159538] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743548.4812159538] Return from hook -antigen-load-env with 0
+[WRN][1518743548.4966020584] /home/cdiesh/.config/antigen.zsh:1469
+[WRN][1518743548.4966020584] Updated meta: target -antigen-load-source mode repeat type replace called 8
+[WRN][1518743548.5089054108] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743548.5089054108] Processing hooks: -antigen-load-source-cached
+[WRN][1518743548.5211868286] /home/cdiesh/.config/antigen.zsh:1498
+[WRN][1518743548.5211868286] Replace hook: -antigen-load-source-cached /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/themes/robbyrussell.zsh-theme
+[WRN][1518743548.5319399834] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743548.5319399834] Replaced hooked function.
+[LOG][1518743548.5436508656] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743548.5436508656] Return from hook -antigen-load-source with 0
+[LOG][1518743548.5590400696] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743548.5590400696] Return from hook antigen-bundle with 0
+[WRN][1518743548.5716886520] /home/cdiesh/.config/antigen.zsh:48
+[WRN][1518743548.5716886520] Parallel install done PARALLEL
+[WRN][1518743548.5882425308] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743548.5882425308] Ignoring hook due to mode once: antigen-apply-lock
+[WRN][1518743548.6001989841] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743548.6001989841] Ignoring hook due to mode once: antigen-apply-parallel
+[WRN][1518743548.6136229038] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743548.6136229038] Ignoring hook due to mode once: antigen-apply-defer
+[WRN][1518743548.6263434887] /home/cdiesh/.config/antigen.zsh:1462
+[WRN][1518743548.6263434887] Ignoring hook due to mode once: antigen-apply-cached
+[WRN][1518743548.6384067535] /home/cdiesh/.config/antigen.zsh:1484
+[WRN][1518743548.6384067535] Processing hooks: antigen-apply-lock antigen-apply-parallel antigen-apply-defer antigen-apply-cached
+[WRN][1518743548.6498496532] /home/cdiesh/.config/antigen.zsh:1505
+[WRN][1518743548.6498496532] -antigen-hook-antigen-apply 
+[LOG][1518743548.6645038128] /home/cdiesh/.config/antigen.zsh:2
+[LOG][1518743548.6645038128] Called antigen-apply
+[TRA][1518743548.6784667969] /home/cdiesh/.config/antigen.zsh:3
+[TRA][1518743548.6784667969] Gonna create compdump file @ apply COMPDUMP
+[TRA][1518743548.6784667969] TRACE
+-antigen-hook-antigen-apply
+-antigen-hook-handler
+antigen-apply
+antigen-apply-parallel-execute
+-antigen-hook-handler
+antigen-apply
+-antigen-hook-antigen
+-antigen-hook-handler
+antigen
+/home/cdiesh/.zshrc
+[LOG][1518743550.0409896374] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743550.0409896374] Return from hook antigen-apply with 0
+[WRN][1518743550.0624887943] /home/cdiesh/.config/antigen.zsh:1509
+[WRN][1518743550.0624887943] Replaced hooked function.
+[WRN][1518743550.0749061108] /home/cdiesh/.config/antigen.zsh:1513
+[WRN][1518743550.0749061108] Post hook: antigen-apply-lock
+[WRN][1518743550.0889019966] /home/cdiesh/.config/antigen.zsh:22
+[WRN][1518743550.0889019966] Freeing antigen-lock file at /home/cdiesh/.antigen/.lock
+[WRN][1518743550.1169013977] /home/cdiesh/.config/antigen.zsh:1513
+[WRN][1518743550.1169013977] Post hook: antigen-apply-cached
+[LOG][1518743550.1275587082] /home/cdiesh/.config/antigen.zsh:7
+[LOG][1518743550.1275587082] TRACE: /home/cdiesh/.config/antigen.zsh:1514 /home/cdiesh/.config/antigen.zsh:2 /home/cdiesh/.config/antigen.zsh:11 /home/cdiesh/.config/antigen.zsh:1506 /home/cdiesh/.config/antigen.zsh:2 /home/cdiesh/.zshrc:19 zsh:0
+[LOG][1518743550.1410017014] /home/cdiesh/.config/antigen.zsh:1787
+[LOG][1518743550.1410017014] Gonna generate cache for /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/bzr.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/clipboard.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/compfix.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/completion.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/correction.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/diagnostics.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/directories.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/functions.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/git.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/grep.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/history.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/key-bindings.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/misc.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/nvm.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/prompt_info_functions.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/spectrum.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/termsupport.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/lib/theme-and-appearance.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/git /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/git/git.plugin.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/heroku /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/pip /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/pip/pip.plugin.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/lein /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/lein/lein.plugin.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/command-not-found /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/plugins/command-not-found/command-not-found.plugin.zsh /home/cdiesh/.antigen/bundles/zsh-users/zsh-syntax-highlighting// /home/cdiesh/.antigen/bundles/zsh-users/zsh-syntax-highlighting///zsh-syntax-highlighting.plugin.zsh /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/themes/robbyrussell.zsh-theme /home/cdiesh/.antigen/bundles/robbyrussell/oh-my-zsh/themes/robbyrussell.zsh-theme
+[LOG][1518743550.2609283924] /home/cdiesh/.config/antigen.zsh:1844
+[LOG][1518743550.2609283924] CHECK_FILES /home/cdiesh/.zshrc /home/cdiesh/.zshrc
+[LOG][1518743551.0343832970] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743551.0343832970] Return from hook antigen-apply with 0
+[LOG][1518743551.0526013374] /home/cdiesh/.config/antigen.zsh:1518
+[LOG][1518743551.0526013374] Return from hook antigen with 0
+[WRN][1518743614.2017600536] /home/cdiesh/.config/antigen.zsh:266
+[WRN][1518743614.2017600536] -antigen-interactive-mode: toplevel:filecode:file:shfunc:shfunc $_ANTIGEN_INTERACTIVE = 
+[TRA][1518743614.2132198811] /home/cdiesh/.config/antigen.zsh:475
+[TRA][1518743614.2132198811] Gonna create compdump file @ env-setup COMPDUMP
+[TRA][1518743614.2132198811] TRACE
+-antigen-env-setup
+/home/cdiesh/.config/antigen.zsh
+/home/cdiesh/.zshrc
+[TRA][1518743614.4218528271] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743614.4218528271] Called antigen-bundle with --loc=lib BUNDLE
+[TRA][1518743614.4218528271] TRACE
+antigen-bundle
+-antigen-use-oh-my-zsh
+antigen-use
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743614.4296846390] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743614.4296846390] Called antigen-bundle with git BUNDLE
+[TRA][1518743614.4296846390] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743614.4461340904] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743614.4461340904] Called antigen-bundle with heroku BUNDLE
+[TRA][1518743614.4461340904] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743614.4571382999] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743614.4571382999] Called antigen-bundle with pip BUNDLE
+[TRA][1518743614.4571382999] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743614.4661889076] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743614.4661889076] Called antigen-bundle with lein BUNDLE
+[TRA][1518743614.4661889076] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743614.4758648872] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743614.4758648872] Called antigen-bundle with command-not-found BUNDLE
+[TRA][1518743614.4758648872] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743614.4860363007] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743614.4860363007] Called antigen-bundle with zsh-users/zsh-syntax-highlighting BUNDLE
+[TRA][1518743614.4860363007] TRACE
+antigen-bundle
+antigen
+/home/cdiesh/.zshrc
+[TRA][1518743614.5026042461] /home/cdiesh/.config/antigen.zsh:808
+[TRA][1518743614.5026042461] Called antigen-bundle with --loc=themes/robbyrussell --btype=theme BUNDLE
+[TRA][1518743614.5026042461] TRACE
+antigen-bundle
+antigen-theme
+antigen
+/home/cdiesh/.zshrc
+[LOG][1518743614.5144798756] /home/cdiesh/.config/antigen.zsh:785
+[LOG][1518743614.5144798756] Called antigen-apply
+[TRA][1518743614.5224244595] /home/cdiesh/.config/antigen.zsh:789
+[TRA][1518743614.5224244595] Gonna create compdump file @ apply COMPDUMP
+[TRA][1518743614.5224244595] TRACE
+antigen-apply
+antigen
+/home/cdiesh/.zshrc

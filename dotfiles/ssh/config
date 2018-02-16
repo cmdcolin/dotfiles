@@ -1,0 +1,12 @@
+Host jbrowse
+    HostName jbrowse.org
+    User cdiesh 
+Host labby
+    HostName 35.8.198.84
+    User dieshcol
+Host hpcc
+    HostName gateway.hpcc.msu.edu
+    User dieshcol
+Host amazon
+    User colindiesh
+    HostName efishgenomics.integrativebiology.msu.edu

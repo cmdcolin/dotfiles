@@ -1,0 +1,44 @@
+config:
+  backup: true
+  create: true
+  dotpath: dotfiles
+dotfiles:
+  d_antigen:
+    dst: ~/.antigen
+    src: antigen
+  f_ansiweatherrc:
+    dst: ~/.ansiweatherrc
+    src: ansiweatherrc
+  f_antigen.zsh:
+    dst: ~/.config/antigen.zsh
+    src: config/antigen.zsh
+  f_gitconfig:
+    dst: ~/.gitconfig
+    src: gitconfig
+  f_rprofile:
+    dst: ~/.Rprofile
+    src: Rprofile
+  f_ssh_config:
+    dst: ~/.ssh/config
+    src: ssh/config
+  f_tmux.conf:
+    dst: ~/.tmux.conf
+    src: tmux.conf
+  f_vimrc:
+    dst: ~/.vimrc
+    src: vimrc
+  f_zshrc:
+    dst: ~/.zshrc
+    src: zshrc
+profiles:
+  DESKTOP-UF62SVF:
+    dotfiles:
+    - f_vimrc
+    - f_zshrc
+    - f_ssh_config
+    - f_antigen.zsh
+    - f_rprofile
+    - f_gitconfig
+    - f_ansiweatherrc
+    - d_antigen
+    - f_tmux.conf
