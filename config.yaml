@@ -6,6 +6,9 @@ dotfiles:
   d_antigen:
     dst: ~/.antigen
     src: antigen
+  d_vim:
+    dst: ~/.vim
+    src: vim
   f_ansiweatherrc:
     dst: ~/.ansiweatherrc
     src: ansiweatherrc
@@ -34,6 +37,7 @@ profiles:
   DESKTOP-UF62SVF:
     dotfiles:
     - d_antigen
+    - d_vim
   cdiesh:
     dotfiles:
     - f_vimrc
