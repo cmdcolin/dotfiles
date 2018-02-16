@@ -31,6 +31,9 @@ dotfiles:
     dst: ~/.zshrc
     src: zshrc
 profiles:
+  DESKTOP-UF62SVF:
+    dotfiles:
+    - d_antigen
   cdiesh:
     dotfiles:
     - f_vimrc
