@@ -20,6 +20,9 @@ dotfiles:
   f_gitconfig:
     dst: ~/.gitconfig
     src: gitconfig
+  f_robbyrussell.zsh-theme.antigen-compat:
+    dst: ~/.antigen/bundles/robbyrussell/oh-my-zsh/themes/robbyrussell.zsh-theme.antigen-compat
+    src: antigen/bundles/robbyrussell/oh-my-zsh/themes/robbyrussell.zsh-theme.antigen-compat
   f_rprofile:
     dst: ~/.Rprofile
     src: Rprofile
@@ -30,10 +33,10 @@ dotfiles:
     dst: ~/.tmux.conf
     src: tmux.conf
   f_vimrc:
+    actions:
+    - vundle
     dst: ~/.vimrc
     src: vimrc
-    actions:
-      - vundle
   f_zshrc:
     dst: ~/.zshrc
     src: zshrc
@@ -42,6 +45,7 @@ profiles:
     dotfiles:
     - d_antigen
     - d_vim
+    - f_robbyrussell.zsh-theme.antigen-compat
   cdiesh:
     dotfiles:
     - f_vimrc
