@@ -1,3 +1,15 @@
 [submodule "dotdrop"]
 	path = dotdrop
 	url = https://github.com/deadc0de6/dotdrop.git
+[submodule "dotfiles/vim/bundle/editorconfig-vim"]
+	path = dotfiles/vim/bundle/editorconfig-vim
+	url = git@github.com:editorconfig/editorconfig-vim
+[submodule "dotfiles/vim/bundle/Vundle.vim"]
+	path = dotfiles/vim/bundle/Vundle.vim
+	url = git@github.com:VundleVim/Vundle.vim
+[submodule "dotfiles/antigen/bundles/robbyrussell/oh-my-zsh"]
+	path = dotfiles/antigen/bundles/robbyrussell/oh-my-zsh
+	url = git@github.com:robbyrussell/oh-my-zsh
+[submodule "dotfiles/antigen/bundles/zsh-users/zsh-syntax-highlighting"]
+	path = dotfiles/antigen/bundles/zsh-users/zsh-syntax-highlighting
+	url = git@github.com:zsh-users/zsh-syntax-highlighting
