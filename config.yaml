@@ -5,24 +5,15 @@ config:
   create: true
   dotpath: dotfiles
 dotfiles:
-  d_antigen:
-    dst: ~/.antigen
-    src: antigen
   d_vim:
     dst: ~/.vim
     src: vim
   f_ansiweatherrc:
     dst: ~/.ansiweatherrc
     src: ansiweatherrc
-  f_antigen.zsh:
-    dst: ~/.config/antigen.zsh
-    src: config/antigen.zsh
   f_gitconfig:
     dst: ~/.gitconfig
     src: gitconfig
-  f_robbyrussell.zsh-theme.antigen-compat:
-    dst: ~/.antigen/bundles/robbyrussell/oh-my-zsh/themes/robbyrussell.zsh-theme.antigen-compat
-    src: antigen/bundles/robbyrussell/oh-my-zsh/themes/robbyrussell.zsh-theme.antigen-compat
   f_rprofile:
     dst: ~/.Rprofile
     src: Rprofile
@@ -43,17 +34,20 @@ dotfiles:
 profiles:
   DESKTOP-UF62SVF:
     dotfiles:
-    - d_antigen
     - d_vim
-    - f_robbyrussell.zsh-theme.antigen-compat
+    - f_vimrc
+    - f_zshrc
+    - f_ssh_config
+    - f_rprofile
+    - f_gitconfig
+    - f_ansiweatherrc
+    - f_tmux.conf
   cdiesh:
     dotfiles:
     - f_vimrc
     - f_zshrc
     - f_ssh_config
-    - f_antigen.zsh
     - f_rprofile
     - f_gitconfig
     - f_ansiweatherrc
-    - d_antigen
     - f_tmux.conf
