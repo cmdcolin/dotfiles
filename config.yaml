@@ -3,9 +3,6 @@ config:
   create: true
   dotpath: dotfiles
 dotfiles:
-  d_vim:
-    dst: ~/.vim
-    src: vim
   f_ansiweatherrc:
     dst: ~/.ansiweatherrc
     src: ansiweatherrc
@@ -30,7 +27,6 @@ dotfiles:
 profiles:
   DESKTOP-UF62SVF:
     dotfiles:
-    - d_vim
     - f_vimrc
     - f_zshrc
     - f_ssh_config
