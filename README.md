@@ -11,7 +11,7 @@ Includes
 - ansiweather
 - zshrc
 - keychain
-- vim with Vundle
+- vim with vim-plug
 
 ## Install
 
