@@ -6,20 +6,11 @@ endif
 
 call plug#begin('~/.vim/plugged')
 Plug 'editorconfig/editorconfig-vim'
-Plug 'altercation/vim-colors-solarized'
 Plug 'bling/vim-airline'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
+Plug 'pangloss/vim-javascript'
+Plug 'cocopon/iceberg.vim'
 call plug#end()
 
-map ; :
-map jj <Esc>
-set syntax=on
-set smartindent
-set pastetoggle=<F2>
-set tabstop=4
-set expandtab
-set sw=4
-set clipboard+=unnamedplus
-set viminfo='100,<1000,s100,h
