@@ -12,3 +12,7 @@ Includes
 - zshrc
 - keychain
 - vim with Vundle
+
+## Install
+
+    pip install dropdrop
