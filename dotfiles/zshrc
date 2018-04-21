@@ -1,38 +1,21 @@
 eval `keychain --eval --agents ssh --inherit any id_rsa`
-source ~/.config/antigen.zsh
-antigen use oh-my-zsh
-#
-# Bundles from the default repo (robbyrussell's oh-my-zsh).
-antigen bundle git
-antigen bundle heroku
-antigen bundle pip
-antigen bundle lein
-antigen bundle command-not-found
-#
-# Syntax highlighting bundle.
-antigen bundle zsh-users/zsh-syntax-highlighting
-#
-# Load the theme.
-antigen theme robbyrussell
-#
-# Tell Antigen that you're done.
-antigen apply
-
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH":"/home/linuxbrew/.linuxbrew/sbin":$PATH
-export EDITOR=vim
-
+export EDITOR="vim"
+alias python="python3"
+alias pip="pip3"
 alias stp="git subtree push --prefix dist origin gh-pages"
-alias stpf="git push origin `git subtree split --prefix dist master`:gh-pages --force"
 alias rtp="git subtree push --prefix inst/doc origin gh-pages"
-alias e=vim
+alias e="vim"
 alias g="git status"
 alias pserver='python -m RangeHTTPServer'
 alias parallel='parallel --no-notice'
 alias ll="ls -l"
 alias ii='Rscript -e "devtools::install()"'
 alias kk="Rscript -e 'devtools::load_all(); tdmsviewer::tdmsviewer(dev=T)'"
-alias ydl=youtube-dl
+alias ydl="youtube-dl"
 alias smaller="parallel convert -resize 50% {} resized.{} ::: *.jpg"
+alias gg="git grep"
+alias sau="sudo apt update&&sudo apt upgrade"
 
 # tmux no longer used
 #[[ $- != *i* ]] && return

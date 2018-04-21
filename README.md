@@ -15,4 +15,7 @@ Includes
 
 ## Install
 
+Use python 3
+
     pip install dropdrop
+    dotdrop install
