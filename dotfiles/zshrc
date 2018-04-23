@@ -1,5 +1,23 @@
 eval `keychain --eval --agents ssh --inherit any id_rsa`
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH":"/home/linuxbrew/.linuxbrew/sbin":$PATH
+
+export ZPLUG_HOME=`brew --prefix zplug`
+source $ZPLUG_HOME/init.zsh
+zplug "zsh-users/zsh-syntax-highlighting", defer:2
+
+# Load theme file
+zplug 'dracula/zsh', as:theme
+
+# Install plugins if there are plugins that have not been installed
+if ! zplug check --verbose; then
+    printf "Install? [y/N]: "
+    if read -q; then
+        echo; zplug install
+    fi
+fi
+
+# Then, source plugins and add commands to $PATH
+zplug load --verbose
 export EDITOR="vim"
 alias python="python3"
 alias pip="pip3"

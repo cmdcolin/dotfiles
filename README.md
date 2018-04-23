@@ -6,14 +6,17 @@ Uses https://github.com/deadc0de6/dotdrop for managing dotfiles
 
 Includes
 
-- R
-- tmux
+- Rprofile
 - ansiweather
-- zshrc
+- zshrc with zplug and dracula/zsh theme
 - keychain
 - vim with vim-plug
 
 ## Install
+
+First install zplug with linuxbrew or homebrew
+
+    brew install zplug
 
 Use python 3
 
