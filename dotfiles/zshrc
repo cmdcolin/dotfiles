@@ -1,8 +1,7 @@
-# [[ $- != *i* ]] && return
-
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH":"/home/linuxbrew/.linuxbrew/sbin":$PATH
-# [[ -z "$TMUX" ]] && exec tmux
-if [ "$TMUX" = "" ]; then tmux -2; fi
+
+[[ -z "$TMUX" ]] && exec tmux -2
+[[ $- != *i* ]] && return
 
 
 export ZPLUG_HOME=`brew --prefix zplug`
