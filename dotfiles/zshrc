@@ -1,5 +1,9 @@
-eval `keychain --eval --agents ssh --inherit any id_rsa`
+# [[ $- != *i* ]] && return
+
 export PATH="/home/linuxbrew/.linuxbrew/bin:$PATH":"/home/linuxbrew/.linuxbrew/sbin":$PATH
+# [[ -z "$TMUX" ]] && exec tmux
+if [ "$TMUX" = "" ]; then tmux; fi
+
 
 export ZPLUG_HOME=`brew --prefix zplug`
 source $ZPLUG_HOME/init.zsh
@@ -34,11 +38,6 @@ alias ydl="youtube-dl"
 alias smaller="parallel convert -resize 50% {} resized.{} ::: *.jpg"
 alias gg="git grep"
 alias sau="sudo apt update&&sudo apt upgrade"
-
-# tmux no longer used
-#[[ $- != *i* ]] && return
-#[[ -z "$TMUX" ]] && exec tmux
-
 # check for dead links on a given wikipedia URL, excluding some stuff that tends to be always alive are not receptive to bot hits
 alias blcc="blc --exclude creativecommons.org --exclude mediawiki.org --exclude wikimedia.org --exclude wikimediafoundation.org --exclude jstor.org --exclude wikipedia.org --exclude doi.org --exclude nih.gov --follow"
 
