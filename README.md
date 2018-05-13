@@ -25,4 +25,4 @@ Use python 3
 
 ## Screenshot
 
-![](1.png)
+![](img/1.png)
