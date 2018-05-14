@@ -6,6 +6,9 @@ dotfiles:
   f_ansiweatherrc:
     dst: ~/.ansiweatherrc
     src: ansiweatherrc
+  f_now:
+    dst: ~/.now.sh
+    src: now 
   f_gitconfig:
     dst: ~/.gitconfig
     src: gitconfig
