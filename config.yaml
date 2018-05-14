@@ -15,9 +15,6 @@ dotfiles:
   f_rprofile:
     dst: ~/.Rprofile
     src: Rprofile
-  f_ssh_config:
-    dst: ~/.ssh/config
-    src: ssh/config
   f_tmux.conf:
     dst: ~/.tmux.conf
     src: tmux.conf
@@ -28,20 +25,11 @@ dotfiles:
     dst: ~/.zshrc
     src: zshrc
 profiles:
-  DESKTOP-UF62SVF:
-    dotfiles:
-    - f_vimrc
-    - f_zshrc
-    - f_ssh_config
-    - f_rprofile
-    - f_gitconfig
-    - f_ansiweatherrc
-    - f_tmux.conf
   cdiesh:
     dotfiles:
     - f_vimrc
+    - f_now
     - f_zshrc
-    - f_ssh_config
     - f_rprofile
     - f_gitconfig
     - f_ansiweatherrc
