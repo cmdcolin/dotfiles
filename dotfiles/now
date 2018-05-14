@@ -17,9 +17,7 @@ TimeColumn=61 # Default is 49 for   "   "   "   "    61 "   "   "   "
 
 # Current weather, already in color so no need to override
 echo " "
-# Replace Edmonton with your city name, GPS, etc. See: curl wttr.in/:help
-curl wttr.in/Edmonton?0 --silent --max-time 3
-# Timeout #. Increase for slow connection---^
+curl "wttr.in/?0" --silent --max-time 3
 echo " "
 echo " "                # Pad with blank lines for calendar & time to fit
 
@@ -90,16 +88,8 @@ while [ $((++i)) -lt 10 ]; do tput cuu1; done
 tput cuf $TimeColumn    # Move 49 columns right
 
 # Do we have the toilet package?
-if hash toilet 2>/dev/null; then
-    echo " "$(date +"%I:%M %P")" " | \
-        toilet -f future --filter border > /tmp/terminal
-# Do we have the figlet package?
-elif hash figlet 2>/dev/null; then
-    echo $(date +"%I:%M %P") | figlet > /tmp/terminal
-# else use standard font
-else
-    echo $(date +"%I:%M %P") > /tmp/terminal
-fi
+echo " "$(date +"%I:%M %P")" " | \
+	toilet -f pagga --filter border > /tmp/terminal
 
 while IFS= read -r Time; do
     printf "\033[01;36m"    # color cyan
@@ -109,5 +99,5 @@ while IFS= read -r Time; do
 done < /tmp/terminal
 
 tput rc                     # Restore saved cursor position.
-
+screenfetch
 exit 0
