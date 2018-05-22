@@ -15,3 +15,7 @@ Plug 'pangloss/vim-javascript'
 Plug 'cocopon/iceberg.vim'
 call plug#end()
 colorscheme iceberg
+
+set sw=4
+set expandtab
+
