@@ -6,11 +6,10 @@ Uses https://github.com/deadc0de6/dotdrop for managing dotfiles
 
 Includes
 
-- Rprofile
-- ansiweather
+- tmux with weather using wttr.in in statusline
 - zshrc with zplug and dracula/zsh theme
-- keychain
 - vim with vim-plug
+- keychain
 
 ## Install
 

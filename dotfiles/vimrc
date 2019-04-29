@@ -6,16 +6,55 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
-Plug 'editorconfig/editorconfig-vim'
-Plug 'bling/vim-airline'
-Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-surround'
-Plug 'tpope/vim-commentary'
-Plug 'pangloss/vim-javascript'
-Plug 'cocopon/iceberg.vim'
+Plug 'editorconfig/editorconfig-vim' " editorconfig, always not fucking working
+Plug 'tpope/vim-commentary' " allows typing v-select block then gc to comment block
+Plug 'tpope/vim-fugitive' " allows some git commands inside vim
+Plug 'joshdick/onedark.vim' " theme
+Plug 'vim-airline/vim-airline' " status line
+Plug 'leafgarland/typescript-vim' " some typescript support
+Plug 'pangloss/vim-javascript' " some javascript support
+Plug 'scrooloose/nerdtree'
+Plug 'w0rp/ale' " autofix and linting
+Plug 'Xuyuanp/nerdtree-git-plugin' " display files as modified from git in nerdtree
+Plug 'junegunn/fzf.vim'
+Plug 'yegappan/mru'
+Plug 'scrooloose/nerdtree-project-plugin'
+Plug 'lifepillar/vim-mucomplete'
+Plug 'Quramy/tsuquyomi'
 call plug#end()
-colorscheme iceberg
+colorscheme onedark
+let g:airline#extensions#tabline#enabled = 1
+autocmd vimenter * NERDTree
+autocmd VimEnter * wincmd p
 
-set sw=4
-set expandtab
+"closes nerdtree on last
+set mouse=a
+set autoread
+set nu
+set noswapfile
+set nobackup
+set nowb
+
+let NERDTreeMouseMode=3
+let g:ale_fixers = ['eslint']
+
+
+
+let g:ale_fix_on_save = 1
+set backspace=indent,eol,start " for some reason backspace doesn't work normally, wtf
+set list
+let g:EditorConfig_exclude_patterns = ['fugitive://.*']
+
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+:command -nargs=+ Ggr execute 'silent Ggrep!' <q-args> | cw | redraw!
+
+nnoremap  <C-F> :Ggr<SPACE>
+set completeopt+=menuone
+set completeopt+=noselect
+set shortmess+=c   " Shut off completion messages
+set belloff+=ctrlg " If Vim beeps during completion
+let g:mucomplete#enable_auto_at_startup = 1
+
+
+
 

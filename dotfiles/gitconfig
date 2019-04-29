@@ -1,7 +1,11 @@
 # This is Git's per-user configuration file.
 [user]
 # Please adapt and uncomment the following lines:
-	name = Colin
-	email = colin.diesh@gmail.com
+  name = Colin
+  email = colin.diesh@gmail.com
 [push]
-	default = simple
+  default = simple
+[merge]
+  tool = meld
+[alias]
+  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
