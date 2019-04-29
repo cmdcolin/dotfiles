@@ -20,7 +20,7 @@ First install zplug with linuxbrew or homebrew
 
 Use python 3
 
-    pip install dropdrop
+    pip install dotdrop
     dotdrop install
 
 ## Screenshot
