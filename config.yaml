@@ -6,15 +6,9 @@ dotfiles:
   f_ansiweatherrc:
     dst: ~/.ansiweatherrc
     src: ansiweatherrc
-  f_now:
-    dst: ~/.now.sh
-    src: now 
   f_gitconfig:
     dst: ~/.gitconfig
     src: gitconfig
-  f_rprofile:
-    dst: ~/.Rprofile
-    src: Rprofile
   f_tmux.conf:
     dst: ~/.tmux.conf
     src: tmux.conf
@@ -28,9 +22,7 @@ profiles:
   cdiesh:
     dotfiles:
     - f_vimrc
-    - f_now
     - f_zshrc
-    - f_rprofile
     - f_gitconfig
     - f_ansiweatherrc
     - f_tmux.conf
