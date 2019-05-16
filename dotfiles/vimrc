@@ -10,17 +10,16 @@ Plug 'editorconfig/editorconfig-vim' " editorconfig, always not fucking working
 Plug 'tpope/vim-commentary' " allows typing v-select block then gc to comment block
 Plug 'tpope/vim-fugitive' " allows some git commands inside vim
 Plug 'joshdick/onedark.vim' " theme
+Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline' " status line
-Plug 'leafgarland/typescript-vim' " some typescript support
-Plug 'pangloss/vim-javascript' " some javascript support
 Plug 'scrooloose/nerdtree'
 Plug 'w0rp/ale' " autofix and linting
 Plug 'Xuyuanp/nerdtree-git-plugin' " display files as modified from git in nerdtree
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'yegappan/mru'
-Plug 'scrooloose/nerdtree-project-plugin'
-Plug 'lifepillar/vim-mucomplete'
 Plug 'Quramy/tsuquyomi'
+Plug 'leafgarland/typescript-vim'
 call plug#end()
 colorscheme onedark
 let g:airline#extensions#tabline#enabled = 1
@@ -36,7 +35,7 @@ set nobackup
 set nowb
 
 let NERDTreeMouseMode=3
-let g:ale_fixers = ['eslint']
+let g:ale_fixers = ['eslint','standard']
 
 
 
@@ -55,6 +54,8 @@ set shortmess+=c   " Shut off completion messages
 set belloff+=ctrlg " If Vim beeps during completion
 let g:mucomplete#enable_auto_at_startup = 1
 
-
-
+let g:fzf_action = {
+  \ 'ctrl-t': 'tab split',
+  \ 'ctrl-x': 'split',
+  \ 'ctrl-v': 'vsplit' }
 
