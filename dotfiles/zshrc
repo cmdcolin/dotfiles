@@ -6,24 +6,38 @@
 export EDITOR="vim"
 alias stp="git subtree push --prefix dist origin gh-pages"
 alias e="vim"
-alias pserver="python -m RangeHTTPServer"
-alias unrarx="parallel unrar x {} ~/Music ::: *.rar"
-alias ll="ls -l"
-alias ydl="youtube-dl" # quick download youtube
-alias yda="youtube-dl -f 'bestaudio[ext=m4a]'" # quick download audio
-alias smaller="parallel convert -resize 50% {} resized.{} ::: *.jpg" # resize all files to 50% in pictures
-alias sau="sudo apt update && sudo apt upgrade" # quick upgrade
-alias ff="/usr/bin/ag -g" # find file
-alias pbcopy="xsel --clipboard --input" # mirror of osx pbcopy on linux
-alias pbpaste="xsel --clipboard --output" # mirror of osx pbpaste on linux
-alias cov="yarn test --coverage && opn coverage/lcov-report/index.html" # quickly open up coverage report
-alias gd="git diff --relative" # use relative paths for git diff
+alias g="git status -uno"
+alias y="yarn"
 alias w="curl wttr.in"
+alias tk="tmux kill-server"
+alias ag="rg"
+alias ls="exa"
+alias ll="exa -l"
+alias lt="exa -lsnew"
+alias ff="fd|grep"
+alias sau="sudo apt update&&sudo apt upgrade"
+alias cov="yarn test --coverage && opn coverage/lcov-report/index.html"
+alias ydl="youtube-dl"
+alias yda="youtube-dl -f 'bestaudio[ext=m4a]' "
+alias grep="grep --color=never"
+alias unarx="parallel unar {} ::: ~/Downloads/*.7z(.N) ~/Downloads/*.rar(.N) ~/Downloads/*.zip(.N)"
+alias pbcopy='xclip -selection clipboard'
+alias pbpaste='xclip -selection clipboard -o'
+alias pserver='python -m RangeHTTPServer'
+alias smaller="parallel convert -resize 50% {} resized.{} ::: *.jpg"
 
-# make ag actually use git grep and ignore snap files
-ag () {
-  local port="${2:-./*}"
-  git grep -i $1 -- $port ':(exclude)*.snap'
+debug () {
+  node --inspect-brk node_modules/.bin/jest $@
+  opn chrome://inspect
+}
+
+
+# check for dead links on a given wikipedia URL, excluding some stuff that tends to be always alive are not receptive to bot hits
+
+
+#http://seqanswers.com/forums/showthread.php?t=23166
+function sortblast {
+    sort -k1,1 -k12,12gr -k11,11g -k3,3gr $1 | sort -u -k1,1 --merge > $2
 }
 
 
@@ -39,7 +53,6 @@ PERL_MB_OPT="--install_base \"/home/cdiesh/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/cdiesh/perl5"; export PERL_MM_OPT;
 
 
-
 bindkey "^P" history-beginning-search-backward
 bindkey "^N" history-beginning-search-forward
 
@@ -49,3 +62,7 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 export PATH=$PATH:~/go/bin:~/bin
+export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+source /home/linuxbrew/.linuxbrew/Cellar/z/1.9/etc/profile.d/z.sh

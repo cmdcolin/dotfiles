@@ -6,6 +6,7 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+Plug 'tpope/vim-sensible'
 Plug 'editorconfig/editorconfig-vim' " editorconfig, always not fucking working
 Plug 'tpope/vim-commentary' " allows typing v-select block then gc to comment block
 Plug 'tpope/vim-fugitive' " allows some git commands inside vim
@@ -18,14 +19,12 @@ Plug 'Xuyuanp/nerdtree-git-plugin' " display files as modified from git in nerdt
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'yegappan/mru'
+Plug 'lifepillar/vim-mucomplete'
 Plug 'Quramy/tsuquyomi'
 Plug 'leafgarland/typescript-vim'
 call plug#end()
 colorscheme onedark
 let g:airline#extensions#tabline#enabled = 1
-autocmd vimenter * NERDTree
-autocmd VimEnter * wincmd p
-
 "closes nerdtree on last
 set mouse=a
 set autoread
@@ -36,26 +35,31 @@ set nowb
 
 let NERDTreeMouseMode=3
 let g:ale_fixers = ['eslint','standard']
-
-
-
 let g:ale_fix_on_save = 1
-set backspace=indent,eol,start " for some reason backspace doesn't work normally, wtf
+
 set list
-let g:EditorConfig_exclude_patterns = ['fugitive://.*']
 
-autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-:command -nargs=+ Ggr execute 'silent Ggrep!' <q-args> | cw | redraw!
+" quit if nerdtree is last window
+autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
+autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
 
-nnoremap  <C-F> :Ggr<SPACE>
+
+
+
+"
+nnoremap  <C-F> :Rg<ENTER>
+nnoremap  <C-G> :GFiles<ENTER>
 set completeopt+=menuone
 set completeopt+=noselect
 set shortmess+=c   " Shut off completion messages
 set belloff+=ctrlg " If Vim beeps during completion
 let g:mucomplete#enable_auto_at_startup = 1
 
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
+autocmd VimEnter * NERDTree
+autocmd VimEnter * wincmd p
+
+
+set ignorecase
+set smartcase
+set backspace=indent,eol,start
 
