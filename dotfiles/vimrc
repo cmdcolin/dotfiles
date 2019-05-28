@@ -34,15 +34,16 @@ set nobackup
 set nowb
 
 let NERDTreeMouseMode=3
-let g:ale_fixers = ['eslint','standard']
+let g:ale_fixers = ['eslint']
 let g:ale_fix_on_save = 1
 
 set list
 
 " quit if nerdtree is last window
 autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-autocmd BufEnter * if &modifiable | NERDTreeFind | wincmd p | endif
+autocmd BufEnter * if &modifiable && winwidth('%')>100 && &filetype !=# 'gitcommit' | NERDTreeFind | wincmd p | endif
 
+autocmd VimEnter * if winwidth('%')>100 && &filetype !=# 'gitcommit' | NERDTree | wincmd p | endif
 
 
 
@@ -55,8 +56,6 @@ set shortmess+=c   " Shut off completion messages
 set belloff+=ctrlg " If Vim beeps during completion
 let g:mucomplete#enable_auto_at_startup = 1
 
-autocmd VimEnter * NERDTree
-autocmd VimEnter * wincmd p
 
 
 set ignorecase
