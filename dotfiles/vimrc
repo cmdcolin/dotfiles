@@ -6,16 +6,15 @@ if empty(glob('~/.vim/autoload/plug.vim'))
 endif
 
 call plug#begin('~/.vim/plugged')
+Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-sensible'
-Plug 'editorconfig/editorconfig-vim' " editorconfig, always not fucking working
-Plug 'tpope/vim-commentary' " allows typing v-select block then gc to comment block
-Plug 'tpope/vim-fugitive' " allows some git commands inside vim
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-fugitive'
+Plug 'tpope/vim-vinegar'
 Plug 'joshdick/onedark.vim' " theme
 Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline' " status line
-Plug 'scrooloose/nerdtree'
 Plug 'w0rp/ale' " autofix and linting
-Plug 'Xuyuanp/nerdtree-git-plugin' " display files as modified from git in nerdtree
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'yegappan/mru'
@@ -25,7 +24,6 @@ Plug 'leafgarland/typescript-vim'
 call plug#end()
 colorscheme onedark
 let g:airline#extensions#tabline#enabled = 1
-"closes nerdtree on last
 set mouse=a
 set autoread
 set nu
@@ -33,21 +31,11 @@ set noswapfile
 set nobackup
 set nowb
 
-let NERDTreeMouseMode=3
 let g:ale_fixers = ['eslint']
 let g:ale_fix_on_save = 1
 
 set list
 
-" quit if nerdtree is last window
-autocmd BufEnter * if (winnr("$") == 1 && exists("b:NERDTree") && b:NERDTree.isTabTree()) | q | endif
-autocmd BufEnter * if &modifiable && winwidth('%')>100 && &filetype !=# 'gitcommit' | NERDTreeFind | wincmd p | endif
-
-autocmd VimEnter * if winwidth('%')>100 && &filetype !=# 'gitcommit' | NERDTree | wincmd p | endif
-
-
-
-"
 nnoremap  <C-F> :Rg<ENTER>
 nnoremap  <C-G> :GFiles<ENTER>
 set completeopt+=menuone
@@ -62,3 +50,20 @@ set ignorecase
 set smartcase
 set backspace=indent,eol,start
 
+let g:netrw_banner = 0
+" let g:netrw_browse_split = 4
+let g:netrw_liststyle=3
+" let g:netrw_altv = 1
+let g:netrw_winsize = 20
+
+augroup ProjectDrawer
+  autocmd!
+  autocmd VimEnter * :Vexplore | wincmd p
+augroup END
+
+autocmd BufEnter * :e.
+autocmd FileType netrw setl bufhidden=delete
+aug netrw_close
+  au!
+  au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw"|q|endif
+aug END
