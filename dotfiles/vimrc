@@ -10,7 +10,7 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug 'justinmk/vim-dirvish'
+Plug 'tpope/vim-vinegar'
 Plug 'kristijanhusak/vim-dirvish-git'
 Plug 'joshdick/onedark.vim' " theme
 Plug 'altercation/vim-colors-solarized'
@@ -50,5 +50,14 @@ let g:mucomplete#enable_auto_at_startup = 1
 set ignorecase
 set smartcase
 set backspace=indent,eol,start
+let g:netrw_banner = 0
+let g:netrw_liststyle=3
+let g:netrw_winsize = 20
 
 
+" A nerdtree like sidebar...hard to use properly though
+"
+" augroup ProjectDrawer
+"   autocmd!
+"   autocmd VimEnter * :Vexplore | wincmd p
+" augroup END
