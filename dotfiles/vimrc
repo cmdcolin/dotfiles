@@ -10,7 +10,8 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
-Plug 'tpope/vim-vinegar'
+Plug 'justinmk/vim-dirvish'
+Plug 'kristijanhusak/vim-dirvish-git'
 Plug 'joshdick/onedark.vim' " theme
 Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline' " status line
@@ -50,20 +51,4 @@ set ignorecase
 set smartcase
 set backspace=indent,eol,start
 
-let g:netrw_banner = 0
-" let g:netrw_browse_split = 4
-let g:netrw_liststyle=3
-" let g:netrw_altv = 1
-let g:netrw_winsize = 20
 
-augroup ProjectDrawer
-  autocmd!
-  autocmd VimEnter * :Vexplore | wincmd p
-augroup END
-
-autocmd BufEnter * :e.
-autocmd FileType netrw setl bufhidden=delete
-aug netrw_close
-  au!
-  au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw"|q|endif
-aug END
