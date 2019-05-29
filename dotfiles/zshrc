@@ -27,10 +27,6 @@ alias pbpaste='xclip -selection clipboard -o'
 alias pserver='python -m RangeHTTPServer'
 alias smaller="parallel convert -resize 50% {} resized.{} ::: *.jpg"
 
-debug () {
-  node --inspect-brk node_modules/.bin/jest $@
-  opn chrome://inspect
-}
 
 
 # check for dead links on a given wikipedia URL, excluding some stuff that tends to be always alive are not receptive to bot hits
@@ -63,6 +59,8 @@ export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source /home/linuxbrew/.linuxbrew/Cellar/z/1.9/etc/profile.d/z.sh
+
+
 # export NVM_DIR="$HOME/.nvm"
 # [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 # [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion

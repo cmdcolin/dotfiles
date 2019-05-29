@@ -28,15 +28,19 @@ colorscheme onedark
 " autofix using eslint, lifesaver...
 let g:ale_fixers = ['eslint']
 let g:ale_fix_on_save = 1
+let g:ale_lint_on_text_changed = 'never'
 
 " use Ctrl+F to search in files <fzf based>
 nnoremap  <C-F> :Rg<ENTER>
 " use Ctrl+G to find file names <fzf based>
 nnoremap  <C-G> :GFiles<ENTER>
+" use Ctrl+H to open most recently used files list
+nnoremap  <C-H> :MRU<ENTER>
 
 let g:mucomplete#enable_auto_at_startup = 1
 set completeopt+=menuone
 set completeopt+=noselect
+set belloff+=ctrlg " If Vim beeps during completion
 
 
 set mouse=a
@@ -57,3 +61,6 @@ if has("mouse_sgr")
 else
     set ttymouse=xterm2
 end
+
+let MRU_Window_Height = 20
+
