@@ -1,4 +1,6 @@
 set t_Co=256
+
+
 if empty(glob('~/.vim/autoload/plug.vim'))
   silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
       \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -11,7 +13,6 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
-Plug 'kristijanhusak/vim-dirvish-git'
 Plug 'joshdick/onedark.vim' " theme
 Plug 'altercation/vim-colors-solarized'
 Plug 'vim-airline/vim-airline' " status line
@@ -53,19 +54,23 @@ set backspace=indent,eol,start
 let g:netrw_banner = 0
 let g:netrw_liststyle=3
 let g:netrw_winsize = 20
+let g:netrw_preview = 1
 
 
-" A nerdtree like sidebar...hard to use properly though
 
-augroup ProjectDrawer
-  autocmd!
-  autocmd VimEnter * :Vexplore | wincmd p
-augroup END
-:e %:h
+" augroup ProjectDrawer
+"   autocmd!
+"   autocmd VimEnter * :Vexplore
+" augroup END
 
-autocmd FileType netrw setl bufhidden=delete
-aug netrw_close
-  au!
-  au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw"|q|endif
-aug END
 
+" autocmd FileType netrw setl bufhidden=delete
+" aug netrw_close
+"   au!
+"   au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw"|q|endif
+" aug END
+
+
+" au FileType netrw hi CursorLine gui=underline
+" au FileType netrw au BufEnter <buffer> hi CursorLine gui=underline
+" au FileType netrw au BufLeave <buffer> hi clear CursorLine
