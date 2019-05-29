@@ -13,10 +13,9 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
-Plug 'joshdick/onedark.vim' " theme
-Plug 'altercation/vim-colors-solarized'
-Plug 'vim-airline/vim-airline' " status line
-Plug 'w0rp/ale' " autofix and linting
+Plug 'joshdick/onedark.vim'
+Plug 'vim-airline/vim-airline'
+Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
 Plug 'yegappan/mru'
@@ -25,52 +24,36 @@ Plug 'Quramy/tsuquyomi'
 Plug 'leafgarland/typescript-vim'
 call plug#end()
 colorscheme onedark
-let g:airline#extensions#tabline#enabled = 1
-set mouse=a
-set autoread
-set nu
-set noswapfile
-set nobackup
-set nowb
 
+" autofix using eslint, lifesaver...
 let g:ale_fixers = ['eslint']
 let g:ale_fix_on_save = 1
 
-set list
-
+" use Ctrl+F to search in files <fzf based>
 nnoremap  <C-F> :Rg<ENTER>
+" use Ctrl+G to find file names <fzf based>
 nnoremap  <C-G> :GFiles<ENTER>
+
+let g:mucomplete#enable_auto_at_startup = 1
 set completeopt+=menuone
 set completeopt+=noselect
-set shortmess+=c   " Shut off completion messages
-set belloff+=ctrlg " If Vim beeps during completion
-let g:mucomplete#enable_auto_at_startup = 1
 
 
-
+set mouse=a
+set nu
+set list
 set ignorecase
 set smartcase
-set backspace=indent,eol,start
 let g:netrw_banner = 0
 let g:netrw_liststyle=3
 let g:netrw_winsize = 20
 let g:netrw_preview = 1
 
 
-
-" augroup ProjectDrawer
-"   autocmd!
-"   autocmd VimEnter * :Vexplore
-" augroup END
-
-
-" autocmd FileType netrw setl bufhidden=delete
-" aug netrw_close
-"   au!
-"   au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw"|q|endif
-" aug END
-
-
-" au FileType netrw hi CursorLine gui=underline
-" au FileType netrw au BufEnter <buffer> hi CursorLine gui=underline
-" au FileType netrw au BufLeave <buffer> hi clear CursorLine
+" allow using mouse to resize splits
+" https://superuser.com/questions/549930/cant-resize-vim-splits-inside-tmux
+if has("mouse_sgr")
+    set ttymouse=sgr
+else
+    set ttymouse=xterm2
+end
