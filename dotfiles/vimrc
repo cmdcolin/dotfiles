@@ -56,8 +56,16 @@ let g:netrw_winsize = 20
 
 
 " A nerdtree like sidebar...hard to use properly though
-"
-" augroup ProjectDrawer
-"   autocmd!
-"   autocmd VimEnter * :Vexplore | wincmd p
-" augroup END
+
+augroup ProjectDrawer
+  autocmd!
+  autocmd VimEnter * :Vexplore | wincmd p
+augroup END
+:e %:h
+
+autocmd FileType netrw setl bufhidden=delete
+aug netrw_close
+  au!
+  au WinEnter * if winnr('$') == 1 && getbufvar(winbufnr(winnr()), "&filetype") == "netrw"|q|endif
+aug END
+

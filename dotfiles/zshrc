@@ -19,6 +19,7 @@ alias sau="sudo apt update&&sudo apt upgrade"
 alias cov="yarn test --coverage && opn coverage/lcov-report/index.html"
 alias ydl="youtube-dl"
 alias yda="youtube-dl -f 'bestaudio[ext=m4a]' "
+alias open="xdg-open"
 alias grep="grep --color=never"
 alias unarx="parallel unar {} ::: ~/Downloads/*.7z(.N) ~/Downloads/*.rar(.N) ~/Downloads/*.zip(.N)"
 alias pbcopy='xclip -selection clipboard'
