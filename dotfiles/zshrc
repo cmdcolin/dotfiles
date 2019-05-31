@@ -1,6 +1,46 @@
-
 [[ -z "$TMUX" ]] && exec tmux -2
 [[ $- != *i* ]] && return
+
+export TERM="xterm-256color"
+DEFAULT_USER=$USER
+
+export ZSH="/home/cdiesh/.oh-my-zsh"
+
+# Which plugins would you like to load?
+# Standard plugins can be found in ~/.oh-my-zsh/plugins/*
+# Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
+# Example format: plugins=(rails git textmate ruby lighthouse)
+# Add wisely, as too many plugins slow down shell startup.
+plugins=(git)
+
+ZSH_THEME="mh"
+source $ZSH/oh-my-zsh.sh
+
+# User configuration
+
+# export MANPATH="/usr/local/man:$MANPATH"
+
+# You may need to manually set your language environment
+# export LANG=en_US.UTF-8
+
+# Preferred editor for local and remote sessions
+# if [[ -n $SSH_CONNECTION ]]; then
+#   export EDITOR='vim'
+# else
+#   export EDITOR='mvim'
+# fi
+
+# Compilation flags
+# export ARCHFLAGS="-arch x86_64"
+
+# Set personal aliases, overriding those provided by oh-my-zsh libs,
+# plugins, and themes. Aliases can be placed here, though oh-my-zsh
+# users are encouraged to define aliases within the ZSH_CUSTOM folder.
+# For a full list of active aliases, run `alias`.
+#
+# Example aliases
+# alias zshconfig="mate ~/.zshrc"
+# alias ohmyzsh="mate ~/.oh-my-zsh"
 
 
 export EDITOR="vim"
@@ -11,9 +51,6 @@ alias y="yarn"
 alias w="curl wttr.in"
 alias tk="tmux kill-server"
 alias ag="rg"
-alias ls="exa"
-alias ll="exa -l"
-alias lt="exa -lsnew"
 alias ff="fd|grep"
 alias sau="sudo apt update&&sudo apt upgrade"
 alias cov="yarn test --coverage && opn coverage/lcov-report/index.html"
@@ -29,14 +66,6 @@ alias smaller="parallel convert -resize 50% {} resized.{} ::: *.jpg"
 
 
 
-# check for dead links on a given wikipedia URL, excluding some stuff that tends to be always alive are not receptive to bot hits
-
-
-#http://seqanswers.com/forums/showthread.php?t=23166
-function sortblast {
-    sort -k1,1 -k12,12gr -k11,11g -k3,3gr $1 | sort -u -k1,1 --merge > $2
-}
-
 
 export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
 HISTFILE="$HOME/.zsh_history"
@@ -50,18 +79,9 @@ PERL_MB_OPT="--install_base \"/home/cdiesh/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/cdiesh/perl5"; export PERL_MM_OPT;
 
 
-bindkey "^P" history-beginning-search-backward
-bindkey "^N" history-beginning-search-forward
-
-
 export PATH=$PATH:~/go/bin:~/bin
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 source /home/linuxbrew/.linuxbrew/Cellar/z/1.9/etc/profile.d/z.sh
 
-
-# export NVM_DIR="$HOME/.nvm"
-# [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-# nvm use system
