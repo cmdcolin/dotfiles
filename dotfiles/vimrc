@@ -37,6 +37,8 @@ nnoremap  <C-G> :GFiles<ENTER>
 " use Ctrl+H to open most recently used files list
 nnoremap  <C-H> :MRU<ENTER>
 
+
+" completion args
 let g:mucomplete#enable_auto_at_startup = 1
 set completeopt+=menuone
 set completeopt+=noselect
@@ -44,10 +46,21 @@ set belloff+=ctrlg " If Vim beeps during completion
 
 
 set mouse=a
+
+" line numbers
 set nu
+
+" display extra characters
 set list
+
+" search ignore case
 set ignorecase
+
+" search ignore case unless something is upper cased
 set smartcase
+
+" netrw/vim-vinegar, no nerdtree like sidebar is used. instead depend on fzf
+" and occaisional browsing of the netrw via '-'
 let g:netrw_banner = 0
 let g:netrw_liststyle=3
 let g:netrw_winsize = 20
@@ -62,5 +75,8 @@ else
     set ttymouse=xterm2
 end
 
+" larger MRU window height
 let MRU_Window_Height = 20
 
+" swp file location
+set directory^=$HOME/.vim/tmp//
