@@ -2,16 +2,15 @@
 [[ $- != *i* ]] && return
 
 export TERM="xterm-256color"
-export ZSH="/home/cdiesh/.oh-my-zsh"
+# export ZSH="/home/cdiesh/.oh-my-zsh"
 
-plugins=(git)
-
-ZSH_THEME="avit"
-source $ZSH/oh-my-zsh.sh
+# ZSH_THEME="avit"
+# source $ZSH/oh-my-zsh.sh
 
 
 export EDITOR="vim"
 alias stp="git subtree push --prefix dist origin gh-pages"
+alias ll="ls -l"
 alias e="vim"
 alias g="git status -uno"
 alias y="yarn"
@@ -19,8 +18,9 @@ alias w="curl wttr.in"
 alias tk="tmux kill-server"
 alias ag="rg"
 alias ff="fd|grep"
+alias yy="yarn lint --cache"
 alias sau="sudo apt update&&sudo apt upgrade"
-alias cov="yarn test --coverage && opn coverage/lcov-report/index.html"
+alias cov="yarn test --coverage && open coverage/lcov-report/index.html"
 alias ydl="youtube-dl"
 alias yda="youtube-dl -f 'bestaudio[ext=m4a]' "
 alias open="xdg-open"
@@ -50,5 +50,11 @@ export PATH=$PATH:~/go/bin:~/bin
 export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-source /home/linuxbrew/.linuxbrew/Cellar/z/1.9/etc/profile.d/z.sh
 
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+unsetopt LIST_BEEP
+export PATH=$PATH:~/.local/bin

@@ -14,7 +14,6 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'joshdick/onedark.vim'
-Plug 'vim-airline/vim-airline'
 Plug 'w0rp/ale'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
@@ -26,7 +25,7 @@ call plug#end()
 colorscheme onedark
 
 " autofix using eslint, lifesaver...
-let g:ale_fixers = ['eslint']
+let g:ale_fixers = {'javascript': ['eslint'], 'json': ['jq'], 'python': ['black']}
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
 
@@ -80,3 +79,9 @@ let MRU_Window_Height = 20
 
 " swp file location
 set directory^=$HOME/.vim/tmp//
+
+" disable page up/page down due to clumsy fingers
+noremap <PageDown> <Nop>
+noremap <PageUp> <Nop>
+set noeb vb t_vb=
+
