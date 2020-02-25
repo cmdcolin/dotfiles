@@ -9,7 +9,7 @@ export TERM="xterm-256color"
 
 
 export EDITOR="vim"
-alias stp="git subtree push --prefix dist origin gh-pages"
+alias stp="git subtree push --prefix build origin gh-pages"
 alias ll="ls -l"
 alias e="vim"
 alias g="git status -uno"
@@ -17,6 +17,8 @@ alias y="yarn"
 alias w="curl wttr.in"
 alias tk="tmux kill-server"
 alias ag="rg"
+alias fd="fdfind"
+alias gst="vim '+Gedit :'"
 alias ff="fd|grep"
 alias yy="yarn lint --cache"
 alias sau="sudo apt update&&sudo apt upgrade"
@@ -31,10 +33,16 @@ alias pbpaste='xclip -selection clipboard -o'
 alias pserver='python -m RangeHTTPServer'
 alias smaller="parallel convert -resize 50% {} resized.{} ::: *.jpg"
 
+function gitbd() {
+  local r="refs"
+  [[ $1 ]] && r="$r/remotes/$1" || r="$r/heads"
+  while read l; do
+    echo ${l}
+    echo $'\t' $(git log --date=short -1 --format="%ad %h  %s" ${l})
+  done <<< $(git for-each-ref --format='%(refname:short)' --sort=-committerdate ${r})
+}
 
-
-
-export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
+#export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
 HISTFILE="$HOME/.zsh_history"
 HISTSIZE=10000000
 SAVEHIST=10000000
@@ -52,9 +60,10 @@ export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
-
 unsetopt LIST_BEEP
 export PATH=$PATH:~/.local/bin
+
+
+# find src -type f -exec file --mime {} \+ | grep utf
+
+# iconv -f UTF8 -t US-ASCII
