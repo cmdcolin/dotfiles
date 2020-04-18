@@ -24,7 +24,12 @@ Plug 'leafgarland/typescript-vim'
 call plug#end()
 colorscheme onedark
 
+autocmd BufEnter *.tsx :setlocal filetype=typescript
+
+
 " autofix using eslint, lifesaver...
+"
+let g:ale_linter_aliases = {'typescriptreact': 'typescript'}
 let g:ale_fixers = {'typescript':['eslint'],'javascript': ['eslint'], 'json': ['jq'], 'python': ['black']}
 let g:ale_fix_on_save = 1
 let g:ale_lint_on_text_changed = 'never'
@@ -85,3 +90,10 @@ noremap <PageDown> <Nop>
 noremap <PageUp> <Nop>
 set noeb vb t_vb=
 
+
+" Console log from insert mode; Puts focus inside parentheses
+imap cll console.log()<Esc><S-f>(a
+" Console log from visual mode on next line, puts visual selection inside parentheses
+vmap cll yocll<Esc>p
+" Console log from normal mode, inserted on next line with word your on inside parentheses
+nmap cll yiwocll<Esc>p
