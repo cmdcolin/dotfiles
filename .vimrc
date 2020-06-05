@@ -18,6 +18,8 @@ call plug#end()
 colorscheme onedark
 set nu
 set mouse=a
+set clipboard=unnamedplus
+
 
 " use Ctrl+F to search in files <fzf based>
 nnoremap  <C-F> :Rg<ENTER>
