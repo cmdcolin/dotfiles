@@ -5,8 +5,8 @@ A list of my dotfiles
 Includes
 
 - tmux with weather using wttr.in in statusline
-- zshrc with oh-my-zsh and a simple theme
-- neovim with vim-plug, coc.vim (used to be normal vim+ale)
+- zsh (used to have oh-my-zsh but disabled)
+- neovim with vim-plug, coc.vim (used to be normal vim+ale, switched to coc.vim)
 
 ## Install
 
