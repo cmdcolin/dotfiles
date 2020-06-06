@@ -49,9 +49,13 @@ These things enabled me to become much less reliant on a file browser inside vim
 #### Paned browser setup
 
 
-There is something called paned browser that has two columns, artist and album. I like to collapse this into one column so it is simply a list of <artist - album>. For various artists and splits, it needs to be specially configured to looks for whether it is a compilation or split using performer and albumartist id3 tag
+There is something called paned browser that has two columns, artist and album. I like to collapse this into one column so it is simply a list of <artist - album>.
    
-   <performer|<performer>|<albumartist|<albumartist>|<artist>>>  -  <album>
+For various artists and splits, it needs to be specially configured to looks for whether it is a compilation or split using performer and albumartist id3 tag
+   
+    <performer|<performer>|<albumartist|<albumartist>|<artist>>>  -  <album>
+    
+    
    
 Then I also turn on "Last played" and "Added" columns in the playlist browser to sort by last played and recently added
 
