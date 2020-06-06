@@ -6,7 +6,7 @@ Includes
 
 - tmux with weather using wttr.in in statusline
 - zshrc with oh-my-zsh and a simple theme
-- vim with vim-plug
+- neovim with vim-plug, coc.vim (used to be normal vim+ale)
 
 ## Install
 
@@ -14,10 +14,10 @@ Just copy or symlink these files to your home folder. It's not intricately crazy
 
 ## Details about my setup
 
-* Computer - Samsung laptop with 8gb RAM, 256gb SSD, hi-res screen
-* OS - Ubuntu 19.04
-* Music player - cmus
-* Text editor - vim
+* Computer - Dell laptop with 512gb RAM, i9, SSD
+* OS - Ubuntu 20
+* Music player - quod libet
+* Text editor - neovim
 * Browser - Chromium
 * Browser Add-ons - Dark Reader
 
@@ -39,7 +39,28 @@ These things enabled me to become much less reliant on a file browser inside vim
 
 ## Random other notes
 
-### C*mus setup
+
+
+### Quod libet setup
+
+
+![](img/2.png)
+
+#### Paned browser setup
+
+
+There is something called paned browser that has two columns, artist and album. I like to collapse this into one column so it is simply a list of <artist - album>. For various artists and splits, it needs to be specially configured to looks for whether it is a compilation or split using performer and albumartist id3 tag
+   
+   <performer|<performer>|<albumartist|<albumartist>|<artist>>>  -  <album>
+   
+Then I also turn on "Last played" and "Added" columns in the playlist browser to sort by last played and recently added
+
+
+### C*mus setup (old)
+
+I used to use cmus command line audio player. It worked well but I never felt entirely comfy in it. Nevertheless here are some notes
+
+
 
 #### Recently added playlist
 
