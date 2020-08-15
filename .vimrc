@@ -19,6 +19,7 @@ colorscheme onedark
 set nu
 set mouse=a
 set clipboard=unnamedplus
+set ignorecase
 
 
 " use Ctrl+F to search in files <fzf based>
@@ -30,6 +31,24 @@ set mouse=a
 
 
 set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
+
+
+" https://gist.github.com/nervetattoo/3652878
+" Console log from insert mode; Puts focus inside parentheses
+imap cll console.log({});<Esc>==f{a
+" Console log from visual mode on next line, puts visual selection inside parentheses
+vmap cll yocll<Esc>p
+" Console log from normal mode, inserted on next line with word your on inside parentheses
+nmap cll yiwocll<Esc>p
+
+imap ckk console.log('');<Esc>==f'a
+" Console log from visual mode on next line, puts visual selection inside parentheses
+vmap ckk yockk<Esc>p
+" Console log from normal mode, inserted on next line with word your on inside parentheses
+nmap ckk yiwockk<Esc>p
+
+" Fast save
+noremap ww :w<CR>
 
 
 nmap <silent> gd <Plug>(coc-definition)

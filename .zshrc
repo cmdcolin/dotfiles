@@ -54,6 +54,5 @@ export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
-unsetopt BEEP
 
+source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
