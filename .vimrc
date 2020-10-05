@@ -14,7 +14,18 @@ Plug 'junegunn/fzf.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'
 call plug#end()
-
+" onedark.vim override: Don't set a background color when running in a terminal;
+" just use the terminal's background color
+" `gui` is the hex color code used in GUI mode/nvim true-color mode
+" `cterm` is the color code used in 256-color mode
+" `cterm16` is the color code used in 16-color mode
+if (has("autocmd") && !has("gui_running"))
+  augroup colorset
+    autocmd!
+    let s:white = { "gui": "#ABB2BF", "cterm": "145", "cterm16" : "7" }
+    autocmd ColorScheme * call onedark#set_highlight("Normal", { "fg": s:white }) " `bg` will not be styled since there is no `bg` setting
+  augroup END
+endif
 colorscheme onedark
 set nu
 set mouse=a
@@ -46,6 +57,13 @@ imap ckk console.log('');<Esc>==f'a
 vmap ckk yockk<Esc>p
 " Console log from normal mode, inserted on next line with word your on inside parentheses
 nmap ckk yiwockk<Esc>p
+
+imap cjj console.log();<Esc>==f(a
+" Console log from visual mode on next line, puts visual selection inside parentheses
+vmap cjj yockk<Esc>p
+" Console log from normal mode, inserted on next line with word your on inside parentheses
+nmap cjj yiwockk<Esc>p
+
 
 " Fast save
 noremap ww :w<CR>
