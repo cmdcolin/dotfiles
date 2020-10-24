@@ -34,30 +34,28 @@ set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
 
 
 " https://gist.github.com/nervetattoo/3652878
-" Console log from insert mode; Puts focus inside parentheses
+" Automatically generates console.log({|}) where | is cursor
 imap cll console.log({});<Esc>==f{a
-" Console log from visual mode on next line, puts visual selection inside parentheses
 vmap cll yocll<Esc>p
-" Console log from normal mode, inserted on next line with word your on inside parentheses
 nmap cll yiwocll<Esc>p
 
+" Automatically generates console.log('|') where | is cursor
 imap ckk console.log('');<Esc>==f'a
-" Console log from visual mode on next line, puts visual selection inside parentheses
 vmap ckk yockk<Esc>p
-" Console log from normal mode, inserted on next line with word your on inside parentheses
 nmap ckk yiwockk<Esc>p
 
+" Automatically generates console.log(|) where | is cursor
 imap cjj console.log();<Esc>==f(a
-" Console log from visual mode on next line, puts visual selection inside parentheses
 vmap cjj yockk<Esc>p
-" Console log from normal mode, inserted on next line with word your on inside parentheses
 nmap cjj yiwockk<Esc>p
 
 
-" Fast save
+" Save with ww instead of :w
 noremap ww :w<CR>
 
 
+" Goto definition with gd
 nmap <silent> gd <Plug>(coc-definition)
+
 
 inoremap <silent><expr> <Tab> coc#refresh()
