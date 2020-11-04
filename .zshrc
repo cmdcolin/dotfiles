@@ -1,3 +1,7 @@
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
 [[ -z "$TMUX" ]] && exec tmux -2
 [[ $- != *i* ]] && return
 
@@ -7,14 +11,18 @@ alias ll="ls -l"
 alias e="vim"
 alias g="git status -uno"
 alias y="yarn"
+alias gb="git branch --sort=-committerdate"
+alias ys="yarn start"
 alias w="curl v2.wttr.in"
 alias tk="tmux kill-server"
 alias ag="rg"
 alias gg="glances --enable-plugin sensors"
 alias fd="fdfind"
+alias gitt="git log --oneline --graph --all --no-decorate"
 alias gst="vim '+Gedit :'"
-alias vim="nvim"
+alias vim="~/Downloads/nvim.appimage"
 alias ff="fd|grep"
+alias ww="watch -n.1 \"cat /proc/cpuinfo | grep \\\"^[c]pu MHz\\\"\""
 alias yy="yarn lint --cache"
 alias sau="sudo apt update&&sudo apt upgrade"
 alias cov="yarn test --coverage && open coverage/lcov-report/index.html"
@@ -48,11 +56,19 @@ PERL_MM_OPT="INSTALL_BASE=/home/cdiesh/perl5"; export PERL_MM_OPT;
 
 
 
-export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-
-
-
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
 source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+unsetopt BEEP
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="/home/cdiesh/.sdkman"
+[[ -s "/home/cdiesh/.sdkman/bin/sdkman-init.sh" ]] && source "/home/cdiesh/.sdkman/bin/sdkman-init.sh"
+
+function vaporwave() {
+  ffmpeg -i "$1" -af "asetrate=44100*0.5,aresample=44100" "`basename $1 .m4a`.vaporwave.m4a"
+}
+
+
+
+export FZF_DEFAULT_COMMAND='rg --files'
+export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
+
