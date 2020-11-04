@@ -10,6 +10,7 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'joshdick/onedark.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'
@@ -28,9 +29,6 @@ nnoremap  <C-F> :Rg<ENTER>
 nnoremap  <C-G> :GFiles<ENTER>
 
 set mouse=a
-
-
-set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
 
 
 " https://gist.github.com/nervetattoo/3652878
