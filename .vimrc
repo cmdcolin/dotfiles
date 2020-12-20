@@ -4,7 +4,7 @@ filetype off
 
 
 call plug#begin(stdpath('data') . '/plugged')
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'neoclide/coc.nvim', {'branch': 'master', 'do': 'yarn install --frozen-lockfile'}
 Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
@@ -33,19 +33,21 @@ set mouse=a
 
 " https://gist.github.com/nervetattoo/3652878
 " Automatically generates console.log({|}) where | is cursor
-imap cll console.log({});<Esc>==f{a
-vmap cll yocll<Esc>p
-nmap cll yiwocll<Esc>p
+inoremap cll console.log({});<esc><left><left>i
+inoremap ckk console.log('');<esc><left><left>i
+inoremap cjj console.log();<esc><left>i
+" vmap cll yocll<Esc>p
+" nmap cll yiwocll<Esc>p
 
-" Automatically generates console.log('|') where | is cursor
-imap ckk console.log('');<Esc>==f'a
-vmap ckk yockk<Esc>p
-nmap ckk yiwockk<Esc>p
+" " Automatically generates console.log('|') where | is cursor
+" imap ckk console.log('');<Esc>==f'a
+" vmap ckk yockk<Esc>p
+" nmap ckk yiwockk<Esc>p
 
-" Automatically generates console.log(|) where | is cursor
-imap cjj console.log();<Esc>==f(a
-vmap cjj yockk<Esc>p
-nmap cjj yiwockk<Esc>p
+" " Automatically generates console.log(|) where | is cursor
+" imap cjj console.log();<Esc>==f(a
+" vmap cjj yockk<Esc>p
+" nmap cjj yiwockk<Esc>p
 
 
 " Save with ww instead of :w
