@@ -6,6 +6,11 @@
     "json",
     "markdown",
     "md",
-    "html"
+    "typescript",
+    "typescriptreact",
+    "html",
+    "yaml",
+    "rust",
+    "r"
   ]
 }
