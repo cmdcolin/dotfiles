@@ -18,9 +18,50 @@ call plug#end()
 
 colorscheme onedark
 set nu
-set mouse=a
 set clipboard=unnamedplus
 set ignorecase
+
+
+" TextEdit might fail if hidden is not set.
+set hidden
+
+" Some servers have issues with backup files, see #649.
+set nobackup
+set nowritebackup
+
+" Give more space for displaying messages.
+set cmdheight=2
+
+" Having longer updatetime (default is 4000 ms = 4 s) leads to noticeable
+" delays and poor user experience.
+set updatetime=100
+
+" Don't pass messages to |ins-completion-menu|.
+set shortmess+=c
+
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
+
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (coc#rpc#ready())
+    call CocActionAsync('doHover')
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
+autocmd CursorHold * silent call CocActionAsync('highlight')
+autocmd CursorHold * silent call CocActionAsync('doHover')
+
 
 
 " use Ctrl+F to search in files <fzf based>
@@ -36,26 +77,10 @@ set mouse=a
 inoremap cll console.log({});<esc><left><left>i
 inoremap ckk console.log('');<esc><left><left>i
 inoremap cjj console.log();<esc><left>i
-" vmap cll yocll<Esc>p
-" nmap cll yiwocll<Esc>p
-
-" " Automatically generates console.log('|') where | is cursor
-" imap ckk console.log('');<Esc>==f'a
-" vmap ckk yockk<Esc>p
-" nmap ckk yiwockk<Esc>p
-
-" " Automatically generates console.log(|) where | is cursor
-" imap cjj console.log();<Esc>==f(a
-" vmap cjj yockk<Esc>p
-" nmap cjj yiwockk<Esc>p
-
 
 " Save with ww instead of :w
 noremap ww :w<CR>
 
-
 " Goto definition with gd
 nmap <silent> gd <Plug>(coc-definition)
 
-
-inoremap <silent><expr> <Tab> coc#refresh()
