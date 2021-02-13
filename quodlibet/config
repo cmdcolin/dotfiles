@@ -1,0 +1,84 @@
+[settings]
+columns = <performer|<performer>|<albumartist|<albumartist>|<artist>>>  -  <album>,~artist~title,~#track,~#length,~year,genre,~#lastplayed,~#added,comment
+	
+default_rating = 0.5
+scan = /home/cdiesh/Music
+
+[memory]
+browser = SearchBar
+browser_collectionbrowser_maximized = 0
+browser_collectionbrowser_position = 506 568
+browser_collectionbrowser_size_ = 600 400
+browser_panedbrowser_maximized = 0
+browser_panedbrowser_position = 322 277
+browser_panedbrowser_size_ = 600 400
+browser_playlistsbrowser_maximized = 0
+browser_playlistsbrowser_position = 222 177
+browser_playlistsbrowser_size_ = 600 400
+browser_searchbar_maximized = 0
+browser_searchbar_position = 222 177
+browser_searchbar_size_ = 600 400
+chooser_dir = /home/cdiesh/Music
+column_expands = <performer|<performer>|<albumartist|<albumartist>|<artist>>>  -  <album>,0,~artist~title,1,~year,1,genre,1,~#lastplayed,0,~#added,0,comment,1
+	
+column_widths = <performer|<performer>|<albumartist|<albumartist>|<artist>>>  -  <album>,228,~artist~title,-1,~year,-1,genre,-1,~#lastplayed,157,~#added,143,comment,-1
+	
+open_browsers = 
+prefs_page = songlist
+queue = True
+queue_disable = False
+queue_expanded = True
+queue_position = 0.5478119935170178
+quodlibet_information_maximized = 0
+quodlibet_information_position = 676 345
+quodlibet_information_size_ = 496 400
+quodlibet_last_active_version = 4.3.0
+quodlibet_maximized = 0
+quodlibet_position = 256 238
+quodlibet_properties_maximized = 0
+quodlibet_properties_pos = 0.07760141093474426
+quodlibet_properties_position = 285 189
+quodlibet_properties_size_ = 620 400
+quodlibet_properties_size_single = 567 400
+quodlibet_size_ = 1596 805
+seek = 0
+shuffle = True
+sidebar_pos = 0.25
+song = /home/cdiesh/Music/Ronnie Sundin - Sleepwalk/25 Sleepwalk 25.mp3
+sortby = 0~#track
+	
+volume = 1.0
+
+[player]
+gst_buffer = 3.0
+is_playing = False
+replaygain = true
+replaygain_mode = auto
+time_remaining = true
+
+[browsers]
+albumlist_pos = 0.39969947407963935
+collectionbrowser_pos = 0.4
+covergrid_pos = 0.3996478873239437
+equal_pane_width = false
+pane_mode = Wide
+pane_selection = 1	.
+panedbrowser_pane_widths = 
+panedbrowser_pos = 0.3161094224924012
+panes = <performer|<performer>|<albumartist|<albumartist>|<artist>>>  -  <album>
+playlist = No Voices III
+playlistsbrowser_pos = 0.18734335839598998
+query_text = 
+
+[__config__]
+version = 0
+
+[plugins]
+active_plugins = 
+
+[rename]
+windows = true
+
+[editing]
+alltags = true
+
