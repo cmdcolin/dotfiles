@@ -1,6 +1,4 @@
 set nocompatible
-set t_Co=256
-filetype off
 
 
 call plug#begin(stdpath('data') . '/plugged')
@@ -9,18 +7,32 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
-Plug 'joshdick/onedark.vim'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'leafgarland/typescript-vim'
 Plug 'peitalin/vim-jsx-typescript'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'bluz71/vim-moonfly-colors'
 call plug#end()
 
-colorscheme onedark
+" configure treesitter
+lua << EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+  },
+}
+EOF
+
+
+
+colorscheme moonfly
 set nu
 set clipboard=unnamedplus
 set ignorecase
+set termguicolors
+
 
 
 " TextEdit might fail if hidden is not set.
