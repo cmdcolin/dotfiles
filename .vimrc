@@ -76,9 +76,14 @@ autocmd CursorHold * silent call CocActionAsync('highlight')
 autocmd CursorHold * silent call CocActionAsync('doHover')
 
 
+" From fzf readme
+command! -bang -nargs=* GGrep
+  \ call fzf#vim#grep(
+  \   'git grep --line-number -- '.shellescape(<q-args>), 0,
+  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
 
 " use Ctrl+F to search in files <fzf based>
-nnoremap  <C-F> :Rg<ENTER>
+nnoremap  <C-F> :GGrep<ENTER>
 " use Ctrl+G to find file names <fzf based>
 nnoremap  <C-G> :GFiles<ENTER>
 
@@ -96,4 +101,5 @@ noremap ww :w<CR>
 
 " Goto definition with gd
 nmap <silent> gd <Plug>(coc-definition)
+
 
