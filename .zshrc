@@ -19,11 +19,14 @@ fi
 export EDITOR="vim"
 alias ll="ls -l"
 alias e="vim"
-alias y="yarn"
+alias g="git status"
 alias w="curl v2.wttr.in"
+alias y="yarn"
+alias ss="yarn start"
 alias ag="rg"
 alias fd="fdfind"
 alias ff="fd|grep"
+alias qq="exit"
 alias gb="git branch --sort=-committerdate"
 alias ww="watch -n.1 \"cat /proc/cpuinfo | grep \\\"^[c]pu MHz\\\"\""
 alias yy="yarn lint --cache"
@@ -67,3 +70,6 @@ export FZF_CTRL_T_COMMAND="$FZF_DEFAULT_COMMAND"
 
 source /usr/share/doc/fzf/examples/key-bindings.zsh
 source /usr/share/doc/fzf/examples/completion.zsh
+
+export PATH=$PATH:/home/linuxbrew/.linuxbrew/opt/python@3.9/libexec/bin
+
