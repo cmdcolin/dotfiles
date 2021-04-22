@@ -39,11 +39,6 @@ halves side by side) with tmux and then do either tests on one side of the
 screen or have two split screens. If needed I make a new tmux tab. I close and
 re-open vim a lot which is kind of crazy in a way, but seems to work for me
 
-Hotkeys for launching fzf windows:
-
-- Ctrl+F to search the entire project for a string with `git grep` :GGrep
-- Ctrl+G to search the entire project for a filename `git ls-files` :GFiles
-
 Using fzf for quick file name searches or greps enabled me to become much less
 reliant on a file browser like NERDTree, so I don't use any NERDTree type
 sidebar
