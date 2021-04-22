@@ -13,10 +13,10 @@ It's fun :)
 
 Favorite vim keybindings:
 
-ww - save in vim (instead of :w)
-qq - quit vim (instead of :q)
-ctrl+g - file name search (fzf+git ls-files)
-ctrl+f - file content search (fzf+git grep)
+* ww - save in vim (instead of :w)
+* qq - quit vim (instead of :q)
+* ctrl+g - file name search (fzf+git ls-files)
+* ctrl+f - file content search (fzf+git grep)
 
 These are silly but reduce keypresses and complex key presses substantially
 
