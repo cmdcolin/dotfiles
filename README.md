@@ -11,6 +11,15 @@ Includes
 If you take nothing else from this, try the weather statusline in .tmux.conf!
 It's fun :)
 
+Favorite vim keybindings:
+
+ww - save in vim (instead of :w)
+qq - quit vim (instead of :q)
+ctrl+g - file name search (fzf+git ls-files)
+ctrl+f - file content search (fzf+git grep)
+
+These are silly but reduce keypresses and complex key presses substantially
+
 ## Install
 
 Just copy or symlink these files to your home folder. It's not intricately
