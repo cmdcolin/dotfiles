@@ -26,7 +26,9 @@ alias ss="yarn start"
 alias ag="rg"
 alias fd="fdfind"
 alias ff="fd|grep"
+alias vv="vim"
 alias qq="exit"
+alias bb="git branch --sort=-committerdate| fzf --height=20% |xargs git checkout "
 alias gb="git branch --sort=-committerdate"
 alias ww="watch -n.1 \"cat /proc/cpuinfo | grep \\\"^[c]pu MHz\\\"\""
 alias yy="yarn lint --cache"
@@ -61,6 +63,16 @@ unsetopt BEEP
 
 function vaporwave() {
   ffmpeg -i "$1" -af "asetrate=44100*0.5,aresample=44100" "`basename $1 .m4a`.vaporwave.m4a"
+}
+
+
+function vaporwave666() {
+  ffmpeg -i "$1" -af "asetrate=44100*0.666,aresample=44100" "`basename $1 .m4a`.vaporwave666.m4a"
+}
+
+
+function vaporwave80() {
+  ffmpeg -i "$1" -af "asetrate=44100*0.80,aresample=44100" "`basename $1 .m4a`.vaporwave80.m4a"
 }
 
 

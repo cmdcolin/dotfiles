@@ -35,6 +35,9 @@ set ignorecase
 set termguicolors
 
 
+" disable preview window...
+let g:fzf_preview_window = []
+
 
 " TextEdit might fail if hidden is not set.
 set hidden
