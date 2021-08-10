@@ -28,7 +28,7 @@ crazy so you don't need an installation process
 ## Details about my setup
 
 - Computer - Dell laptop with 32gb RAM, 512GB SSD
-- OS - Ubuntu 20
+- OS - Ubuntu 21.04
 - Music player - quod libet
 - Text editor - neovim+coc.nvim+treesitter+fzf
 - Browser - Chromium
