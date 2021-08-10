@@ -35,6 +35,7 @@ alias yy="yarn lint --cache"
 alias vim="~/.local/bin/nvim"
 alias stp="git subtree push --prefix build origin gh-pages"
 alias sau="sudo apt update && sudo apt upgrade"
+alias saa="appimageupdate ~/.local/bin/nvim"
 alias cov="yarn test --coverage && open coverage/lcov-report/index.html"
 alias ydl="youtube-dl"
 alias yda="youtube-dl -f 'bestaudio[ext=m4a]' "
@@ -84,4 +85,5 @@ source /usr/share/doc/fzf/examples/key-bindings.zsh
 source /usr/share/doc/fzf/examples/completion.zsh
 
 export PATH=$PATH:/home/linuxbrew/.linuxbrew/opt/python@3.9/libexec/bin
+export PATH=$PATH:~/.local/bin/
 

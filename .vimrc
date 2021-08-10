@@ -7,11 +7,16 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
+Plug 'tpope/vim-rhubarb'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-Plug 'bluz71/vim-moonfly-colors'
+Plug 'tjdevries/colorbuddy.vim'
+Plug 'tjdevries/gruvbuddy.nvim'
 call plug#end()
+
+
+lua require('colorbuddy').colorscheme('gruvbuddy')
 
 " configure treesitter
 lua << EOF
@@ -25,7 +30,6 @@ EOF
 
 
 
-colorscheme moonfly
 set nu
 set clipboard=unnamedplus
 set smartcase
