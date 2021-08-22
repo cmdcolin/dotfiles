@@ -8,11 +8,11 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rhubarb'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tjdevries/colorbuddy.vim'
 Plug 'tjdevries/gruvbuddy.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 call plug#end()
 
 
@@ -21,12 +21,17 @@ lua require('colorbuddy').colorscheme('gruvbuddy')
 " configure treesitter
 lua << EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "all", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  ensure_installed = "all",
   highlight = {
-    enable = true,              -- false will disable the whole extension
+    enable = true,
   },
 }
 EOF
+
+nnoremap <leader>ff <cmd>Telescope git_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 
 
@@ -34,10 +39,6 @@ set nu
 set clipboard=unnamedplus
 set smartcase
 set termguicolors
-
-
-" disable preview window...
-let g:fzf_preview_window = []
 
 
 " TextEdit might fail if hidden is not set.
@@ -81,16 +82,6 @@ endfunction
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 
-" From fzf readme
-command! -bang -nargs=* GGrep
-  \ call fzf#vim#grep(
-  \   'git grep --line-number -- '.shellescape(<q-args>), 0,
-  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
-
-" use Ctrl+F to search in files <fzf based>
-nnoremap  <C-F> :GGrep<ENTER>
-" use Ctrl+G to find file names <fzf based>
-nnoremap  <C-G> :GFiles<ENTER>
 
 set mouse=a
 
@@ -109,7 +100,3 @@ noremap qq :q<CR>
 nmap <silent> gd <Plug>(coc-definition)
 
 
-let g:fzf_action = {
-  \ 'ctrl-t': 'tab split',
-  \ 'ctrl-x': 'split',
-  \ 'ctrl-v': 'vsplit' }
