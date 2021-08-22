@@ -15,8 +15,8 @@ Favorite vim keybindings:
 
 * ww - save in vim (instead of :w)
 * qq - quit vim (instead of :q)
-* ctrl+g - file name search (fzf+git ls-files)
-* ctrl+f - file content search (fzf+git grep)
+* ctrl+g - file name search (telescope+git ls-files)
+* ctrl+f - file content search (telescope+live grep)
 
 These are silly but reduce keypresses and complex key presses substantially
 
@@ -30,7 +30,7 @@ crazy so you don't need an installation process
 - Computer - Dell laptop with 32gb RAM, 512GB SSD
 - OS - Ubuntu 21.04
 - Music player - quod libet
-- Text editor - neovim+coc.nvim+treesitter+fzf
+- Text editor - neovim+coc.nvim+treesitter+telescope.nvim
 - Browser - Chromium
 - Browser Add-ons - Dark Reader
 
@@ -39,9 +39,9 @@ halves side by side) with tmux and then do either tests on one side of the
 screen or have two split screens. If needed I make a new tmux tab. I close and
 re-open vim a lot which is kind of crazy in a way, but seems to work for me
 
-Using fzf for quick file name searches or greps enabled me to become much less
-reliant on a file browser like NERDTree, so I don't use any NERDTree type
-sidebar
+Using telescope.nvim for quick file name searches or greps enabled me to become 
+much less reliant on a file browser like NERDTree, so I don't use any NERDTree 
+type sidebar
 
 ## Screenshot
 
