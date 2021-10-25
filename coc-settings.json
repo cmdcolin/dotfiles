@@ -1,16 +1,4 @@
 {
   "eslint.autoFixOnSave": true,
-  "coc.preferences.formatOnSaveFiletypes": [
-    "javascript",
-    "css",
-    "json",
-    "markdown",
-    "md",
-    "typescript",
-    "typescriptreact",
-    "html",
-    "yaml",
-    "rust",
-    "r"
-  ]
+  "coc.preferences.formatOnSaveFiletypes": ["*"]
 }
