@@ -8,11 +8,11 @@ Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-vinegar'
 Plug 'tpope/vim-rhubarb'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'tjdevries/colorbuddy.vim'
 Plug 'tjdevries/gruvbuddy.nvim'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
 call plug#end()
 
 
@@ -28,10 +28,9 @@ require'nvim-treesitter.configs'.setup {
 }
 EOF
 
-nnoremap <leader>ff <cmd>Telescope git_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+let mapleader = ","
+nnoremap <leader>ff <cmd>Rg<cr>
+nnoremap <leader>gg <cmd>Files<cr>
 
 
 
@@ -98,5 +97,7 @@ noremap qq :q<CR>
 
 " Goto definition with gd
 nmap <silent> gd <Plug>(coc-definition)
+
+
 
 
