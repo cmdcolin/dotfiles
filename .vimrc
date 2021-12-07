@@ -24,17 +24,7 @@ Plug 'hrsh7th/vim-vsnip'
 call plug#end()
 
 
-lua require('colorbuddy').colorscheme('gruvbuddy')
 
-" configure treesitter
-lua << EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = "all",
-  highlight = {
-    enable = true,
-  },
-}
-EOF
 
 let mapleader = ","
 nnoremap <leader>ff <cmd>Rg<cr>
@@ -47,6 +37,8 @@ set clipboard=unnamedplus
 set smartcase
 set termguicolors
 set mouse=a
+set expandtab
+set sw=2
 
 
 " https://gist.github.com/nervetattoo/3652878
@@ -61,8 +53,18 @@ noremap qq :q<CR>
 
 
 
-
+" configure treesitter
 lua << EOF
+
+require('colorbuddy').colorscheme('gruvbuddy')
+
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "all",
+  highlight = {
+    enable = true,
+  },
+}
+
 local nvim_lsp = require('lspconfig')
 
 -- Use an on_attach function to only map the following keys
@@ -197,24 +199,11 @@ cmp.setup {
 
 
 
-EOF
-
-
-
-
-
-
-" https://github.com/neovim/nvim-lspconfig/issues/195#issuecomment-753644842
-lua <<EOF
 vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
   vim.lsp.diagnostic.on_publish_diagnostics, {
-    -- disable virtual text
     virtual_text = false,
-    -- show signs
     signs = true,
-    -- delay update diagnostics
     update_in_insert = false,
-    -- display_diagnostic_autocmds = { "InsertLeave" },
   }
 )
 
@@ -234,6 +223,8 @@ require('formatter').setup({
     javascript = { prettierfmt },
     typescriptreact = { prettierfmt },
     typescript = { prettierfmt },
+    json = { prettierfmt },
+    markdown = { prettierfmt },
   }
 })
 
@@ -241,7 +232,7 @@ require('formatter').setup({
 vim.api.nvim_exec([[
 augroup FormatAutogroup
   autocmd!
-  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx FormatWrite
+  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx,*json,*.md FormatWrite
 augroup END
 ]], true)
 

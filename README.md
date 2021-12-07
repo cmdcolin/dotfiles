@@ -6,7 +6,7 @@ Includes
 
 - tmux with weather using wttr.in in statusline
 - zsh
-- neovim with vim-plug, coc.nvim
+- neovim with vim-plug, built in lsp
 
 If you take nothing else from this, try the weather statusline in .tmux.conf!
 It's fun :)
@@ -32,7 +32,7 @@ crazy so you don't need an installation process
 - Computer - Dell laptop with 32gb RAM, 512GB SSD
 - OS - Ubuntu 21.04
 - Music player - quod libet
-- Text editor - neovim+coc.nvim+treesitter+fzf
+- Text editor - neovim+build in lsp+treesitter+fzf
 - Browser - Chromium
 - Browser Add-ons - Dark Reader
 

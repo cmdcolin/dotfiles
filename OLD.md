@@ -18,6 +18,7 @@ Post college:
 
 - Learning the ropes of command line at University of Missouri
 - Vim on MacBook pro, spending a lot of time in SSH to web servers
+- coc.nvim, very helpful
 
 ## Old music player setups
 
