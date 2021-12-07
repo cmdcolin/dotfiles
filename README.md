@@ -15,8 +15,10 @@ Favorite vim keybindings:
 
 * ww - save in vim (instead of :w)
 * qq - quit vim (instead of :q)
-* ctrl+g - file name search (telescope+git ls-files)
-* ctrl+f - file content search (telescope+live grep)
+* <leader>gg - file name search (telescope+git ls-files)
+* <leader>ff - file content search (telescope+live grep)
+  
+leader for me is comma (,)
 
 These are silly but reduce keypresses and complex key presses substantially
 
