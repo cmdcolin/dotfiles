@@ -13,6 +13,7 @@ Plug 'tjdevries/colorbuddy.vim'
 Plug 'tjdevries/gruvbuddy.nvim'
 
 
+Plug 'mhartington/formatter.nvim'
 Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
@@ -216,4 +217,32 @@ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
     -- display_diagnostic_autocmds = { "InsertLeave" },
   }
 )
+
+
+local prettierfmt = function()
+  return {
+    exe = "prettier",
+    args = {"--stdin-filepath", vim.api.nvim_buf_get_name(0)},
+    stdin = true
+  }
+end
+
+-- https://github.com/mhartington/formatter.nvim/blob/master/CONFIG.md#prettier
+require('formatter').setup({
+  filetype = {
+    javascriptreact = { prettierfmt },
+    javascript = { prettierfmt },
+    typescriptreact = { prettierfmt },
+    typescript = { prettierfmt },
+  }
+})
+
+-- https://github.com/mhartington/formatter.nvim
+vim.api.nvim_exec([[
+augroup FormatAutogroup
+  autocmd!
+  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx FormatWrite
+augroup END
+]], true)
+
 EOF
