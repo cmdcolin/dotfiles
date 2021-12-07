@@ -15,8 +15,8 @@ Favorite vim keybindings:
 
 * ww - save in vim (instead of :w)
 * qq - quit vim (instead of :q)
-* <leader>gg - file name search (gzg+git ls-files)
-* <leader>ff - file content search (gzg+live grep)
+* <leader>gg - file name search (fzf+git ls-files)
+* <leader>ff - file content search (fzf+live grep)
   
 leader for me is comma (,)
 
@@ -32,7 +32,7 @@ crazy so you don't need an installation process
 - Computer - Dell laptop with 32gb RAM, 512GB SSD
 - OS - Ubuntu 21.04
 - Music player - quod libet
-- Text editor - neovim+coc.nvim+treesitter+gzg
+- Text editor - neovim+coc.nvim+treesitter+fzf
 - Browser - Chromium
 - Browser Add-ons - Dark Reader
 
