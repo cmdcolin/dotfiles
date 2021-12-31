@@ -1,27 +1,23 @@
-#
-# Executes commands at the start of an interactive session.
-#
-# Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
-#
-
-# Source Prezto.
-if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-fi
-
-# Customize to your needs...
-#
-#
 [[ -z "$TMUX" ]] && exec tmux -2
 [[ $- != *i* ]] && return
 
+
+# Start configuration added by Zim install {{{
+#
+# User configuration sourced by interactive shells
+#
+
+# -----------------
+# Zsh configuration
+# -----------------
+#
+#
 export EDITOR="vim"
 alias ll="ls -l"
 alias e="vim"
-alias g="git status"
 alias w="curl v2.wttr.in"
 alias y="yarn"
+alias g="git status"
 alias ss="yarn start"
 alias ag="rg"
 alias fd="fdfind"
@@ -58,10 +54,6 @@ PERL_MB_OPT="--install_base \"/home/cdiesh/perl5\""; export PERL_MB_OPT;
 PERL_MM_OPT="INSTALL_BASE=/home/cdiesh/perl5"; export PERL_MM_OPT;
 
 
-
-source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
-unsetopt BEEP
-
 function vaporwave() {
   ffmpeg -i "$1" -af "asetrate=44100*0.5,aresample=44100" "`basename $1 .m4a`.vaporwave.m4a"
 }
@@ -86,4 +78,74 @@ source /usr/share/doc/fzf/examples/completion.zsh
 
 export PATH=$PATH:/home/linuxbrew/.linuxbrew/opt/python@3.9/libexec/bin
 export PATH=$PATH:~/.local/bin/
+
+#
+# History
+#
+
+# Remove older command from the history if a duplicate is to be added.
+setopt HIST_IGNORE_ALL_DUPS
+
+#
+# Input/output
+#
+
+# Set editor default keymap to emacs (`-e`) or vi (`-v`)
+bindkey -e
+
+# Remove path separator from WORDCHARS.
+WORDCHARS=${WORDCHARS//[\/]}
+
+
+
+# Set what highlighters will be used.
+# See https://github.com/zsh-users/zsh-syntax-highlighting/blob/master/docs/highlighters.md
+ZSH_HIGHLIGHT_HIGHLIGHTERS=(main brackets)
+
+# ------------------
+# Initialize modules
+# ------------------
+
+if [[ ! -e ${ZIM_HOME}/zimfw.zsh ]]; then
+  # Download zimfw script if missing.
+  command mkdir -p ${ZIM_HOME}
+  if (( ${+commands[curl]} )); then
+    command curl -fsSL -o ${ZIM_HOME}/zimfw.zsh https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+  else
+    command wget -nv -O ${ZIM_HOME}/zimfw.zsh https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+  fi
+fi
+if [[ ! ${ZIM_HOME}/init.zsh -nt ${ZDOTDIR:-${HOME}}/.zimrc ]]; then
+  # Install missing modules, and update ${ZIM_HOME}/init.zsh if missing or outdated.
+  source ${ZIM_HOME}/zimfw.zsh init -q
+fi
+source ${ZIM_HOME}/init.zsh
+
+# ------------------------------
+# Post-init module configuration
+# ------------------------------
+
+#
+# zsh-history-substring-search
+#
+
+# Bind ^[[A/^[[B manually so up/down works both before and after zle-line-init
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
+
+# Bind up and down keys
+zmodload -F zsh/terminfo +p:terminfo
+if [[ -n ${terminfo[kcuu1]} && -n ${terminfo[kcud1]} ]]; then
+  bindkey ${terminfo[kcuu1]} history-substring-search-up
+  bindkey ${terminfo[kcud1]} history-substring-search-down
+fi
+
+bindkey '^P' history-substring-search-up
+bindkey '^N' history-substring-search-down
+bindkey -M vicmd 'k' history-substring-search-up
+bindkey -M vicmd 'j' history-substring-search-down
+# }}} End configuration added by Zim install
+
+
+
 
