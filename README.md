@@ -81,3 +81,7 @@ to sort by last played and recently added
 ## Old stuff
 
 [OLD.md](./OLD.md)
+
+## References
+
+https://github.com/manzt/dotfiles
