@@ -1,11 +1,11 @@
 ## Past iterations for dev environment
 
-Early years:
+High school:
 
 - Magic C++
 - DevC++
 - Code::Blocks
-- Visual Studio Express 2013,2015, etc
+- Visual Studio Express/WTL
 
 College:
 
