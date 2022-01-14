@@ -235,6 +235,7 @@ require('formatter').setup({
     json = { prettierfmt },
     markdown = { prettierfmt },
     r = { rfmt },
+    html = { prettierfmt },
   }
 })
 
@@ -242,7 +243,7 @@ require('formatter').setup({
 vim.api.nvim_exec([[
 augroup FormatAutogroup
   autocmd!
-  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx,*json,*.md,*.R,*.r FormatWrite
+  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx,*json,*.md,*.R,*.r,*.html FormatWrite
 augroup END
 ]], true)
 
