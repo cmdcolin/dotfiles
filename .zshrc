@@ -77,7 +77,7 @@ source /usr/share/doc/fzf/examples/key-bindings.zsh
 source /usr/share/doc/fzf/examples/completion.zsh
 
 export PATH=$PATH:/home/linuxbrew/.linuxbrew/opt/python@3.9/libexec/bin
-export PATH=$PATH:~/.local/bin/
+export PATH=$PATH:~/.local/bin/:~/.cargo/bin:~/go/bin
 
 #
 # History
@@ -147,5 +147,5 @@ bindkey -M vicmd 'j' history-substring-search-down
 # }}} End configuration added by Zim install
 
 
-
-
+export TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling
+export DEBUG_PRINT_LIMIT=0
