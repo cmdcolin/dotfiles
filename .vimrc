@@ -9,12 +9,15 @@ Plug 'tpope/vim-rhubarb'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+
+Plug 'neovim/nvim-lspconfig'
+Plug 'simrat39/rust-tools.nvim'
+Plug 'mhartington/formatter.nvim'
+
 Plug 'tjdevries/colorbuddy.vim'
 Plug 'tjdevries/gruvbuddy.nvim'
 
 
-Plug 'mhartington/formatter.nvim'
-Plug 'neovim/nvim-lspconfig'
 Plug 'hrsh7th/nvim-cmp'
 Plug 'hrsh7th/cmp-nvim-lsp'
 Plug 'hrsh7th/cmp-buffer'
@@ -56,7 +59,11 @@ noremap qq :q<CR>
 " configure treesitter
 lua << EOF
 
+
 require('colorbuddy').colorscheme('gruvbuddy')
+
+require('rust-tools').setup({})
+
 
 require'nvim-treesitter.configs'.setup {
   ensure_installed = "all",
