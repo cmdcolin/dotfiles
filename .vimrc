@@ -29,8 +29,13 @@ call plug#end()
 
 
 
+" avoid repetitive strain injury by making comma the leader
 let mapleader = ","
+
+" simple search inside files
 nnoremap <leader>ff <cmd>Rg<cr>
+
+" simple search filenames
 nnoremap <leader>gg <cmd>Files<cr>
 
 
