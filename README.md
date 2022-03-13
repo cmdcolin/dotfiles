@@ -53,6 +53,8 @@ type sidebar
 
 ### Music player setup
 
+I am running foobar2000 under Wine (from the `snap install foobar2000` installation route)
+
 My main customization goals of pretty much any music player are to have
 
 - A list of albums in the form `Artist - Album name` (as opposed to an itunes
