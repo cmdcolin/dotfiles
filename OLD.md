@@ -22,6 +22,26 @@ Post college:
 
 ## Old music player setups
 
+### quod libet
+
+I used quod libet for awhile but it stopped working entirely and also was not a
+great user experience unfortunately. It was a bit slow, had to force rescan
+library frequently, and I just spent most of my time listening on youtube
+instead of in the player!
+
+![](img/2.png)
+
+To get the list in the format `Artist - Album name`, and to add some support so
+that "Various artists" compilations get merged into a single item in this list,
+I use this config in quodlibet's paned browser
+
+```
+    <performer|<performer>|<albumartist|<albumartist>|<artist>>>  -  <album>
+```
+
+Then I also turn on "Last played" and "Added" columns in the playlist browser
+to sort by last played and recently added
+
 ### cmus setup
 
 I used to use cmus command line audio player. It worked well but I never felt

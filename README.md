@@ -13,11 +13,11 @@ It's fun :)
 
 Favorite vim keybindings:
 
-* ww - save in vim (instead of :w)
-* qq - quit vim (instead of :q)
-* <leader>gg - file name search (fzf+git ls-files)
-* <leader>ff - file content search (fzf+live grep)
-  
+- ww - save in vim (instead of :w)
+- qq - quit vim (instead of :q)
+- <leader>gg - file name search (fzf+git ls-files)
+- <leader>ff - file content search (fzf+live grep)
+
 leader for me is comma (,)
 
 These are silly but reduce keypresses and complex key presses substantially
@@ -31,7 +31,7 @@ crazy so you don't need an installation process
 
 - Computer - Dell laptop with 32gb RAM, 512GB SSD
 - OS - Ubuntu 21.04
-- Music player - quod libet
+- Music player - foobar2000 snap (uses wine on linux)
 - Text editor - neovim+build in lsp+treesitter+fzf
 - Browser - Chromium
 - Browser Add-ons - Dark Reader
@@ -41,8 +41,8 @@ halves side by side) with tmux and then do either tests on one side of the
 screen or have two split screens. If needed I make a new tmux tab. I close and
 re-open vim a lot which is kind of crazy in a way, but seems to work for me
 
-Using fzf for quick file name searches or greps enabled me to become 
-much less reliant on a file browser like NERDTree, so I don't use any NERDTree 
+Using fzf for quick file name searches or greps enabled me to become
+much less reliant on a file browser like NERDTree, so I don't use any NERDTree
 type sidebar
 
 ## Screenshot
@@ -61,22 +61,7 @@ My main customization goals of pretty much any music player are to have
 - A recently added playlist
 - A recently played playlist
 
-These goals are hangovers from using foobar2000 but I try to have a similar
-setup on linux now, and currently use Quod Libet. It is not as customizable as
-foobar2000 but it gets most of the way there
-
-![](img/2.png)
-
-To get the list in the format `Artist - Album name`, and to add some support so
-that "Various artists" compilations get merged into a single item in this list,
-I use this config in quodlibet's paned browser
-
-```
-    <performer|<performer>|<albumartist|<albumartist>|<artist>>>  -  <album>
-```
-
-Then I also turn on "Last played" and "Added" columns in the playlist browser
-to sort by last played and recently added
+![](img/3.png)
 
 ## Old stuff
 
