@@ -30,7 +30,7 @@ crazy so you don't need an installation process
 ## Details about my setup
 
 - Computer - Dell laptop with 32gb RAM, 512GB SSD
-- OS - Ubuntu 21.04
+- OS - Ubuntu 22.04
 - Music player - foobar2000 snap (uses wine on linux)
 - Text editor - neovim+build in lsp+treesitter+fzf
 - Browser - Chromium
