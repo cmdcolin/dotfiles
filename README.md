@@ -13,14 +13,14 @@ It's fun :)
 
 Favorite vim keybindings:
 
-- ww - save in vim (instead of :w)
-- qq - quit vim (instead of :q)
-- <leader>gg - file name search (fzf+git ls-files)
-- <leader>ff - file content search (fzf+live grep)
+- `ww` - save in vim (instead of :w)
+- `qq` - quit vim (instead of :q)
+- `<leader>gg` - file name search (fzf+git ls-files)
+- `<leader>ff` - file content search (fzf+live grep)
 
 leader for me is comma (,)
 
-These are silly but reduce keypresses and complex key presses substantially
+These are silly but reduce keypresses and complex key presses substantially, and I have gotten repetitive strain injury from excessive keyboard shortcuts that use the control key (left control, left pinky gets twinged)
 
 ## Install
 
