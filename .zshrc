@@ -12,16 +12,25 @@
 # -----------------
 #
 #
+#
+function md() {
+    pandoc $1 > /tmp/$1.html
+    xdg-open /tmp/$1.html 
+}
+
 export EDITOR="vim"
 alias ll="ls -l"
 alias e="vim"
 alias w="curl v2.wttr.in"
 alias y="yarn"
 alias g="git status"
+alias gd="git diff"
 alias ss="yarn start"
 alias ag="rg"
 alias fd="fdfind"
 alias ff="fd|grep"
+alias tt="yarn typecheck"
+alias lg="lazygit"
 alias vv="vim"
 alias vun="vim"
 alias qq="exit"
@@ -150,3 +159,12 @@ bindkey -M vicmd 'j' history-substring-search-down
 
 export TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling
 export DEBUG_PRINT_LIMIT=0
+
+export NVM_DIR="$HOME/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+
+function sortgff() {
+  awk '$1 ~ /^#/ {print $0;next} {print $0 | "sort -k1,1 -k4,4n -k5,5n"}' $1
+}

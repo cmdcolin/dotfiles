@@ -24,6 +24,10 @@ Plug 'hrsh7th/cmp-buffer'
 Plug 'hrsh7th/cmp-path'
 Plug 'hrsh7th/cmp-vsnip'
 Plug 'hrsh7th/vim-vsnip'
+
+Plug 'nvim-lua/plenary.nvim'
+
+Plug 'jose-elias-alvarez/null-ls.nvim'
 call plug#end()
 
 
@@ -149,6 +153,8 @@ set completeopt=menuone,noinsert,noselect
 lua <<EOF
 local cmp = require 'cmp'
 
+
+
 -- https://github.com/hrsh7th/nvim-cmp/wiki/Example-mappings
 local has_words_before = function()
   if vim.api.nvim_buf_get_option(0, "buftype") == "prompt" then
@@ -250,6 +256,12 @@ require('formatter').setup({
     html = { prettierfmt },
     css = { prettierfmt },
   }
+})
+
+require("null-ls").setup({
+  sources = {
+    require("null-ls").builtins.diagnostics.eslint,
+  },
 })
 
 -- https://github.com/mhartington/formatter.nvim
