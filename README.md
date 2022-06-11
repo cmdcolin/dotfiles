@@ -20,7 +20,12 @@ Favorite vim keybindings:
 
 leader for me is comma (,)
 
-These are silly but reduce keypresses and complex key presses substantially, and I have gotten repetitive strain injury from excessive keyboard shortcuts that use the control key (left control, left pinky gets twinged)
+I have gotten repetitive strain injury from excessive keyboard shortcuts that
+use the control key (left control, left pinky gets twinged, sometimes called
+emacs pinky though I don't use emacs). Therefore I try to avoid keypresses that
+use it. I also remap caps lock to left-control (screenshot
+https://askubuntu.com/a/1044001/487959) which helps to reduce some left pinky
+contortions.
 
 ## Install
 
