@@ -6,7 +6,7 @@ Includes
 
 - tmux with weather using wttr.in in statusline
 - zsh
-- neovim with vim-plug, built in lsp
+- neovim with lua init script (based on kickstart.nvim)
 
 If you take nothing else from this, try the weather statusline in .tmux.conf!
 It's fun :)
