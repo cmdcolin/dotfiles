@@ -26,9 +26,9 @@ require('packer').startup(function(use)
   use 'hrsh7th/nvim-cmp'
   use 'hrsh7th/cmp-nvim-lsp'
   use 'saadparwaiz1/cmp_luasnip'
-  use 'jose-elias-alvarez/null-ls.nvim'
   use 'L3MON4D3/LuaSnip'
   use 'dstein64/vim-startuptime'
+  use 'mhartington/formatter.nvim'
 end)
 
 --Set highlight on search
@@ -79,36 +79,6 @@ require('Comment').setup()
 --Remap , as leader key
 vim.g.mapleader = ','
 vim.g.maplocalleader = ','
-
-local augroup = vim.api.nvim_create_augroup('LspFormatting', {})
-local null_ls = require 'null-ls'
-null_ls.setup {
-  sources = {
-    null_ls.builtins.formatting.prettier,
-    null_ls.builtins.formatting.stylua,
-    null_ls.builtins.diagnostics.eslint,
-    null_ls.builtins.completion.spell,
-    null_ls.builtins.formatting.styler,
-  },
-  -- you can reuse a shared lspconfig on_attach callback here
-  on_attach = function(client, bufnr)
-    if client.supports_method 'textDocument/formatting' then
-      vim.api.nvim_clear_autocmds { group = augroup, buffer = bufnr }
-      vim.api.nvim_create_autocmd('BufWritePre', {
-        group = augroup,
-        buffer = bufnr,
-        callback = function()
-          vim.lsp.buf.format {
-            bufnr = bufnr,
-            filter = function(client)
-              return client.name == 'null-ls'
-            end,
-          }
-        end,
-      })
-    end
-  end,
-}
 
 -- Enable telescope fzf native
 require('telescope').load_extension 'fzf'
@@ -219,7 +189,6 @@ luasnip.add_snippets(nil, {
   },
 })
 
--- nvim-cmp setup
 local cmp = require 'cmp'
 cmp.setup {
   snippet = {
@@ -259,3 +228,45 @@ cmp.setup {
     { name = 'luasnip' },
   },
 }
+
+vim.lsp.handlers['textDocument/publishDiagnostics'] = vim.lsp.with(
+  vim.lsp.diagnostic.on_publish_diagnostics,
+  {
+    virtual_text = false,
+    signs = true,
+    update_in_insert = false,
+  }
+)
+
+local prettierfmt = function()
+  return {
+    exe = 'prettier',
+    args = { '--stdin-filepath', vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)) },
+    stdin = true,
+  }
+end
+
+require('formatter').setup {
+  filetype = {
+    javascriptreact = { prettierfmt },
+    javascript = { prettierfmt },
+    typescriptreact = { prettierfmt },
+    typescript = { prettierfmt },
+    json = { prettierfmt },
+    markdown = { prettierfmt },
+    r = { rfmt },
+    html = { prettierfmt },
+    css = { prettierfmt },
+    svg = { prettierfmt },
+  },
+}
+
+vim.api.nvim_exec(
+  [[
+augroup FormatAutogroup
+  autocmd!
+  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx,*json,*.md,*.R,*.r,*.html,*.css,*.svg FormatWrite
+augroup END
+]],
+  true
+)

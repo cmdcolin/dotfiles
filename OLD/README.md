@@ -8,9 +8,9 @@
 - Then tried to get vim-vinegar to display in a sidebar as an alternative
 - Then got rid of sidebar preferring to auto-launch finding files using Fzf
 - Then moved to coc.nvim and neovim for LSP support
-- Was hard for me to understand native LSP, and the larger amount of boilerplate config still is tedious though the fine grained control is interestingly
-- Used formatter.nvim for Prettier
-- Switched to null-ls for eslint+prettier and used pure lua init.lua
+- Was hard for me to understand native LSP, and the larger amount of
+  boilerplate config still is tedious though the fine grained control is
+  interestingly
 
 # Music players
 
