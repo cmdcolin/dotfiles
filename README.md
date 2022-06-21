@@ -72,7 +72,7 @@ My main customization goals of pretty much any music player are to have
 
 ## Old stuff
 
-[OLD.md](./OLD.md)
+[Older setup stuff](./OLD)
 
 ## References
 

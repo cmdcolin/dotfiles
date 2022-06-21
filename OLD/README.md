@@ -1,24 +1,18 @@
-## Past iterations for dev environment
+# Text editors
 
-High school:
+## Vim setup iterations
 
-- Magic C++
-- DevC++
-- Code::Blocks
-- Visual Studio Express/WTL
+- Used very raw setup for a long time with no plugins
+- Then got vim-plug and used w0rp/ale plugin for auto-lint-on-save
+- Then tried to get Nerdtree to work with my setup
+- Then tried to get vim-vinegar to display in a sidebar as an alternative
+- Then got rid of sidebar preferring to auto-launch finding files using Fzf
+- Then moved to coc.nvim and neovim for LSP support
+- Was hard for me to understand native LSP, and the larger amount of boilerplate config still is tedious though the fine grained control is interestingly
+- Used formatter.nvim for Prettier
+- Switched to null-ls for eslint+prettier and used pure lua init.lua
 
-College:
-
-- CodeLite (C++)
-- Notepad++
-- Manually pasting javascript snippets into the jsonlint web form
-- Still bad at command line stuff
-
-Post college:
-
-- Learning the ropes of command line at University of Missouri
-- Vim on MacBook pro, spending a lot of time in SSH to web servers
-- coc.nvim, very helpful
+# Music players
 
 ## Old music player setups
 
@@ -63,7 +57,7 @@ measures of file time such as "created, last access, and last modification"
 
 I also used set_status_display_program to append the currently playing track to
 text file, creating a "recently played playlist", see
-[cmus_recently_played.sh](https://github.com/cmdcolin/dotfiles/blob/master/cmus_recently_played.sh)
+[cmus_recently_played.sh](cmus_recently_played.sh)
 
 ### Playlist browser
 
@@ -77,11 +71,24 @@ recently added and recently played text files using the cmus file browser
 - Easier to use recently added/recently played
 - GUI frontend
 
-## Vim setup iterations
+# My old dev environments
 
-- Used very raw setup for a long time with no plugins
-- Then got vim-plug and used w0rp/ale plugin for auto-lint-on-save
-- Then tried to get Nerdtree to work with my setup
-- Then tried to get vim-vinegar to display in a sidebar as an alternative
-- Then got rid of sidebar preferring to auto-launch finding files using Fzf
-- Then moved to coc.nvim and neovim for LSP support
+### High school
+
+- Magic C++
+- DevC++
+- Code::Blocks
+- Visual Studio Express/WTL
+
+### College
+
+- CodeLite (C++)
+- Notepad++
+- Manually pasting javascript snippets into the jsonlint web form
+- Still bad at command line stuff
+
+### Post-college
+
+- Learning the ropes of command line at University of Missouri
+- Vim on MacBook pro, spending a lot of time in SSH to web servers
+- coc.nvim, very helpful
