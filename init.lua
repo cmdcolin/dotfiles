@@ -59,6 +59,8 @@ vim.o.completeopt = 'menuone,noselect'
 -- Nightly only feature
 vim.o.cmdheight = 0
 
+vim.o.lazyredraw = true
+
 require('colorbuddy').colorscheme 'gruvbuddy'
 
 --Set statusbar
