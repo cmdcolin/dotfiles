@@ -14,7 +14,8 @@ vim.api.nvim_create_autocmd(
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
   use 'tpope/vim-rhubarb'
-  use 'numToStr/Comment.nvim'
+  use 'tpope/vim-commentary'
+  use 'tpope/vim-vinegar'
   use 'neovim/nvim-lspconfig'
   use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
@@ -56,6 +57,8 @@ vim.o.termguicolors = true
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
 
+vim.o.clipboard = 'unnamedplus'
+
 -- Nightly only feature
 vim.o.cmdheight = 0
 
@@ -73,8 +76,6 @@ require('lualine').setup {
   },
 }
 
---Enable Comment.nvim
-require('Comment').setup()
 
 --Remap , as leader key
 vim.g.mapleader = ','
