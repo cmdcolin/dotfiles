@@ -202,3 +202,5 @@ function vaporwave() {
 }
 
 
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
