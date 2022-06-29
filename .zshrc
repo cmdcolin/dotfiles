@@ -1,12 +1,6 @@
 [[ -z "$TMUX" ]] && exec tmux -2
 [[ $- != *i* ]] && return
 
-## lazy nvm starts up 6x faster
-# before zsh -i -c exit  0.27s user 0.13s system 121% cpu 0.335 total
-# after  zsh -i -c exit  0.04s user 0.02s system 108% cpu 0.051 total
-export NVM_LAZY_LOAD=true
-
-
 ## https://github.com/zimfw/git#settings
 zstyle ':zim:git' aliases-prefix 'g'
 
@@ -191,16 +185,21 @@ alias unarx="parallel unar {} ::: *.7z *.rar *.zip"
 alias delarx="rm -rf *.zip *.7z *.rar"
 alias pbcopy='xclip -selection clipboard'
 alias pbpaste='xclip -selection clipboard -o'
-alias pserver='python3 -m RangeHTTPServer'
+alias pserver='npx serve'
 alias smaller="parallel convert -resize 50% {} resized.{} ::: *.png"
 alias cpuspeed="glances --enable-plugin sensors"
 alias gitbranch="git log --oneline --graph --all --no-decorate"
 
 
 function vaporwave() {
-  ffmpeg -i "$1" -af "asetrate=44100*0.5,aresample=44100" "`basename $1 .m4a`.vaporwave.m4a"
+  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.5},aresample=44100" "`basename $1 .m4a`.vaporwave.m4a"
 }
 
 
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export PATH=$PATH:~/.local/bin/
+
+# fnm
+export PATH=/home/cdiesh/.fnm:$PATH
+eval "`fnm env`"

@@ -53,6 +53,8 @@ vim.o.updatetime = 250
 
 --Set colorscheme
 vim.o.termguicolors = true
+vim.o.expandtab = true
+vim.o.sw = 2
 
 -- Set completeopt to have a better completion experience
 vim.o.completeopt = 'menuone,noselect'
