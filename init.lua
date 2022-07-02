@@ -1,16 +1,3 @@
--- Install packer
-local install_path = vim.fn.stdpath 'data' .. '/site/pack/packer/start/packer.nvim'
-
-if vim.fn.empty(vim.fn.glob(install_path)) > 0 then
-  vim.fn.execute('!git clone https://github.com/wbthomason/packer.nvim ' .. install_path)
-end
-
-local packer_group = vim.api.nvim_create_augroup('Packer', { clear = true })
-vim.api.nvim_create_autocmd(
-  'BufWritePost',
-  { command = 'source <afile> | PackerCompile', group = packer_group, pattern = 'init.lua' }
-)
-
 require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
   use 'tpope/vim-rhubarb'
@@ -49,7 +36,7 @@ vim.o.ignorecase = true
 vim.o.smartcase = true
 
 --Decrease update time
-vim.o.updatetime = 250
+vim.o.updatetime = 50
 
 --Set colorscheme
 vim.o.termguicolors = true
@@ -61,14 +48,12 @@ vim.o.completeopt = 'menuone,noselect'
 
 vim.o.clipboard = 'unnamedplus'
 
--- Nightly only feature
 vim.o.cmdheight = 0
 
 vim.o.lazyredraw = true
 
+require('telescope').load_extension 'fzf'
 require('colorbuddy').colorscheme 'gruvbuddy'
-
---Set statusbar
 require('lualine').setup {
   options = {
     icons_enabled = false,
@@ -79,46 +64,27 @@ require('lualine').setup {
 }
 
 
---Remap , as leader key
 vim.g.mapleader = ','
 vim.g.maplocalleader = ','
 
--- Enable telescope fzf native
-require('telescope').load_extension 'fzf'
 
---Add leader shortcuts
-vim.keymap.set('n', '<leader>gg', require('telescope.builtin').git_files)
-vim.keymap.set('n', '<leader>ff', require('telescope.builtin').live_grep)
-vim.keymap.set('n', '<leader>bb', require('telescope.builtin').current_buffer_fuzzy_find)
-vim.keymap.set('n', '<leader>hh', require('telescope.builtin').grep_string)
-vim.keymap.set('n', 'ww', ':w<CR>')
-vim.keymap.set('n', 'qq', ':q<CR>')
-
--- Treesitter configuration
--- Parsers must be installed manually via :TSInstall
 require('nvim-treesitter.configs').setup {
-  highlight = {
-    enable = true, -- false will disable the whole extension
-  },
-  incremental_selection = {
-    enable = true,
-    keymaps = {
-      init_selection = 'gnn',
-      node_incremental = 'grn',
-      scope_incremental = 'grc',
-      node_decremental = 'grm',
-    },
-  },
-  indent = {
-    enable = true,
-  },
+  highlight = { enable = true },
+  indent = { enable = true },
 }
 
-vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
 -- LSP settings
 local lspconfig = require 'lspconfig'
+local telescope_builtin = require 'telescope.builtin'
+vim.keymap.set('n', '<leader>gg', telescope_builtin.git_files)
+vim.keymap.set('n', '<leader>ff', telescope_builtin.live_grep)
+vim.keymap.set('n', '<leader>bb', telescope_builtin.current_buffer_fuzzy_find)
+vim.keymap.set('n', '<leader>hh', telescope_builtin.grep_string)
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
+vim.keymap.set('n', 'ww', ':w<CR>')
+vim.keymap.set('n', 'qq', ':q<CR>')
+
 local on_attach = function(_, bufnr)
   local opts = { buffer = bufnr }
   vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
@@ -130,12 +96,14 @@ local on_attach = function(_, bufnr)
   vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
   vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
   vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-  vim.keymap.set('n', '<leader>so', require('telescope.builtin').lsp_document_symbols, opts)
+  vim.keymap.set('n', '<leader>so', telescope_builtin.lsp_document_symbols, opts)
+
 end
 
 -- nvim-cmp supports additional completion capabilities
 local capabilities = vim.lsp.protocol.make_client_capabilities()
 capabilities = require('cmp_nvim_lsp').update_capabilities(capabilities)
+
 
 -- Enable the following language servers
 local servers = { 'tsserver' }
@@ -145,6 +113,7 @@ for _, lsp in ipairs(servers) do
     capabilities = capabilities,
   }
 end
+
 
 -- luasnip setup
 local luasnip = require 'luasnip'
@@ -199,7 +168,7 @@ cmp.setup {
       luasnip.lsp_expand(args.body)
     end,
   },
-  mapping = cmp.mapping.preset.insert {
+  mapping = cmp.mapping.preset.insert({
     ['<C-d>'] = cmp.mapping.scroll_docs(-4),
     ['<C-f>'] = cmp.mapping.scroll_docs(4),
     ['<C-Space>'] = cmp.mapping.complete(),
@@ -225,7 +194,7 @@ cmp.setup {
         fallback()
       end
     end, { 'i', 's' }),
-  },
+  }),
   sources = {
     { name = 'nvim_lsp' },
     { name = 'luasnip' },
