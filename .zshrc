@@ -203,3 +203,9 @@ export PATH=$PATH:~/.local/bin/
 # fnm
 export PATH=/home/cdiesh/.fnm:$PATH
 eval "`fnm env`"
+
+
+function sortgff() {
+  grep "^#" $1;
+  grep -v "^#" $1 | sort -t"`printf '\t'`" -k1,1 -k4,4n;
+}

@@ -19,6 +19,7 @@ require('packer').startup(function(use)
   use 'mhartington/formatter.nvim'
 end)
 
+
 --Set highlight on search
 vim.o.hlsearch = false
 
