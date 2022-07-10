@@ -1,5 +1,6 @@
 return require('packer').startup(function(use)
   use 'wbthomason/packer.nvim'
+  use 'mhartington/formatter.nvim'
   use 'tjdevries/colorbuddy.vim'
   use 'tpope/vim-vinegar'
   use 'tpope/vim-commentary'
@@ -15,7 +16,6 @@ return require('packer').startup(function(use)
   use 'hrsh7th/cmp-path'
   use { 'saadparwaiz1/cmp_luasnip' }
   use 'L3MON4D3/LuaSnip'
-  use 'jose-elias-alvarez/null-ls.nvim'
   use 'mhinz/vim-startify'
   use {
     'numToStr/Comment.nvim',
