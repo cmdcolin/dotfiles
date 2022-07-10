@@ -1,5 +1,3 @@
--- Native LSP Setup
-
 require('nvim-lsp-installer').setup {
   automatic_installation = true,
 }
@@ -7,23 +5,14 @@ require('nvim-lsp-installer').setup {
 local servers = { 'tsserver', 'sumneko_lua' }
 local nvim_lsp = require 'lspconfig'
 
--- Bindings
 local on_attach = function(client)
-  -- Let formatters format
   client.server_capabilities.documentFormatting = false
-
-  -- Buffers
   vim.keymap.set('n', '<leader>r', vim.lsp.buf.rename, { buffer = 0 })
   vim.keymap.set('n', 'K', vim.lsp.buf.hover, { buffer = 0 })
   vim.keymap.set('n', 'gd', vim.lsp.buf.definition, { buffer = 0 })
   vim.keymap.set('n', 'gt', vim.lsp.buf.type_definition, { buffer = 0 })
   vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, { buffer = 0 })
   vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, { buffer = 0 })
-
-  -- Errors
-  vim.keymap.set('n', 'g]', vim.diagnostic.goto_next, { buffer = 0 })
-  vim.keymap.set('n', 'g[', vim.diagnostic.goto_prev, { buffer = 0 })
-  vim.keymap.set('n', '<leader>dl', '<cmd>Telescope diagnostics<cr>', { buffer = 0 })
 end
 
 local capabilities = require('cmp_nvim_lsp').update_capabilities(
@@ -37,7 +26,6 @@ for _, lsp in ipairs(servers) do
     settings = {
       Lua = {
         diagnostics = {
-          -- Get the language server to recognize the `vim` global
           globals = { 'vim' },
         },
       },
@@ -47,13 +35,12 @@ end
 
 vim.opt.completeopt = { 'menu', 'menuone', 'noselect' }
 
--- Setup nvim-cmp.
 local cmp = require 'cmp'
 
 cmp.setup {
   snippet = {
     expand = function(args)
-      require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+      require('luasnip').lsp_expand(args.body)
     end,
   },
 
@@ -71,8 +58,28 @@ cmp.setup {
 
   sources = cmp.config.sources({
     { name = 'nvim_lsp' },
-    { name = 'luasnip' }, -- For luasnip users.
+    { name = 'luasnip' },
   }, {
     { name = 'buffer' },
   }),
+}
+
+local function organize_imports()
+  local params = {
+    command = '_typescript.organizeImports',
+    arguments = { vim.api.nvim_buf_get_name(0) },
+    title = '',
+  }
+  vim.lsp.buf.execute_command(params)
+end
+
+nvim_lsp.tsserver.setup {
+  on_attach = on_attach,
+  capabilities = capabilities,
+  commands = {
+    OrganizeImports = {
+      organize_imports,
+      description = 'Organize Imports',
+    },
+  },
 }
