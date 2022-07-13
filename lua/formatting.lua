@@ -17,6 +17,7 @@ require('formatter').setup {
     html = { prettierfmt },
     css = { prettierfmt },
     svg = { prettierfmt },
+    lua = { require('formatter.filetypes.lua').stylua },
   },
 }
 
@@ -24,7 +25,7 @@ vim.api.nvim_exec(
   [[
 augroup FormatAutogroup
   autocmd!
-  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx,*json,*.md,*.R,*.r,*.html,*.css,*.svg FormatWrite
+  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx,*json,*.md,*.R,*.r,*.html,*.css,*.svg,*.lua FormatWrite
 augroup END
 ]],
   true
