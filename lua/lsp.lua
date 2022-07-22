@@ -2,7 +2,7 @@ require('nvim-lsp-installer').setup {
   automatic_installation = true,
 }
 
-local servers = { 'tsserver', 'sumneko_lua' }
+local servers = { 'tsserver', 'sumneko_lua', 'rust_analyzer', 'bashls' }
 local nvim_lsp = require 'lspconfig'
 
 local on_attach = function(client)

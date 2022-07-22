@@ -6,6 +6,15 @@ local prettierfmt = function()
   }
 end
 
+local rustfmt = function()
+  return {
+    exe = 'rustfmt',
+    stdin = true,
+  }
+end
+
+local stylua = require('formatter.filetypes.lua').stylua
+
 require('formatter').setup {
   filetype = {
     javascriptreact = { prettierfmt },
@@ -17,7 +26,8 @@ require('formatter').setup {
     html = { prettierfmt },
     css = { prettierfmt },
     svg = { prettierfmt },
-    lua = { require('formatter.filetypes.lua').stylua },
+    lua = { stylua },
+    rust = { rustfmt },
   },
 }
 
@@ -25,7 +35,7 @@ vim.api.nvim_exec(
   [[
 augroup FormatAutogroup
   autocmd!
-  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx,*json,*.md,*.R,*.r,*.html,*.css,*.svg,*.lua FormatWrite
+  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx,*json,*.md,*.R,*.r,*.html,*.css,*.svg,*.lua,*.rs FormatWrite
 augroup END
 ]],
   true

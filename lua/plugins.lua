@@ -5,6 +5,8 @@ return require('packer').startup(function(use)
   use 'tjdevries/colorbuddy.vim'
   use 'tpope/vim-vinegar'
   use 'tpope/vim-commentary'
+  use 'tpope/vim-fugitive'
+  use 'tpope/vim-rhubarb'
   use 'tjdevries/gruvbuddy.nvim'
   use 'williamboman/nvim-lsp-installer'
   use 'neovim/nvim-lspconfig'
