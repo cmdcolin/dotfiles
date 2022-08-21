@@ -8,7 +8,7 @@ opt.cmdheight = 0
 opt.lazyredraw = true
 opt.sw = 2
 opt.expandtab = true
-opt.updatetime = 50
+opt.updatetime = 200
 
 require('telescope').setup {}
 require('telescope').load_extension 'fzf'
@@ -17,5 +17,3 @@ require('nvim-treesitter.configs').setup {
   highlight = { enable = true },
   indent = { enable = true },
 }
-
-
