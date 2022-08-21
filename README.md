@@ -13,8 +13,6 @@ It's fun :)
 
 Favorite vim keybindings:
 
-- `ww` - save in vim (instead of :w)
-- `qq` - quit vim (instead of :q)
 - `<leader>gg` - file name search (fzf+git ls-files)
 - `<leader>ff` - file content search (fzf+live grep)
 
