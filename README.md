@@ -27,8 +27,9 @@ contortions.
 
 ## Install
 
-Just copy or symlink these files to your home folder. It's not intricately
-crazy so you don't need an installation process
+For nvim, cp init.lua to ~/.config/nvim/init.lua and copy the lua directory to ~/.config/nvim/lua
+
+For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 
 ## Details about my setup
 
