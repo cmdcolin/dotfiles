@@ -36,5 +36,12 @@ luasnip.add_snippets(nil, {
     }, {
       text { '// @ts-ignore' },
     }),
+    snip({
+      trig = 'pp',
+    }, {
+      text { 'println!("{}",' },
+      insert(1, ''),
+      text { ');' },
+    }),
   },
 })
