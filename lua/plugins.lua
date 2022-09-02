@@ -17,6 +17,12 @@ return require('packer').startup(function(use)
       require('nvim-surround').setup()
     end,
   }
+  use {
+    'j-hui/fidget.nvim',
+    config = function()
+      require('fidget').setup {}
+    end,
+  }
 
   -- all requires from https://github.com/VonHeikemen/lsp-zero.nvim
   use {
