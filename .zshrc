@@ -162,31 +162,30 @@ alias g="git status"
 alias gd="git diff"
 alias ss="yarn start"
 alias ag="rg"
-alias rr="cargo run"
 alias fd="fdfind"
 alias tt="yarn typecheck"
 alias lg="lazygit"
 alias vv="vim"
 alias vun="vim"
+alias ggg="git commit --amend --no-edit"
+alias ee="cargo run"
+alias rr="git reset --hard origin/main"
 alias qq="exit"
 alias bb="git branch --sort=-committerdate| fzf --height=20% |xargs git checkout "
-alias gg="git commit -m"
-alias ggg="git commit --amend"
 alias gb="git branch --sort=-committerdate"
 alias ww="watch -n.1 \"cat /proc/cpuinfo | grep \\\"^[c]pu MHz\\\"\""
 alias yy="yarn lint --cache"
 alias ff="yarn format --cache"
-alias gap="git add -p"
 alias vim="~/.local/bin/nvim"
-alias sss="systemctl --user enable pulseaudio && systemctl --user start pulseaudio"
+alias ttt="yarn tsc --noEmit --watch"
 alias stp="git subtree push --prefix build origin gh-pages"
 alias sau="sudo apt update && sudo apt upgrade"
-alias ttt="yarn typecheck --watch"
+alias saa="appimageupdate ~/.local/bin/nvim"
 alias cov="yarn test --coverage && open coverage/lcov-report/index.html"
 alias ydl="youtube-dl"
 alias yda="youtube-dl -f 'bestaudio[ext=m4a]' "
-alias glp="git log -p"
 alias open="xdg-open"
+alias glp="git log -p"
 alias unarx="parallel unar {} ::: *.7z *.rar *.zip"
 alias delarx="rm -rf *.zip *.7z *.rar"
 alias pbcopy='xclip -selection clipboard'
@@ -215,3 +214,7 @@ function sortgff() {
   grep "^#" $1;
   grep -v "^#" $1 | sort -t"`printf '\t'`" -k1,1 -k4,4n;
 }
+
+
+source /usr/share/doc/fzf/examples/key-bindings.zsh
+source /usr/share/doc/fzf/examples/completion.zsh
