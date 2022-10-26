@@ -36,9 +36,9 @@ For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 - Computer - Dell laptop with 32gb RAM, 512GB SSD
 - OS - Ubuntu 22.04
 - Music player - foobar2000 snap (uses wine on linux)
-- Text editor - neovim+build in lsp+treesitter+fzf
-- Browser - Chromium
-- Browser Add-ons - Dark Reader
+- Text editor - neovim nightly 0.8 + built-in lsp + treesitter + fzf
+- Browser - Firefox (switched from Chrome Oct 2022)
+- Browser Add-ons - Dark Reader, uBlock origin
 
 I perform a lot of work in tmux+neovim where I split the screen vertically (two
 halves side by side) with tmux and then do either tests on one side of the
