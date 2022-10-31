@@ -8,27 +8,11 @@ return require('packer').startup(function(use)
   use 'tpope/vim-commentary'
   use 'EdenEast/nightfox.nvim'
   use 'mhinz/vim-startify'
+  use 'kylechui/nvim-surround'
+  use 'ggandor/leap.nvim'
   use { 'nvim-telescope/telescope.nvim', requires = { { 'nvim-lua/plenary.nvim' } } }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
-  use {
-    'kylechui/nvim-surround',
-    config = function()
-      require('nvim-surround').setup {}
-    end,
-  }
-  use {
-    'ggandor/leap.nvim',
-    config = function()
-      require('leap').set_default_keymaps()
-    end,
-  }
-  use {
-    'j-hui/fidget.nvim',
-    config = function()
-      require('fidget').setup {}
-    end,
-  }
 
   -- all requires from https://github.com/VonHeikemen/lsp-zero.nvim
   use {

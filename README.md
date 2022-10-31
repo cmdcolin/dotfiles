@@ -57,7 +57,8 @@ type sidebar
 
 ### Music player setup
 
-I am running foobar2000 under Wine (from the `snap install foobar2000` installation route)
+I am running foobar2000 under Wine (from the `snap install foobar2000`
+installation route)
 
 My main customization goals of pretty much any music player are to have
 
@@ -68,6 +69,14 @@ My main customization goals of pretty much any music player are to have
 - A recently played playlist
 
 ![](img/3.png)
+
+Recently (Sept 2022) I started creating my own music player to try to bring my
+foobar2000 to native linux with gtk4-rs
+
+![](https://github.com/cmdcolin/fml9000/raw/master/img/1.png)
+
+Progress is slow on it but it does play MP3s :)
+https://github.com/cmdcolin/fml9000
 
 ## Old stuff
 
