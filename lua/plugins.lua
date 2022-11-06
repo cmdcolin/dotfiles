@@ -9,8 +9,9 @@ return require('packer').startup(function(use)
   use 'EdenEast/nightfox.nvim'
   use 'mhinz/vim-startify'
   use 'kylechui/nvim-surround'
+  use 'windwp/nvim-autopairs'
   use 'ggandor/leap.nvim'
-  use { 'nvim-telescope/telescope.nvim', requires = { { 'nvim-lua/plenary.nvim' } } }
+  use { 'nvim-telescope/telescope.nvim', requires = {  'nvim-lua/plenary.nvim' }  }
   use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
