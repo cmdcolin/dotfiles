@@ -1,33 +1,30 @@
-local prettierfmt = function()
+local util = require 'formatter.util'
+local rfmt = function()
   return {
-    exe = 'prettier',
-    args = { '--stdin-filepath', vim.fn.fnameescape(vim.api.nvim_buf_get_name(0)) },
-    stdin = true,
+    exe = 'Rscript',
+    args = {
+      '-e \'styler::style_file("'
+        .. util.escape_path(util.get_current_buffer_file_path())
+        .. '")\'',
+    },
   }
 end
-
-local rustfmt = function()
-  return {
-    exe = 'rustfmt',
-    stdin = true,
-  }
-end
-
-local stylua = require('formatter.filetypes.lua').stylua
 
 require('formatter').setup {
   filetype = {
-    javascriptreact = { prettierfmt },
-    javascript = { prettierfmt },
-    typescriptreact = { prettierfmt },
-    typescript = { prettierfmt },
-    json = { prettierfmt },
-    markdown = { prettierfmt },
-    html = { prettierfmt },
-    css = { prettierfmt },
-    svg = { prettierfmt },
-    lua = { stylua },
-    rust = { rustfmt },
+    r = { rfmt },
+    javascriptreact = { require 'formatter.defaults.prettier' },
+    javascript = { require 'formatter.defaults.prettier' },
+    typescriptreact = { require 'formatter.defaults.prettier' },
+    typescript = { require 'formatter.defaults.prettier' },
+    json = { require 'formatter.defaults.prettier' },
+    markdown = { require 'formatter.defaults.prettier' },
+    html = { require 'formatter.defaults.prettier' },
+    css = { require 'formatter.defaults.prettier' },
+    svg = { require 'formatter.defaults.prettier' },
+    lua = { require('formatter.filetypes.lua').stylua },
+    rust = { require('formatter.filetypes.lua').rustfmt },
+    ['*'] = { require('formatter.filetypes.any').remove_trailing_whitespace },
   },
 }
 
@@ -35,7 +32,7 @@ vim.api.nvim_exec(
   [[
 augroup FormatAutogroup
   autocmd!
-  autocmd BufWritePost *.js,*.tsx,*.ts,*jsx,*json,*.md,*.R,*.r,*.html,*.css,*.svg,*.lua,*.rs FormatWrite
+  autocmd BufWritePost * FormatWrite
 augroup END
 ]],
   true
