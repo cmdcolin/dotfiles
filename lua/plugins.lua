@@ -5,14 +5,13 @@ return require('packer').startup(function(use)
   use 'tpope/vim-vinegar'
   use 'tpope/vim-fugitive'
   use 'tpope/vim-rhubarb'
-  use 'tpope/vim-commentary'
+  use 'numToStr/Comment.nvim'
   use 'EdenEast/nightfox.nvim'
   use 'mhinz/vim-startify'
   use 'kylechui/nvim-surround'
   use 'windwp/nvim-autopairs'
   use 'ggandor/leap.nvim'
-  use { 'nvim-telescope/telescope.nvim', requires = {  'nvim-lua/plenary.nvim' }  }
-  use { 'nvim-telescope/telescope-fzf-native.nvim', run = 'make' }
+  use { 'nvim-telescope/telescope.nvim', requires = { 'nvim-lua/plenary.nvim' } }
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
 
   -- all requires from https://github.com/VonHeikemen/lsp-zero.nvim

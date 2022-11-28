@@ -32,6 +32,11 @@ luasnip.add_snippets(nil, {
       text { '// eslint-disable-next-line @typescript-eslint/no-explicit-any' },
     }),
     snip({
+      trig = 'ds',
+    }, {
+      text { '// eslint-disable-next-line @typescript-eslint/no-floating-promises' },
+    }),
+    snip({
       trig = 'ts',
     }, {
       text { '// @ts-ignore' },

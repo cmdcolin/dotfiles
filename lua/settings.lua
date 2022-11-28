@@ -14,17 +14,23 @@ vim.cmd [[colorscheme nightfox]]
 require('nvim-surround').setup {}
 require('telescope').setup {}
 require('nvim-autopairs').setup {}
-require('mason').setup()
-require('mason-lspconfig').setup()
+require('Comment').setup()
 require('leap').add_default_mappings()
-require('telescope').load_extension 'fzf'
 require('nvim-treesitter.configs').setup {
   highlight = { enable = true },
   indent = { enable = true },
   auto_install = true,
 }
+
+require('mason').setup()
+require('mason-lspconfig').setup()
 local lsp = require 'lsp-zero'
 lsp.preset 'recommended'
+lsp.ensure_installed {
+  'tsserver',
+  'eslint',
+}
+lsp.nvim_workspace()
 lsp.setup()
 
 require('lspconfig').eslint.setup {}

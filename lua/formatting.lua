@@ -10,6 +10,13 @@ local rfmt = function()
   }
 end
 
+local rustfmt = function()
+  return {
+    exe = 'rustfmt',
+    stdin = true,
+  }
+end
+
 require('formatter').setup {
   filetype = {
     r = { rfmt },
@@ -23,17 +30,17 @@ require('formatter').setup {
     css = { require 'formatter.defaults.prettier' },
     svg = { require 'formatter.defaults.prettier' },
     lua = { require('formatter.filetypes.lua').stylua },
-    rust = { require('formatter.filetypes.lua').rustfmt },
+    rust = { rustfmt },
     ['*'] = { require('formatter.filetypes.any').remove_trailing_whitespace },
   },
 }
 
 vim.api.nvim_exec(
   [[
-augroup FormatAutogroup
-  autocmd!
-  autocmd BufWritePost * FormatWrite
-augroup END
-]],
+    augroup FormatAutogroup
+      autocmd!
+      autocmd BufWritePost * FormatWrite
+    augroup END
+  ]],
   true
 )
