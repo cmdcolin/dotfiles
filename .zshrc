@@ -218,3 +218,7 @@ function sortgff() {
 
 source /usr/share/doc/fzf/examples/key-bindings.zsh
 source /usr/share/doc/fzf/examples/completion.zsh
+
+# fnm
+export PATH="/home/cdiesh/.fnm:$PATH"
+eval "`fnm env`"
