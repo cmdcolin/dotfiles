@@ -149,7 +149,7 @@ export DEBUG_PRINT_LIMIT=0
 
 function md() {
   pandoc $1 > /tmp/$1.html
-  xdg-open /tmp/$1.html 
+  xdg-open /tmp/$1.html
 }
 
 export EDITOR="vim"
@@ -218,6 +218,9 @@ function sortgff() {
 
 source /usr/share/doc/fzf/examples/key-bindings.zsh
 source /usr/share/doc/fzf/examples/completion.zsh
+
+# used for building old create-react-apps with newer node
+export NODE_OPTIONS=--openssl-legacy-provider
 
 # fnm
 export PATH="/home/cdiesh/.fnm:$PATH"
