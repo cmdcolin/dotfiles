@@ -6,7 +6,7 @@ return require('packer').startup(function(use)
   use 'tpope/vim-fugitive'
   use 'tpope/vim-rhubarb'
   use 'numToStr/Comment.nvim'
-  use 'EdenEast/nightfox.nvim'
+  use 'KeitaNakamura/neodark.vim'
   use 'mhinz/vim-startify'
   use 'kylechui/nvim-surround'
   use 'windwp/nvim-autopairs'

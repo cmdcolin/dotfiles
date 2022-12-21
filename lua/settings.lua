@@ -1,5 +1,4 @@
 local opt = vim.opt
-
 opt.undofile = true
 opt.mouse = 'a'
 opt.termguicolors = true
@@ -8,15 +7,18 @@ opt.cmdheight = 0
 opt.lazyredraw = true
 opt.sw = 2
 opt.expandtab = true
+opt.termguicolors = true
+opt.background = 'dark'
 opt.updatetime = 200
 
-vim.cmd [[colorscheme nightfox]]
+vim.cmd 'colorscheme neodark'
 require('nvim-surround').setup {}
 require('telescope').setup {}
 require('nvim-autopairs').setup {}
 require('Comment').setup()
 require('leap').add_default_mappings()
 require('nvim-treesitter.configs').setup {
+  ensure_installed = { 'typescript', 'tsx', 'r', 'javascript', 'lua', 'rust' },
   highlight = { enable = true },
   indent = { enable = true },
   auto_install = true,

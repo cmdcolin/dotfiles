@@ -10,13 +10,6 @@ local rfmt = function()
   }
 end
 
-local rustfmt = function()
-  return {
-    exe = 'rustfmt',
-    stdin = true,
-  }
-end
-
 require('formatter').setup {
   filetype = {
     r = { rfmt },
@@ -30,7 +23,7 @@ require('formatter').setup {
     css = { require 'formatter.defaults.prettier' },
     svg = { require 'formatter.defaults.prettier' },
     lua = { require('formatter.filetypes.lua').stylua },
-    rust = { rustfmt },
+    rust = { require('formatter.filetypes.rust').rustfmt },
     ['*'] = { require('formatter.filetypes.any').remove_trailing_whitespace },
   },
 }

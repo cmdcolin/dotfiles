@@ -11,4 +11,4 @@ map('n', '<leader>f', '<cmd>LspZeroFormat<cr>', default_opts)
 map('n', '<leader>o', 'o<Esc>', default_opts)
 map('n', '<leader>O', 'O<Esc>', default_opts)
 map('n', '<leader>p', '"_dP', default_opts)
-
+vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
