@@ -5,7 +5,7 @@ return require('packer').startup(function(use)
   use 'tpope/vim-vinegar'
   use 'tpope/vim-fugitive'
   use 'tpope/vim-rhubarb'
-  use 'numToStr/Comment.nvim'
+  use 'tpope/vim-commentary'
   use 'KeitaNakamura/neodark.vim'
   use 'mhinz/vim-startify'
   use 'kylechui/nvim-surround'

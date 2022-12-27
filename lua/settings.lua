@@ -9,13 +9,12 @@ opt.sw = 2
 opt.expandtab = true
 opt.termguicolors = true
 opt.background = 'dark'
-opt.updatetime = 200
+opt.updatetime = 1000
 
 vim.cmd 'colorscheme neodark'
 require('nvim-surround').setup {}
 require('telescope').setup {}
 require('nvim-autopairs').setup {}
-require('Comment').setup()
 require('leap').add_default_mappings()
 require('nvim-treesitter.configs').setup {
   ensure_installed = { 'typescript', 'tsx', 'r', 'javascript', 'lua', 'rust' },
