@@ -1,52 +1,24 @@
-local luasnip = require 'luasnip'
-local snip = luasnip.snippet
-local text = luasnip.text_node
-local insert = luasnip.insert_node
+local ls = require 'luasnip'
+local p = ls.parser
 
-luasnip.add_snippets(nil, {
-  all = {
-    snip({
-      trig = 'cl',
-    }, {
-      text { 'console.log({' },
-      insert(1, ''),
-      text { '})' },
-    }),
-    snip({
-      trig = 'cj',
-    }, {
-      text { 'console.log(' },
-      insert(1, ''),
-      text { ')' },
-    }),
-    snip({
-      trig = 'ck',
-    }, {
-      text { "console.log('" },
-      insert(1, ''),
-      text { "')" },
-    }),
-    snip({
-      trig = 'da',
-    }, {
-      text { '// eslint-disable-next-line @typescript-eslint/no-explicit-any' },
-    }),
-    snip({
-      trig = 'ds',
-    }, {
-      text { '// eslint-disable-next-line @typescript-eslint/no-floating-promises' },
-    }),
-    snip({
-      trig = 'ts',
-    }, {
-      text { '// @ts-ignore' },
-    }),
-    snip({
-      trig = 'pp',
-    }, {
-      text { 'println!("{}",' },
-      insert(1, ''),
-      text { ');' },
-    }),
+local v = {
+  p.parse_snippet('ti', 'import $1 from "$2"'),
+  p.parse_snippet('ti', 'import $1 from "$2"'),
+  p.parse_snippet('ts', '// @ts-ignore'),
+  p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-explicit-any'),
+  p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-floating-promises'),
+  p.parse_snippet('cl', 'console.log({$1})'),
+}
+
+ls.add_snippets(nil, {
+  javascript = v,
+  javascriptreact = v,
+  typescript = v,
+  typescriptreact = v,
+  rust = {
+    p.parse_snippet('pp', 'println!("{}",$1)'),
+  },
+  java = {
+    p.parse_snippet('pp', 'System.out.println($1)'),
   },
 })
