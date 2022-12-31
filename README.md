@@ -20,14 +20,14 @@ leader for me is comma (,)
 
 I have gotten repetitive strain injury from excessive keyboard shortcuts that
 use the control key (left control, left pinky gets twinged, sometimes called
-emacs pinky though I don't use emacs). Therefore I try to avoid keypresses that
-use it. I also remap caps lock to left-control (screenshot
-https://askubuntu.com/a/1044001/487959) which helps to reduce some left pinky
-contortions.
+emacs pinky though I don't use emacs). I have to be careful with contorting
+hand, but also I found out that you have to be careful with using e.g. armrests
+too https://cmdcolin.github.io/posts/2022-07-08-pinky
 
 ## Install
 
-For nvim, cp init.lua to ~/.config/nvim/init.lua and copy the lua directory to ~/.config/nvim/lua
+For nvim, cp init.lua to ~/.config/nvim/init.lua and copy the lua directory to
+~/.config/nvim/lua
 
 For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 
@@ -35,8 +35,8 @@ For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 
 - Computer - Dell laptop with 32gb RAM, 512GB SSD
 - OS - Ubuntu 22.04
-- Music player - foobar2000 snap (uses wine on linux)
-- Text editor - neovim nightly 0.8 + built-in lsp + treesitter + fzf
+- Music player - [fml9000](https://github.com/cmdcolin/fml9000)
+- Text editor - neovim nightly 0.9 + built-in lsp + treesitter + fzf
 - Browser - Firefox (switched from Chrome Oct 2022)
 - Browser Add-ons - Dark Reader, uBlock origin
 
@@ -45,9 +45,9 @@ halves side by side) with tmux and then do either tests on one side of the
 screen or have two split screens. If needed I make a new tmux tab. I close and
 re-open vim a lot which is kind of crazy in a way, but seems to work for me
 
-Using fzf for quick file name searches or greps enabled me to become
-much less reliant on a file browser like NERDTree, so I don't use any NERDTree
-type sidebar
+Using fzf for quick file name searches or greps enabled me to become much less
+reliant on a file browser like NERDTree, so I don't use any NERDTree type
+sidebar
 
 ## Screenshot
 
@@ -57,21 +57,8 @@ type sidebar
 
 ### Music player setup
 
-I am running foobar2000 under Wine (from the `snap install foobar2000`
-installation route)
-
-My main customization goals of pretty much any music player are to have
-
-- A list of albums in the form `Artist - Album name` (as opposed to an itunes
-  style layout where it is a list of artists and then a separate list of
-  albums)
-- A recently added playlist
-- A recently played playlist
-
-![](img/3.png)
-
-Recently (Sept 2022) I started creating my own music player to try to bring my
-foobar2000 to native linux with gtk4-rs
+I started creating my own music player to try to bring my foobar2000 to native
+linux with gtk4-rs
 
 ![](https://github.com/cmdcolin/fml9000/raw/master/img/1.png)
 
