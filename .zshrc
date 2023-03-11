@@ -38,6 +38,8 @@ export EDITOR="vim"
 alias ll="ls -l"
 alias e="vim"
 alias y="yarn"
+alias r="npm run"
+alias rr="npm run dev"
 alias p="z"
 alias v="nvim"
 alias g="git status"
@@ -100,6 +102,7 @@ function sortgff() {
 source /usr/share/doc/fzf/examples/key-bindings.zsh
 source /usr/share/doc/fzf/examples/completion.zsh
 
+CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
 # fnm
 export PATH="/home/cdiesh/.fnm:$PATH"

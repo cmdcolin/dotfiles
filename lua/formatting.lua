@@ -19,6 +19,7 @@ require('formatter').setup {
     typescript = { require 'formatter.defaults.prettier' },
     json = { require 'formatter.defaults.prettier' },
     markdown = { require 'formatter.defaults.prettier' },
+    scss = { require 'formatter.defaults.prettier' },
     html = { require 'formatter.defaults.prettier' },
     css = { require 'formatter.defaults.prettier' },
     svg = { require 'formatter.defaults.prettier' },
