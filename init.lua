@@ -1,3 +1,14 @@
+local opt = vim.opt
+opt.undofile = true
+opt.mouse = 'a'
+opt.nu = true
+opt.clipboard = 'unnamedplus'
+opt.cmdheight = 0
+opt.lazyredraw = true
+opt.sw = 2
+opt.expandtab = true
+vim.g.termguicolors = true
+
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system {
@@ -17,7 +28,7 @@ require('lazy').setup {
   'VonHeikemen/lsp-zero.nvim',
   branch = 'v2.x',
   dependencies = {
-    { 'folke/tokyonight.nvim' },
+    { 'rebelot/kanagawa.nvim' },
     { 'mhartington/formatter.nvim' },
     { 'nvim-treesitter/nvim-treesitter' },
     { 'tpope/vim-commentary' },
@@ -55,7 +66,53 @@ require('lspconfig').eslint.setup {}
 
 lsp.setup()
 
-require 'settings'
+require('telescope').setup {}
+require('nvim-autopairs').setup {}
+require('nvim-treesitter.configs').setup {
+  ensure_installed = { 'typescript', 'tsx', 'r', 'javascript', 'lua', 'rust' },
+  highlight = { enable = true },
+  indent = { enable = true },
+  auto_install = true,
+}
+
+vim.cmd 'colorscheme kanagawa'
+
 require 'keymaps'
-require 'snips'
 require 'formatting'
+
+local cmp = require 'cmp'
+
+cmp.setup {
+  sources = {
+    { name = 'path' },
+    { name = 'nvim_lsp' },
+    { name = 'buffer', keyword_length = 3 },
+    { name = 'luasnip', keyword_length = 2 },
+  },
+}
+
+local ls = require 'luasnip'
+local p = ls.parser
+
+local v = {
+  p.parse_snippet('ti', 'import $1 from "$2"'),
+  p.parse_snippet('ti', 'import $1 from "$2"'),
+  p.parse_snippet('ts', '// @ts-expect-error'),
+  p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-explicit-any'),
+  p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-floating-promises'),
+  p.parse_snippet('cl', 'console.log({$1})'),
+  p.parse_snippet('cl', 'console.log($1)'),
+}
+
+ls.add_snippets(nil, {
+  javascript = v,
+  javascriptreact = v,
+  typescript = v,
+  typescriptreact = v,
+  rust = {
+    p.parse_snippet('pp', 'println!("{}",$1)'),
+  },
+  java = {
+    p.parse_snippet('pp', 'System.out.println($1)'),
+  },
+})

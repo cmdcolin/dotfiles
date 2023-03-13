@@ -1,7 +1,7 @@
 [[ -z "$TMUX" ]] && exec tmux -2
 [[ $- != *i* ]] && return
 
-## https://github.com/zimfw/git#settings
+#https://github.com/zimfw/git#settings
 zstyle ':zim:git' aliases-prefix 'g'
 bindkey -v
 WORDCHARS=${WORDCHARS//[\/]}
