@@ -24,6 +24,8 @@ require('lazy').setup {
   branch = 'v2.x',
   dependencies = {
     { 'rebelot/kanagawa.nvim' },
+    { 'goolord/alpha-nvim' },
+    { 'nvim-tree/nvim-web-devicons' },
     { 'mhartington/formatter.nvim' },
     { 'nvim-treesitter/nvim-treesitter' },
     { 'tpope/vim-commentary' },
@@ -55,6 +57,7 @@ require 'keymaps'
 require 'formatting'
 require 'snips'
 
+require('alpha').setup(require('alpha.themes.startify').config)
 require('nvim-autopairs').setup {}
 require('nvim-treesitter.configs').setup {
   ensure_installed = { 'typescript', 'tsx', 'r', 'javascript', 'lua', 'rust' },
