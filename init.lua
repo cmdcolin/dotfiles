@@ -23,6 +23,8 @@ require('lazy').setup {
   'VonHeikemen/lsp-zero.nvim',
   branch = 'v2.x',
   dependencies = {
+    { 'windwp/nvim-autopairs' },
+    { 'windwp/nvim-ts-autotag' },
     { 'rebelot/kanagawa.nvim' },
     { 'goolord/alpha-nvim' },
     { 'nvim-tree/nvim-web-devicons' },
@@ -32,7 +34,6 @@ require('lazy').setup {
     { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
     { 'tpope/vim-vinegar' },
     { 'tpope/vim-rhubarb' },
-    { 'windwp/nvim-autopairs' },
     -- LSP Support
     { 'neovim/nvim-lspconfig' },
     { 'williamboman/mason.nvim' },
@@ -60,8 +61,11 @@ require 'snips'
 require('alpha').setup(require('alpha.themes.startify').config)
 require('nvim-autopairs').setup {}
 require('nvim-treesitter.configs').setup {
-  ensure_installed = { 'typescript', 'tsx', 'r', 'javascript', 'lua', 'rust' },
+  ensure_installed = { 'typescript', 'tsx', 'r', 'javascript', 'lua', 'rust', 'java' },
   highlight = { enable = true },
   indent = { enable = true },
   auto_install = true,
+  autotag = {
+    enable = true,
+  },
 }
