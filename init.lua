@@ -31,9 +31,10 @@ require('lazy').setup {
     { 'mhartington/formatter.nvim' },
     { 'nvim-treesitter/nvim-treesitter' },
     { 'tpope/vim-commentary' },
-    { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
+    { 'tpope/vim-fugitive' },
     { 'tpope/vim-vinegar' },
     { 'tpope/vim-rhubarb' },
+    { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
     -- LSP Support
     { 'neovim/nvim-lspconfig' },
     { 'williamboman/mason.nvim' },

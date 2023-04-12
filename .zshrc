@@ -81,7 +81,7 @@ alias gitbranch="git log --oneline --graph --all --no-decorate"
 
 
 function vaporwave() {
-  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.5},aresample=44100" "`basename $1 .m4a`.vaporwave.m4a"
+  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "`basename $1 .m4a`.vaporwave${2:-0.66}.m4a"
 }
 
 
