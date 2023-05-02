@@ -22,6 +22,7 @@ require('formatter').setup {
     scss = { require 'formatter.defaults.prettier' },
     html = { require 'formatter.defaults.prettier' },
     css = { require 'formatter.defaults.prettier' },
+    mdx = { require 'formatter.defaults.prettier' },
     svg = { require 'formatter.defaults.prettier' },
     lua = { require('formatter.filetypes.lua').stylua },
     rust = { require('formatter.filetypes.rust').rustfmt },

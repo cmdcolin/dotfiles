@@ -30,6 +30,7 @@ require('lazy').setup {
     { 'nvim-tree/nvim-web-devicons' },
     { 'mhartington/formatter.nvim' },
     { 'nvim-treesitter/nvim-treesitter' },
+    { 'nvim-treesitter/playground' },
     { 'tpope/vim-commentary' },
     { 'tpope/vim-fugitive' },
     { 'tpope/vim-vinegar' },
