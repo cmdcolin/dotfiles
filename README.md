@@ -34,9 +34,10 @@ For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 ## Details about my setup
 
 - Computer - Dell laptop with 32gb RAM, 512GB SSD
-- OS - Ubuntu 22.04
-- Music player - [fml9000](https://github.com/cmdcolin/fml9000)
-- Text editor - neovim nightly 0.9 + built-in lsp + treesitter + fzf
+- OS - Ubuntu 23.04
+- Music player - [fml9000](https://github.com/cmdcolin/fml9000) or
+  [ytshuffle](https://cmdcolin.github.io/ytshuffle/)
+- Text editor - neovim nightly 0.10 + built-in lsp + treesitter + fzf
 - Browser - Firefox (switched from Chrome Oct 2022)
 - Browser Add-ons - Dark Reader, uBlock origin
 
@@ -64,6 +65,9 @@ linux with gtk4-rs
 
 Progress is slow on it but it does play MP3s :)
 https://github.com/cmdcolin/fml9000
+
+I also made an app, ytshuffle, to load entire channels worth of youtubes and
+browse like a music library. See https://cmdcolin.github.io/ytshuffle/
 
 ## Old stuff
 

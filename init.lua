@@ -28,14 +28,14 @@ require('lazy').setup {
     { 'rebelot/kanagawa.nvim' },
     { 'goolord/alpha-nvim' },
     { 'nvim-tree/nvim-web-devicons' },
-    { 'mhartington/formatter.nvim' },
+    { 'jose-elias-alvarez/null-ls.nvim' },
     { 'nvim-treesitter/nvim-treesitter' },
     { 'nvim-treesitter/playground' },
     { 'tpope/vim-commentary' },
     { 'tpope/vim-fugitive' },
     { 'tpope/vim-vinegar' },
     { 'tpope/vim-rhubarb' },
-    { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
+    { 'nvim-telescope/telescope.nvim',    dependencies = { 'nvim-lua/plenary.nvim' } },
     -- LSP Support
     { 'neovim/nvim-lspconfig' },
     { 'williamboman/mason.nvim' },
@@ -57,7 +57,6 @@ require('lazy').setup {
 vim.cmd 'colorscheme kanagawa'
 require 'lsp'
 require 'keymaps'
-require 'formatting'
 require 'snips'
 
 require('alpha').setup(require('alpha.themes.startify').config)
@@ -71,3 +70,5 @@ require('nvim-treesitter.configs').setup {
     enable = true,
   },
 }
+vim.filetype.add({ extension = { mdx = 'mdx' } })
+vim.treesitter.language.register('mdx', 'markdown')
