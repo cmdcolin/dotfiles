@@ -4,6 +4,7 @@ local lsp = require('lsp-zero').preset {
   },
 }
 
+
 lsp.on_attach(function(client, bufnr)
   lsp.default_keymaps { buffer = bufnr }
 end)
@@ -19,8 +20,24 @@ lsp.format_on_save {
   servers = {
     ['lua_ls'] = { 'lua' },
     ['rust_analyzer'] = { 'rust' },
-    ['null-ls'] = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "css", "scss", "less",
-      "html", "json", "jsonc", "yaml", "markdown", "markdown.mdx", "graphql", "handlebars" },
+    ['null-ls'] = {
+      "javascript",
+      "javascriptreact",
+      "typescript",
+      "typescriptreact",
+      "vue",
+      "css",
+      "scss",
+      "less",
+      "html",
+      "json",
+      "jsonc",
+      "yaml",
+      "markdown",
+      "markdown.mdx",
+      "graphql",
+      "handlebars"
+    },
   },
 }
 

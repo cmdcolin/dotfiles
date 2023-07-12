@@ -38,9 +38,9 @@ export EDITOR="vim"
 alias ll="ls -l"
 alias e="vim"
 alias y="yarn"
+alias p="z"
 alias r="npm run"
 alias rr="npm run dev"
-alias p="z"
 alias v="nvim"
 alias g="git status"
 alias oo="npm run dev"
@@ -48,15 +48,13 @@ alias gd="git diff"
 alias ss="yarn start"
 alias ag="rg"
 alias fd="fdfind"
-alias lg="lazygit"
-alias cg="grep --color=always"
 alias gg="git grep"
 alias ggg="git commit --amend --no-edit"
 alias gggg="git add . && git commit --amend --no-edit"
 alias ggggg="git add . && git commit --amend --no-edit && git push -f"
 alias vim="nvim"
 alias gp="git add -p"
-alias gcm="git checkout main"
+alias mm="git checkout main"
 alias ppp="git push"
 alias ee="cargo run"
 alias qq="exit"
@@ -81,20 +79,17 @@ alias pserver='npx serve'
 alias smaller="parallel convert -resize 50% {} resized.{} ::: *.png"
 alias cpuspeed="glances --enable-plugin sensors"
 alias gitbranch="git log --oneline --graph --all --no-decorate"
+alias uprust="rustup update"
+alias uprustdeps="cargo install-update -a"
+alias upytdl="wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux && chmod +x yt-dlp_linux && mv yt-dlp_linux ~/.local/bin/youtube-dl"
+alias upneovim="wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage && chmod +x nvim.appimage && mv nvim.appimage ~/.local/bin/nvim"
+alias clean_node_modules="find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
+alias upall="upytdl && upneovim && uprustdeps && uprust && sau"
 
 
 function vaporwave() {
   ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "`basename $1 .m4a`.vaporwave${2:-0.66}.m4a"
 }
-
-
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export PATH=$PATH:~/.local/bin/
-
-# fnm
-export PATH=/home/cdiesh/.fnm:$PATH
-eval "`fnm env`"
 
 
 function sortgff() {
@@ -103,11 +98,13 @@ function sortgff() {
 }
 
 
-source /usr/share/doc/fzf/examples/key-bindings.zsh
-source /usr/share/doc/fzf/examples/completion.zsh
-
 CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
 # fnm
-export PATH="/home/cdiesh/.fnm:$PATH"
 eval "`fnm env`"
+
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+export PATH=$PATH:~/.local/bin/
+
