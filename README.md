@@ -13,8 +13,8 @@ It's fun :)
 
 Favorite vim keybindings:
 
-- `<leader>gg` - file name search (fzf+git ls-files)
-- `<leader>ff` - file content search (fzf+live grep)
+- `<leader>gg` - file name search (telescope find-files)
+- `<leader>ff` - file content search (telescope live-grep)
 
 leader for me is comma (,)
 

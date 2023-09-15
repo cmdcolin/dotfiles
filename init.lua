@@ -46,6 +46,7 @@ require('lazy').setup {
     { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
     {
       'j-hui/fidget.nvim',
+      tag = "legacy",
       opts = {}
     },
     {
