@@ -87,7 +87,7 @@ alias uprustdeps="cargo install-update -a"
 alias upytdl="wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux && chmod +x yt-dlp_linux && mv yt-dlp_linux ~/.local/bin/youtube-dl"
 alias upneovim="wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage && chmod +x nvim.appimage && mv nvim.appimage ~/.local/bin/nvim"
 alias clean_node_modules="find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
-alias upall="upytdl && upneovim && uprustdeps && uprust && sau"
+alias upall="upytdl; upneovim; uprust; uprustdeps; sau"
 
 
 function vaporwave() {
