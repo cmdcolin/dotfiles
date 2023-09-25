@@ -7,11 +7,11 @@ opt.cmdheight = 0
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
   vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
+    'git',
+    'clone',
+    '--filter=blob:none',
+    'https://github.com/folke/lazy.nvim.git',
+    '--branch=stable', -- latest stable release
     lazypath,
   })
 end
@@ -21,8 +21,16 @@ vim.g.mapleader = ','
 
 
 require('lazy').setup({
-  { 'VonHeikemen/lsp-zero.nvim',        branch = 'v3.x' },
-
+  {
+    'VonHeikemen/lsp-zero.nvim',
+    branch = 'v3.x'
+  },
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+  },
   -- Lsp-zero recommended - LSP Support
   { 'neovim/nvim-lspconfig' },
   { 'williamboman/mason.nvim' },
@@ -31,7 +39,10 @@ require('lazy').setup({
   -- Lsp-zero recommended - Autocompletion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-nvim-lsp' },
+  { 'hrsh7th/cmp-path' },
   { 'L3MON4D3/LuaSnip' },
+  { 'saadparwaiz1/cmp_luasnip' },
+  { 'hrsh7th/cmp-nvim-lua' },
 
   -- My stuff
   { 'windwp/nvim-autopairs' },
@@ -66,7 +77,7 @@ require('lazy').setup({
     -- Enable `lukas-reineke/indent-blankline.nvim`
     -- See `:help indent_blankline.txt`
     opts = {
-      char = '┊',
+      char = '|',
       show_trailing_blankline_indent = false,
     },
   },
@@ -124,8 +135,12 @@ lsp_zero.format_on_save({
     timeout_ms = 10000,
   },
   servers = {
-    ['lua_ls'] = { 'lua' },
-    ['rust_analyzer'] = { 'rust' },
+    ['lua_ls'] = {
+      'lua'
+    },
+    ['rust_analyzer'] = {
+      'rust'
+    },
     ['null-ls'] = {
       "javascript",
       "javascriptreact",
@@ -184,9 +199,11 @@ ls.add_snippets(nil, {
   typescript = v,
   typescriptreact = v,
   rust = {
-    p.parse_snippet('pp', 'println!("{}",$1)'),
+    p.parse_snippet('cl', 'println!("{}",$1)'),
   },
   java = {
-    p.parse_snippet('pp', 'System.out.println($1)'),
+    p.parse_snippet('cl', 'System.out.println($1)'),
   },
 })
+
+vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
