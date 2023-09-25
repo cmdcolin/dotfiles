@@ -27,13 +27,19 @@ require('lazy').setup({
   },
   {
     'stevearc/oil.nvim',
-    opts = {},
-    -- Optional dependencies
-    dependencies = { "nvim-tree/nvim-web-devicons" },
+    opts = {
+      default_file_explorer = false,
+    },
+  },
+  {
+    'stevearc/conform.nvim',
   },
   -- Lsp-zero recommended - LSP Support
   { 'neovim/nvim-lspconfig' },
-  { 'williamboman/mason.nvim' },
+  {
+    'williamboman/mason.nvim',
+    opts = {}
+  },
   { 'williamboman/mason-lspconfig.nvim' },
 
   -- Lsp-zero recommended - Autocompletion
@@ -43,16 +49,21 @@ require('lazy').setup({
   { 'L3MON4D3/LuaSnip' },
   { 'saadparwaiz1/cmp_luasnip' },
   { 'hrsh7th/cmp-nvim-lua' },
-
-  -- My stuff
-  { 'windwp/nvim-autopairs' },
+  {
+    'windwp/nvim-autopairs',
+    opts = {}
+  },
   { 'windwp/nvim-ts-autotag' },
   { 'rebelot/kanagawa.nvim' },
-  { 'goolord/alpha-nvim' },
-  { 'nvim-tree/nvim-web-devicons' },
-  { 'jose-elias-alvarez/null-ls.nvim' },
   {
-    -- Highlight, edit, and navigate code
+    'goolord/alpha-nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      require 'alpha'.setup(require 'alpha.themes.startify'.config)
+    end
+  },
+  { 'nvim-tree/nvim-web-devicons' },
+  {
     'nvim-treesitter/nvim-treesitter',
     dependencies = {
       'nvim-treesitter/nvim-treesitter-textobjects',
@@ -62,36 +73,30 @@ require('lazy').setup({
   { 'folke/trouble.nvim' },
   { 'nvim-treesitter/playground' },
   { 'tpope/vim-commentary' },
-  { 'tpope/vim-fugitive' },
-  { 'tpope/vim-vinegar' },
-  { 'tpope/vim-rhubarb' },
-  { 'nvim-telescope/telescope.nvim', dependencies = { 'nvim-lua/plenary.nvim' } },
+  {
+    'ruifm/gitlinker.nvim',
+    opts = {}
+  },
+  {
+    'nvim-telescope/telescope.nvim',
+    dependencies = {
+      'nvim-lua/plenary.nvim'
+    }
+  },
   {
     'j-hui/fidget.nvim',
     tag = "legacy",
     opts = {}
   },
-  {
-    -- Add indentation guides even on blank lines
-    'lukas-reineke/indent-blankline.nvim',
-    -- Enable `lukas-reineke/indent-blankline.nvim`
-    -- See `:help indent_blankline.txt`
-    opts = {
-      char = '|',
-      show_trailing_blankline_indent = false,
-    },
-  },
+  { 'lukas-reineke/indent-blankline.nvim', },
 })
 
 local lsp_zero = require('lsp-zero')
 
 lsp_zero.on_attach(function(client, bufnr)
-  -- see :help lsp-zero-keybindings
-  -- to learn the available actions
   lsp_zero.default_keymaps({ buffer = bufnr })
 end)
 
-require('mason').setup({})
 require('mason-lspconfig').setup({
   ensure_installed = { 'tsserver', 'rust_analyzer', 'lua_ls' },
   handlers = {
@@ -107,19 +112,19 @@ local cmp = require('cmp')
 local cmp_format = lsp_zero.cmp_format()
 
 cmp.setup({
+  sources = {
+    { name = 'nvim_lsp' },
+    { name = 'luasnip' },
+  },
   formatting = cmp_format,
   mapping = cmp.mapping.preset.insert({
-    -- scroll up and down the documentation window
-    ['<C-u>'] = cmp.mapping.scroll_docs(-4),
-    ['<C-d>'] = cmp.mapping.scroll_docs(4),
+    ['<CR>'] = cmp.mapping.confirm { select = true },
   }),
 })
 
 
 vim.cmd 'colorscheme kanagawa'
 
-require('alpha').setup(require('alpha.themes.startify').config)
-require('nvim-autopairs').setup {}
 require('nvim-treesitter.configs').setup {
   ensure_installed = { 'typescript', 'tsx', 'r', 'javascript', 'lua', 'rust', 'java' },
   highlight = { enable = true },
@@ -129,44 +134,27 @@ require('nvim-treesitter.configs').setup {
 }
 
 
-lsp_zero.format_on_save({
-  format_opts = {
-    async = false,
-    timeout_ms = 10000,
+
+
+require("conform").setup({
+  formatters_by_ft = {
+    lua = { "stylua" },
+    -- Conform will run multiple formatters sequentially
+    python = { "isort", "black" },
+    -- Use a sub-list to run only the first available formatter
+    javascript = { { "prettierd", "prettier" } },
+    javascriptreact = { { "prettierd", "prettier" } },
+    typescript = { { "prettierd", "prettier" } },
+    typescriptreact = { { "prettierd", "prettier" } },
+    markdown = { { "prettierd", "prettier" } },
   },
-  servers = {
-    ['lua_ls'] = {
-      'lua'
-    },
-    ['rust_analyzer'] = {
-      'rust'
-    },
-    ['null-ls'] = {
-      "javascript",
-      "javascriptreact",
-      "typescript",
-      "typescriptreact",
-      "css",
-      "scss",
-      "less",
-      "html",
-      "json",
-      "yaml",
-      "markdown",
-      "markdown.mdx",
-      "graphql",
-    },
+  format_on_save = {
+    -- These options will be passed to conform.format()
+    timeout_ms = 500,
+    lsp_fallback = true,
   },
 })
 
-
-local null_ls = require 'null-ls'
-
-null_ls.setup {
-  sources = {
-    null_ls.builtins.formatting.prettier
-  },
-}
 
 
 local builtin = require 'telescope.builtin'
