@@ -88,7 +88,8 @@ require('lazy').setup({
     tag = "legacy",
     opts = {}
   },
-  { 'lukas-reineke/indent-blankline.nvim', },
+  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+  { 'gsuuon/llm.nvim' }
 })
 
 local lsp_zero = require('lsp-zero')
@@ -139,17 +140,17 @@ require('nvim-treesitter.configs').setup {
 require("conform").setup({
   formatters_by_ft = {
     lua = { "stylua" },
-    -- Conform will run multiple formatters sequentially
     python = { "isort", "black" },
-    -- Use a sub-list to run only the first available formatter
     javascript = { { "prettierd", "prettier" } },
     javascriptreact = { { "prettierd", "prettier" } },
     typescript = { { "prettierd", "prettier" } },
     typescriptreact = { { "prettierd", "prettier" } },
     markdown = { { "prettierd", "prettier" } },
+    json = { { "prettierd", "prettier" } },
+    css = { { "prettierd", "prettier" } },
+    html = { { "prettierd", "prettier" } },
   },
   format_on_save = {
-    -- These options will be passed to conform.format()
     timeout_ms = 500,
     lsp_fallback = true,
   },
