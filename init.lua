@@ -88,8 +88,41 @@ require('lazy').setup({
     tag = "legacy",
     opts = {}
   },
-  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-  { 'gsuuon/llm.nvim' }
+  {
+    "lukas-reineke/indent-blankline.nvim",
+    main = "ibl",
+    opts = {}
+  },
+  { 'gsuuon/llm.nvim' },
+  {
+    "folke/noice.nvim",
+    event = "VeryLazy",
+    opts = {},
+    dependencies = {
+      "MunifTanjim/nui.nvim",
+      "rcarriga/nvim-notify",
+    }
+  },
+})
+
+
+require("noice").setup({
+  lsp = {
+    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+    override = {
+      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+      ["vim.lsp.util.stylize_markdown"] = true,
+      ["cmp.entry.get_documentation"] = true,
+    },
+  },
+  -- you can enable a preset for easier configuration
+  presets = {
+    bottom_search = true,         -- use a classic bottom cmdline for search
+    command_palette = true,       -- position the cmdline and popupmenu together
+    long_message_to_split = true, -- long messages will be sent to a split
+    inc_rename = false,           -- enables an input dialog for inc-rename.nvim
+    lsp_doc_border = false,       -- add a border to hover docs and signature help
+  },
 })
 
 local lsp_zero = require('lsp-zero')
@@ -167,17 +200,15 @@ vim.keymap.set('n', '<leader>p', '"_dP')
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
 vim.keymap.set('n', '<leader>ff', builtin.live_grep)
 vim.keymap.set('n', '<leader>gg', builtin.find_files)
+vim.keymap.set('n', '<leader>hh', ':Alpha<CR>')
 
 local ls = require 'luasnip'
 local p = ls.parser
 
 local v = {
-  p.parse_snippet('ti', 'import $1 from "$2"'),
-  p.parse_snippet('ti', 'import $1 from "$2"'),
   p.parse_snippet('ts', '// @ts-expect-error'),
   p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-explicit-any'),
   p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-floating-promises'),
-  p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-non-null-assertion'),
   p.parse_snippet('cl', 'console.log({$1})'),
   p.parse_snippet('cl', 'console.log($1)'),
 }
