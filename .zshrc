@@ -48,6 +48,7 @@ alias gd="git diff"
 alias ss="yarn start"
 alias ag="rg"
 alias fd="fdfind"
+alias bn="y build:esm --watch  --preserveWatchOutput"
 alias gg="git grep"
 alias ggg="git commit --amend --no-edit"
 alias gggg="git add . && git commit --amend --no-edit"
@@ -111,3 +112,6 @@ eval "`fnm env`"
 
 export PATH=$PATH:~/.local/bin/
 
+function file_ends_with_newline() {
+    [[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
+}

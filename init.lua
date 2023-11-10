@@ -94,42 +94,24 @@ require('lazy').setup({
     opts = {}
   },
   { 'gsuuon/llm.nvim' },
-  {
-    "folke/noice.nvim",
-    event = "VeryLazy",
-    opts = {},
-    dependencies = {
-      "MunifTanjim/nui.nvim",
-      "rcarriga/nvim-notify",
-    }
-  },
+
+  { "zbirenbaum/copilot.lua" },
+  { "zbirenbaum/copilot-cmp", }
 })
 
-
-require("noice").setup({
-  lsp = {
-    -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
-    override = {
-      ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-      ["vim.lsp.util.stylize_markdown"] = true,
-      ["cmp.entry.get_documentation"] = true,
-    },
-  },
-  -- you can enable a preset for easier configuration
-  presets = {
-    bottom_search = true,         -- use a classic bottom cmdline for search
-    command_palette = true,       -- position the cmdline and popupmenu together
-    long_message_to_split = true, -- long messages will be sent to a split
-    inc_rename = false,           -- enables an input dialog for inc-rename.nvim
-    lsp_doc_border = false,       -- add a border to hover docs and signature help
-  },
+require("copilot").setup({
+  suggestion = { enabled = false },
+  panel = { enabled = false },
 })
+require("copilot_cmp").setup()
+
 
 local lsp_zero = require('lsp-zero')
 
 lsp_zero.on_attach(function(client, bufnr)
   lsp_zero.default_keymaps({ buffer = bufnr })
 end)
+
 
 require('mason-lspconfig').setup({
   ensure_installed = { 'tsserver', 'rust_analyzer', 'lua_ls' },
@@ -147,13 +129,23 @@ local cmp_format = lsp_zero.cmp_format()
 
 cmp.setup({
   sources = {
-    { name = 'nvim_lsp' },
-    { name = 'luasnip' },
+    -- Copilot Source
+    { name = "copilot",  group_index = 2 },
+    -- Other Sources
+    { name = "nvim_lsp", group_index = 2 },
+    { name = "path",     group_index = 2 },
+    { name = "nuffer",   group_index = 2 },
+    { name = "luasnip",  group_index = 2 },
   },
   formatting = cmp_format,
   mapping = cmp.mapping.preset.insert({
     ['<CR>'] = cmp.mapping.confirm { select = true },
   }),
+
+  window = {
+    completion = cmp.config.window.bordered(),
+    documentation = cmp.config.window.bordered(),
+  }
 })
 
 
@@ -179,6 +171,7 @@ require("conform").setup({
     typescript = { { "prettierd", "prettier" } },
     typescriptreact = { { "prettierd", "prettier" } },
     markdown = { { "prettierd", "prettier" } },
+    mdx = { { "prettierd", "prettier" } },
     json = { { "prettierd", "prettier" } },
     css = { { "prettierd", "prettier" } },
     html = { { "prettierd", "prettier" } },
@@ -209,6 +202,10 @@ local v = {
   p.parse_snippet('ts', '// @ts-expect-error'),
   p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-explicit-any'),
   p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-floating-promises'),
+  p.parse_snippet('pa', '/**\n* #property\n*/'),
+  p.parse_snippet('pa', '/**\n* #action\n*/'),
+  p.parse_snippet('pa', '/**\n* #getter\n*/'),
+  p.parse_snippet('pa', '/**\n* #method\n*/'),
   p.parse_snippet('cl', 'console.log({$1})'),
   p.parse_snippet('cl', 'console.log($1)'),
 }
