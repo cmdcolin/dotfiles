@@ -53,7 +53,12 @@ require('lazy').setup({
     'windwp/nvim-autopairs',
     opts = {}
   },
-  { 'windwp/nvim-ts-autotag' },
+  {
+    'windwp/nvim-ts-autotag',
+    opts = {
+      enable_close_on_slash = false,
+    }
+  },
   { 'rebelot/kanagawa.nvim' },
   {
     'goolord/alpha-nvim',
@@ -165,7 +170,7 @@ require('nvim-treesitter.configs').setup {
 require("conform").setup({
   formatters_by_ft = {
     lua = { "stylua" },
-    python = { "isort", "black" },
+    python = { "isort", "ruff" },
     javascript = { { "prettierd", "prettier" } },
     javascriptreact = { { "prettierd", "prettier" } },
     typescript = { { "prettierd", "prettier" } },
@@ -224,3 +229,4 @@ ls.add_snippets(nil, {
 })
 
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+vim.keymap.set("n", "<leader>fg", "<CMD>lua vim.lsp.buf.format()<CR>", { desc = "LSP format" })
