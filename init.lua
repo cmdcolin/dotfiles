@@ -98,17 +98,8 @@ require('lazy').setup({
     main = "ibl",
     opts = {}
   },
-  { 'gsuuon/llm.nvim' },
-
-  { "zbirenbaum/copilot.lua" },
-  { "zbirenbaum/copilot-cmp", }
 })
 
-require("copilot").setup({
-  suggestion = { enabled = false },
-  panel = { enabled = false },
-})
-require("copilot_cmp").setup()
 
 
 local lsp_zero = require('lsp-zero')
@@ -180,6 +171,7 @@ require("conform").setup({
     json = { { "prettierd", "prettier" } },
     css = { { "prettierd", "prettier" } },
     html = { { "prettierd", "prettier" } },
+    yaml = { { "prettierd", "prettier" } },
   },
   format_on_save = {
     timeout_ms = 500,
