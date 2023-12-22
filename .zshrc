@@ -41,6 +41,7 @@ alias y="yarn"
 alias p="z"
 alias r="npm run"
 alias rr="npm run dev"
+alias rrr="npm run dev --open"
 alias v="nvim"
 alias g="git status"
 alias oo="npm run dev"
@@ -87,8 +88,9 @@ alias uprust="rustup update"
 alias uprustdeps="cargo install-update -a"
 alias upytdl="wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux && chmod +x yt-dlp_linux && mv yt-dlp_linux ~/.local/bin/youtube-dl"
 alias upneovim="wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage && chmod +x nvim.appimage && mv nvim.appimage ~/.local/bin/nvim"
+alias upfzf="cd ~/.fzf; git pull; cd -; ~/.fzf/install --all"
 alias clean_node_modules="find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
-alias upall="upytdl; upneovim; uprust; uprustdeps; sau; zimfw update; zimfw upgrade"
+alias upall="upytdl; upneovim; uprust; uprustdeps; sau; zimfw update; zimfw upgrade; upfzf"
 
 
 function vaporwave() {

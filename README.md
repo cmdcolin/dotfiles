@@ -18,11 +18,9 @@ Favorite vim keybindings:
 
 leader for me is comma (,)
 
-I have gotten repetitive strain injury from excessive keyboard shortcuts that
-use the control key (left control, left pinky gets twinged, sometimes called
-emacs pinky though I don't use emacs). I have to be careful with contorting
-hand, but also I found out that you have to be careful with using e.g. armrests
-too https://cmdcolin.github.io/posts/2022-07-08-pinky
+I have gotten repetitive strain injury, and some of my weird config is trying to
+help with that, for example there are many 'double tap' key commands instead of
+weird key combos. See https://cmdcolin.github.io/posts/2022-07-08-pinky
 
 ## Install
 
@@ -37,18 +35,16 @@ For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 - OS - Ubuntu 23.04
 - Music player - [fml9000](https://github.com/cmdcolin/fml9000) or
   [ytshuffle](https://cmdcolin.github.io/ytshuffle/)
-- Text editor - neovim nightly 0.10 + built-in lsp + treesitter + fzf
+- Text editor - neovim nightly 0.10 + built-in lsp + treesitter + telescope
 - Browser - Firefox (switched from Chrome Oct 2022)
 - Browser Add-ons - Dark Reader, uBlock origin
 
 I perform a lot of work in tmux+neovim where I split the screen vertically (two
 halves side by side) with tmux and then do either tests on one side of the
 screen or have two split screens. If needed I make a new tmux tab. I close and
-re-open vim a lot which is kind of crazy in a way, but seems to work for me
-
-Using fzf for quick file name searches or greps enabled me to become much less
-reliant on a file browser like NERDTree, so I don't use any NERDTree type
-sidebar
+re-open vim a lot which is kind of crazy in a way, but seems to work for me I
+don't use any NERDTree type sidebar, and instead use a lot of telescope search
+bars
 
 ## Screenshot
 
