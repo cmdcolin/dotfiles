@@ -160,7 +160,7 @@ cmp.setup({
 })
 
 
-vim.cmd 'colorscheme kanagawa'
+vim.cmd.colorscheme('kanagawa')
 
 require('nvim-treesitter.configs').setup {
   ensure_installed = { 'typescript', 'tsx', 'r', 'javascript', 'lua', 'rust', 'java' },
@@ -220,6 +220,9 @@ local v = {
   p.parse_snippet('pa', '/**\n* #method\n*/'),
   p.parse_snippet('cl', 'console.log({$1})'),
   p.parse_snippet('cl', 'console.log($1)'),
+  p.parse_snippet('wa', '"language":["$1"],'),
+  p.parse_snippet('wa', '"tags":["$1"],'),
+  p.parse_snippet('wa', '"pub":{"doi":""},'),
 }
 
 ls.add_snippets(nil, {
@@ -227,6 +230,7 @@ ls.add_snippets(nil, {
   javascriptreact = v,
   typescript = v,
   typescriptreact = v,
+  json = v,
   rust = {
     p.parse_snippet('cl', 'println!("{}",$1)'),
   },
