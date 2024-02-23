@@ -98,6 +98,15 @@ function vaporwave() {
 }
 
 
+function vaporwavemp3() {
+  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "`basename $1 .mp3`.vaporwave${2:-0.66}.mp3"
+}
+
+function vaporwaveogg() {
+  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "`basename $1 .ogg`.vaporwave${2:-0.66}.ogg"
+}
+
+
 function sortgff() {
   grep "^#" $1;
   grep -v "^#" $1 | sort -t"`printf '\t'`" -k1,1 -k4,4n;

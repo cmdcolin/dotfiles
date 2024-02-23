@@ -62,7 +62,6 @@ require('lazy').setup({
   { 'rebelot/kanagawa.nvim' },
   {
     'goolord/alpha-nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       require 'alpha'.setup(require 'alpha.themes.startify'.config)
     end
@@ -82,37 +81,27 @@ require('lazy').setup({
     'ruifm/gitlinker.nvim',
     opts = {}
   },
-  {
-    'nvim-telescope/telescope.nvim',
-    dependencies = {
-      'nvim-lua/plenary.nvim'
-    }
-  },
+  { 'nvim-telescope/telescope.nvim' },
+  { 'nvim-lua/plenary.nvim' },
   {
     'j-hui/fidget.nvim',
     tag = "legacy",
     opts = {}
   },
   {
+    'gera2ld/ai.nvim',
+    opts = {
+      api_key = os.getenv('GEMINI_API_KEY'),
+      locale = 'en',
+      prompts = {},
+    },
+    event = 'VeryLazy',
+  },
+  {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
     opts = {}
   },
-  {
-    "folke/noice.nvim",
-    event = "VeryLazy",
-    opts = {
-      -- add any options here
-    },
-    dependencies = {
-      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
-      "MunifTanjim/nui.nvim",
-      -- OPTIONAL:
-      --   `nvim-notify` is only needed, if you want to use the notification view.
-      --   If not available, we use `mini` as the fallback
-      "rcarriga/nvim-notify",
-    }
-  }
 })
 
 
@@ -140,23 +129,15 @@ local cmp_format = lsp_zero.cmp_format()
 
 cmp.setup({
   sources = {
-    -- Copilot Source
-    { name = "copilot",  group_index = 2 },
-    -- Other Sources
     { name = "nvim_lsp", group_index = 2 },
     { name = "path",     group_index = 2 },
-    { name = "nuffer",   group_index = 2 },
+    { name = "buffer",   group_index = 2 },
     { name = "luasnip",  group_index = 2 },
   },
   formatting = cmp_format,
   mapping = cmp.mapping.preset.insert({
     ['<CR>'] = cmp.mapping.confirm { select = true },
   }),
-
-  window = {
-    completion = cmp.config.window.bordered(),
-    documentation = cmp.config.window.bordered(),
-  }
 })
 
 
@@ -177,16 +158,16 @@ require("conform").setup({
   formatters_by_ft = {
     lua = { "stylua" },
     python = { "isort", "ruff" },
-    javascript = { { "prettierd", "prettier" } },
-    javascriptreact = { { "prettierd", "prettier" } },
-    typescript = { { "prettierd", "prettier" } },
-    typescriptreact = { { "prettierd", "prettier" } },
-    markdown = { { "prettierd", "prettier" } },
-    mdx = { { "prettierd", "prettier" } },
-    json = { { "prettierd", "prettier" } },
-    css = { { "prettierd", "prettier" } },
-    html = { { "prettierd", "prettier" } },
-    yaml = { { "prettierd", "prettier" } },
+    javascript = { "prettier" },
+    javascriptreact = { "prettier" },
+    typescript = { "prettier" },
+    typescriptreact = { "prettier" },
+    markdown = { "prettier" },
+    mdx = { "prettier" },
+    json = { "prettier" },
+    css = { "prettier" },
+    html = { "prettier" },
+    yaml = { "prettier" },
   },
   format_on_save = {
     timeout_ms = 2000,
@@ -196,6 +177,7 @@ require("conform").setup({
 
 
 
+-- note my keybindings are ridiculous
 local builtin = require 'telescope.builtin'
 vim.keymap.set('i', 'jj', '<Esc>')
 vim.keymap.set('i', 'kk', '<C-\\><C-o>:w<CR>')
@@ -240,4 +222,7 @@ ls.add_snippets(nil, {
 })
 
 vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
+
+-- manual lsp format with ,fg
+-- i don't use this very much, mostly use conform format-on-save
 vim.keymap.set("n", "<leader>fg", "<CMD>lua vim.lsp.buf.format()<CR>", { desc = "LSP format" })

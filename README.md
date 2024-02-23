@@ -6,7 +6,7 @@ Includes
 
 - tmux with weather using wttr.in in statusline
 - zsh
-- neovim with lua init script (based on kickstart.nvim)
+- neovim with lua init script (based on kickstart.nvim and lsp-zero)
 
 If you take nothing else from this, try the weather statusline in .tmux.conf!
 It's fun :)
@@ -24,8 +24,7 @@ weird key combos. See https://cmdcolin.github.io/posts/2022-07-08-pinky
 
 ## Install
 
-For nvim, cp init.lua to ~/.config/nvim/init.lua and copy the lua directory to
-~/.config/nvim/lua
+For nvim, cp init.lua to ~/.config/nvim/init.lua
 
 For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 
