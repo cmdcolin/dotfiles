@@ -22,13 +22,26 @@ vim.g.mapleader = ','
 
 require('lazy').setup({
   {
+    "refractalize/oil-git-status.nvim",
+
+    dependencies = {
+      "stevearc/oil.nvim",
+    },
+
+    config = true,
+  },
+  {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v3.x'
   },
+  { 'sindrets/diffview.nvim' },
   {
     'stevearc/oil.nvim',
     opts = {
       default_file_explorer = false,
+      win_options = {
+        signcolumn = "yes:2",
+      },
     },
   },
   {
@@ -88,15 +101,15 @@ require('lazy').setup({
     tag = "legacy",
     opts = {}
   },
-  {
-    'gera2ld/ai.nvim',
-    opts = {
-      api_key = os.getenv('GEMINI_API_KEY'),
-      locale = 'en',
-      prompts = {},
-    },
-    event = 'VeryLazy',
-  },
+  -- {
+  -- 'gera2ld/ai.nvim',
+  -- opts = {
+  --   api_key = os.getenv('GEMINI_API_KEY'),
+  --   locale = 'en',
+  --   prompts = {},
+  -- },
+  -- event = 'VeryLazy',
+  -- },
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
