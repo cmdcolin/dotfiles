@@ -22,6 +22,15 @@ vim.g.mapleader = ','
 
 require('lazy').setup({
   {
+    "refractalize/oil-git-status.nvim",
+
+    dependencies = {
+      "stevearc/oil.nvim",
+    },
+
+    config = true,
+  },
+  {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v3.x'
   },
@@ -29,6 +38,9 @@ require('lazy').setup({
     'stevearc/oil.nvim',
     opts = {
       default_file_explorer = false,
+      win_options = {
+        signcolumn = "yes:2",
+      },
     },
   },
   {
@@ -69,12 +81,44 @@ require('lazy').setup({
   { 'nvim-tree/nvim-web-devicons' },
   {
     'nvim-treesitter/nvim-treesitter',
-    dependencies = {
-      'nvim-treesitter/nvim-treesitter-textobjects',
-    },
     build = ':TSUpdate',
   },
-  { 'folke/trouble.nvim' },
+  {
+    'folke/trouble.nvim',
+    branch = "dev",
+    keys = {
+      {
+        "<leader>xx",
+        "<cmd>Trouble diagnostics toggle<cr>",
+        desc = "Diagnostics (Trouble)",
+      },
+      {
+        "<leader>xX",
+        "<cmd>Trouble diagnostics toggle filter.buf=0<cr>",
+        desc = "Buffer Diagnostics (Trouble)",
+      },
+      {
+        "<leader>cs",
+        "<cmd>Trouble symbols toggle focus=false<cr>",
+        desc = "Symbols (Trouble)",
+      },
+      {
+        "<leader>cl",
+        "<cmd>Trouble lsp toggle focus=false win.position=right<cr>",
+        desc = "LSP Definitions / references / ... (Trouble)",
+      },
+      {
+        "<leader>xL",
+        "<cmd>Trouble loclist toggle<cr>",
+        desc = "Location List (Trouble)",
+      },
+      {
+        "<leader>xQ",
+        "<cmd>Trouble qflist toggle<cr>",
+        desc = "Quickfix List (Trouble)",
+      },
+    },
+  },
   { 'nvim-treesitter/playground' },
   { 'tpope/vim-commentary' },
   {
@@ -88,15 +132,15 @@ require('lazy').setup({
     tag = "legacy",
     opts = {}
   },
-  {
-    'gera2ld/ai.nvim',
-    opts = {
-      api_key = os.getenv('GEMINI_API_KEY'),
-      locale = 'en',
-      prompts = {},
-    },
-    event = 'VeryLazy',
-  },
+  -- {
+  -- 'gera2ld/ai.nvim',
+  -- opts = {
+  --   api_key = os.getenv('GEMINI_API_KEY'),
+  --   locale = 'en',
+  --   prompts = {},
+  -- },
+  -- event = 'VeryLazy',
+  -- },
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
@@ -148,7 +192,6 @@ require('nvim-treesitter.configs').setup {
   highlight = { enable = true },
   indent = { enable = true },
   auto_install = true,
-  autotag = { enable = true },
 }
 
 
