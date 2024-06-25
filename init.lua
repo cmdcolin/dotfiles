@@ -30,6 +30,7 @@ require('lazy').setup({
 
     config = true,
   },
+  { 'rebelot/kanagawa.nvim' },
   {
     'VonHeikemen/lsp-zero.nvim',
     branch = 'v3.x'
@@ -43,9 +44,15 @@ require('lazy').setup({
       },
     },
   },
+  { 'stevearc/conform.nvim', },
   {
-    'stevearc/conform.nvim',
+    'numToStr/Comment.nvim',
+    opts = {
+      -- add any options here
+    },
+    lazy = false,
   },
+
   -- Lsp-zero recommended - LSP Support
   { 'neovim/nvim-lspconfig' },
   {
@@ -53,12 +60,11 @@ require('lazy').setup({
     opts = {}
   },
   { 'williamboman/mason-lspconfig.nvim' },
-
-  -- Lsp-zero recommended - Autocompletion
   { 'hrsh7th/nvim-cmp' },
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'hrsh7th/cmp-path' },
   { 'L3MON4D3/LuaSnip' },
+  { 'lukas-reineke/lsp-format.nvim',    opts = {} },
   { 'saadparwaiz1/cmp_luasnip' },
   { 'hrsh7th/cmp-nvim-lua' },
   {
@@ -71,7 +77,6 @@ require('lazy').setup({
       enable_close_on_slash = false,
     }
   },
-  { 'rebelot/kanagawa.nvim' },
   {
     'goolord/alpha-nvim',
     config = function()
@@ -81,11 +86,15 @@ require('lazy').setup({
   { 'nvim-tree/nvim-web-devicons' },
   {
     'nvim-treesitter/nvim-treesitter',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
     build = ':TSUpdate',
   },
   {
-    'folke/trouble.nvim',
-    branch = "dev",
+    "folke/trouble.nvim",
+    opts = {}, -- for default options, refer to the configuration section for custom setup.
+    cmd = "Trouble",
     keys = {
       {
         "<leader>xx",
@@ -120,7 +129,6 @@ require('lazy').setup({
     },
   },
   { 'nvim-treesitter/playground' },
-  { 'tpope/vim-commentary' },
   {
     'ruifm/gitlinker.nvim',
     opts = {}
@@ -132,15 +140,14 @@ require('lazy').setup({
     tag = "legacy",
     opts = {}
   },
-  -- {
-  -- 'gera2ld/ai.nvim',
-  -- opts = {
-  --   api_key = os.getenv('GEMINI_API_KEY'),
-  --   locale = 'en',
-  --   prompts = {},
-  -- },
-  -- event = 'VeryLazy',
-  -- },
+  {
+    'gera2ld/ai.nvim',
+    opts = {
+      api_key = os.getenv('GEMINI_API_KEY'),
+      locale = 'en',
+      prompts = {},
+    },
+  },
   {
     "lukas-reineke/indent-blankline.nvim",
     main = "ibl",
@@ -185,13 +192,15 @@ cmp.setup({
 })
 
 
+
 vim.cmd.colorscheme('kanagawa')
 
-require('nvim-treesitter.configs').setup {
+require('nvim-ts-autotag').setup {
   ensure_installed = { 'typescript', 'tsx', 'r', 'javascript', 'lua', 'rust', 'java' },
   highlight = { enable = true },
   indent = { enable = true },
   auto_install = true,
+  autotag = { enable = true },
 }
 
 
@@ -239,10 +248,12 @@ local v = {
   p.parse_snippet('ts', '// @ts-expect-error'),
   p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-explicit-any'),
   p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-floating-promises'),
+  p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition'),
   p.parse_snippet('pa', '/**\n* #property\n*/'),
   p.parse_snippet('pa', '/**\n* #action\n*/'),
   p.parse_snippet('pa', '/**\n* #getter\n*/'),
   p.parse_snippet('pa', '/**\n* #method\n*/'),
+  p.parse_snippet('ps', 'const {$1} = self'),
   p.parse_snippet('cl', 'console.log({$1})'),
   p.parse_snippet('cl', 'console.log($1)'),
   p.parse_snippet('wa', '"language":["$1"],'),
