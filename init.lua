@@ -165,7 +165,7 @@ end)
 
 
 require('mason-lspconfig').setup({
-  ensure_installed = { 'tsserver', 'rust_analyzer', 'lua_ls' },
+  ensure_installed = { 'ts_ls', 'rust_analyzer', 'lua_ls' },
   handlers = {
     lsp_zero.default_setup,
     lua_ls = function()
@@ -243,7 +243,11 @@ vim.keymap.set('n', '<leader>hh', ':Alpha<CR>')
 
 local ls = require 'luasnip'
 local p = ls.parser
-
+require 'lspconfig'.eslint.setup {
+  experimental = {
+    useFlatConfig = true
+  },
+}
 local v = {
   p.parse_snippet('ts', '// @ts-expect-error'),
   p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-explicit-any'),
@@ -253,7 +257,10 @@ local v = {
   p.parse_snippet('pa', '/**\n* #action\n*/'),
   p.parse_snippet('pa', '/**\n* #getter\n*/'),
   p.parse_snippet('pa', '/**\n* #method\n*/'),
+  p.parse_snippet('pa', '/**\n* #volatile\n*/'),
   p.parse_snippet('ps', 'const {$1} = self'),
+  p.parse_snippet('ps', "import {expect,test} from 'vitest'"),
+  p.parse_snippet('ps', "import {afterEach,expect,test} from 'vitest'\nafterEach(()=>{cleanup()})"),
   p.parse_snippet('cl', 'console.log({$1})'),
   p.parse_snippet('cl', 'console.log($1)'),
   p.parse_snippet('wa', '"language":["$1"],'),
