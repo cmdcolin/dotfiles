@@ -5,17 +5,21 @@ opt.clipboard = 'unnamedplus'
 opt.cmdheight = 0
 
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    'git',
-    'clone',
-    '--filter=blob:none',
-    'https://github.com/folke/lazy.nvim.git',
-    '--branch=stable', -- latest stable release
-    lazypath,
-  })
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out,                            "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
 vim.opt.rtp:prepend(lazypath)
+
 
 vim.g.mapleader = ','
 
@@ -33,7 +37,7 @@ require('lazy').setup({
   { 'rebelot/kanagawa.nvim' },
   {
     'VonHeikemen/lsp-zero.nvim',
-    branch = 'v3.x'
+    branch = 'v4.x'
   },
   {
     'stevearc/oil.nvim',
@@ -64,7 +68,10 @@ require('lazy').setup({
   { 'hrsh7th/cmp-nvim-lsp' },
   { 'hrsh7th/cmp-path' },
   { 'L3MON4D3/LuaSnip' },
-  { 'lukas-reineke/lsp-format.nvim',    opts = {} },
+  {
+    'lukas-reineke/lsp-format.nvim',
+    opts = {}
+  },
   { 'saadparwaiz1/cmp_luasnip' },
   { 'hrsh7th/cmp-nvim-lua' },
   {
@@ -153,37 +160,27 @@ require('lazy').setup({
     main = "ibl",
     opts = {}
   },
+  checker = { enabled = true },
 })
 
 
 
 local lsp_zero = require('lsp-zero')
 
-lsp_zero.on_attach(function(client, bufnr)
-  lsp_zero.default_keymaps({ buffer = bufnr })
-end)
-
-
-require('mason-lspconfig').setup({
-  ensure_installed = { 'ts_ls', 'rust_analyzer', 'lua_ls' },
-  handlers = {
-    lsp_zero.default_setup,
-    lua_ls = function()
-      local lua_opts = lsp_zero.nvim_lua_ls()
-      require('lspconfig').lua_ls.setup(lua_opts)
-    end,
-  }
-})
-
 local cmp = require('cmp')
 local cmp_format = lsp_zero.cmp_format()
 
 cmp.setup({
   sources = {
-    { name = "nvim_lsp", group_index = 2 },
+    { name = 'nvim_lsp', group_index = 2 },
     { name = "path",     group_index = 2 },
     { name = "buffer",   group_index = 2 },
     { name = "luasnip",  group_index = 2 },
+  },
+  snippet = {
+    expand = function(args)
+      require('luasnip').lsp_expand(args.body)
+    end,
   },
   formatting = cmp_format,
   mapping = cmp.mapping.preset.insert({
@@ -192,11 +189,50 @@ cmp.setup({
 })
 
 
+local lsp_attach = function(client, bufnr)
+  -- see :help lsp-zero-keybindings
+  -- to learn the available actions
+  lsp_zero.default_keymaps({ buffer = bufnr })
+end
+
+lsp_zero.extend_lspconfig({
+  capabilities = require('cmp_nvim_lsp').default_capabilities(),
+  lsp_attach = lsp_attach,
+  float_border = 'rounded',
+  sign_text = true,
+})
+
+
+require('mason').setup({})
+require('mason-lspconfig').setup({
+  ensure_installed = { 'ts_ls', 'rust_analyzer', 'lua_ls', },
+  handlers = {
+    function(server_name)
+      require('lspconfig')[server_name].setup({})
+    end,
+
+    lua_ls = function()
+      require('lspconfig').lua_ls.setup({
+        on_init = function(client)
+          lsp_zero.nvim_lua_settings(client, {})
+        end,
+      })
+    end,
+  }
+})
 
 vim.cmd.colorscheme('kanagawa')
 
 require('nvim-ts-autotag').setup {
-  ensure_installed = { 'typescript', 'tsx', 'r', 'javascript', 'lua', 'rust', 'java' },
+  ensure_installed = {
+    'typescript',
+    'tsx',
+    'r',
+    'javascript',
+    'lua',
+    'rust',
+    'java'
+  },
   highlight = { enable = true },
   indent = { enable = true },
   auto_install = true,
@@ -228,7 +264,6 @@ require("conform").setup({
 })
 
 
-
 -- note my keybindings are ridiculous
 local builtin = require 'telescope.builtin'
 vim.keymap.set('i', 'jj', '<Esc>')
@@ -243,11 +278,9 @@ vim.keymap.set('n', '<leader>hh', ':Alpha<CR>')
 
 local ls = require 'luasnip'
 local p = ls.parser
-require 'lspconfig'.eslint.setup {
-  experimental = {
-    useFlatConfig = true
-  },
-}
+
+require 'lspconfig'.eslint.setup({})
+
 local v = {
   p.parse_snippet('ts', '// @ts-expect-error'),
   p.parse_snippet('da', '// eslint-disable-next-line @typescript-eslint/no-explicit-any'),
