@@ -1,0 +1,25 @@
+[user]
+  email = <colin.diesh@gmail.com>
+  name = Colin
+[blame]
+  date = short
+[http]
+  sslVerify = true
+[pull]
+  rebase = true
+[push]
+  default = simple
+  autoSetupRemote = true
+[credential]
+  helper = cache
+[core]
+  editor = nvim
+
+[interactive]
+  diffFilter = delta --color-only
+
+[delta]
+  navigate = true
+
+[merge]
+  conflictstyle = zdiff3

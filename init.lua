@@ -245,7 +245,7 @@ require('nvim-ts-autotag').setup {
 require("conform").setup({
   formatters_by_ft = {
     lua = { "stylua" },
-    python = { "isort", "ruff" },
+    python = { "isort", "ruff_format" },
     javascript = { "prettier" },
     javascriptreact = { "prettier" },
     typescript = { "prettier" },
@@ -273,6 +273,7 @@ vim.keymap.set('n', '00', '<cmd>q<cr>')
 vim.keymap.set('n', '<leader>p', '"_dP')
 vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
 vim.keymap.set('n', '<leader>ff', builtin.live_grep)
+vim.keymap.set('n', '<leader>rf', builtin.grep_string)
 vim.keymap.set('n', '<leader>gg', builtin.find_files)
 vim.keymap.set('n', '<leader>hh', ':Alpha<CR>')
 
