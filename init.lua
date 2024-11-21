@@ -202,10 +202,13 @@ lsp_zero.extend_lspconfig({
   sign_text = true,
 })
 
-
 require('mason').setup({})
 require('mason-lspconfig').setup({
-  ensure_installed = { 'ts_ls', 'rust_analyzer', 'lua_ls', },
+  ensure_installed = {
+    'ts_ls',
+    'rust_analyzer',
+    'lua_ls',
+  },
   handlers = {
     function(server_name)
       require('lspconfig')[server_name].setup({})
@@ -276,6 +279,7 @@ vim.keymap.set('n', '<leader>ff', builtin.live_grep)
 vim.keymap.set('n', '<leader>rf', builtin.grep_string)
 vim.keymap.set('n', '<leader>gg', builtin.find_files)
 vim.keymap.set('n', '<leader>hh', ':Alpha<CR>')
+vim.keymap.set('n', '<leader>fd', ':LspZeroFormat<CR>')
 
 local ls = require 'luasnip'
 local p = ls.parser
@@ -297,6 +301,8 @@ local v = {
   p.parse_snippet('ps', "import {afterEach,expect,test} from 'vitest'\nafterEach(()=>{cleanup()})"),
   p.parse_snippet('cl', 'console.log({$1})'),
   p.parse_snippet('cl', 'console.log($1)'),
+  p.parse_snippet('cl', 'console.log("$1")'),
+  p.parse_snippet('cl', 'console.log(e)'),
   p.parse_snippet('wa', '"language":["$1"],'),
   p.parse_snippet('wa', '"tags":["$1"],'),
   p.parse_snippet('wa', '"pub":{"doi":""},'),
@@ -321,3 +327,6 @@ vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory" })
 -- manual lsp format with ,fg
 -- i don't use this very much, mostly use conform format-on-save
 vim.keymap.set("n", "<leader>fg", "<CMD>lua vim.lsp.buf.format()<CR>", { desc = "LSP format" })
+
+
+vim.keymap.set('v', '<leader>ca', vim.lsp.buf.code_action)

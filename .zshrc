@@ -1,13 +1,35 @@
+# Customize to your needs...
 [[ -z "$TMUX" ]] && exec tmux -2
 [[ $- != *i* ]] && return
 
+
+
+#
+# Executes commands at the start of an interactive session.
+#
+# Authors:
+#   Sorin Ionescu <sorin.ionescu@gmail.com>
+#
+
+# Source Prezto.
+if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+fi
+
 export EDITOR="vim"
-alias ll="ls -l"
+alias python="python3"
+alias ll="exa -l"
+alias vm="vim"
+alias lo="ll -sold"
+alias ls="exa"
 alias e="vim"
 alias y="yarn"
 alias p="z"
+alias pp="python"
 alias r="npm run"
+alias gti="git"
 alias rr="npm run dev"
+alias mm="git reset --hard origin/main"
 alias rrr="npm run dev --open"
 alias v="nvim"
 alias g="git status"
@@ -25,9 +47,10 @@ alias gp="git add -p"
 alias comppng="pngquant *.png; mkdir pngquant; mv *fs8* pngquant; rm *.png;"
 alias mm="git checkout main"
 alias ee="cargo run"
+alias eee="PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/ cargo run"
 alias qq="exit"
 alias 00="exit"
-alias hh="htop"
+alias hh="vtop"
 alias bb="git branch --sort=-committerdate| fzy |xargs git checkout "
 alias bbb="git ls-files| fzy |xargs nvim "
 alias bbbb="fd| fzy |xargs nvim "
@@ -52,35 +75,42 @@ alias cpuspeed="glances --enable-plugin sensors"
 alias gitbranch="git log --oneline --graph --all --no-decorate"
 alias uprust="rustup update"
 alias uprustdeps="cargo install-update -a"
-alias upytdl="wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux && chmod +x yt-dlp_linux && mv -f yt-dlp_linux ~/.local/bin/youtube-dl"
-alias upneovim="wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage && chmod +x nvim.appimage && mv -f nvim.appimage ~/.local/bin/nvim"
+alias upytdl="wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux && chmod +x yt-dlp_linux && mv yt-dlp_linux ~/.local/bin/youtube-dl"
+alias upneovim="wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage && chmod +x nvim.appimage && mv nvim.appimage ~/.local/bin/nvim"
 alias upfzf="cd ~/.fzf; git pull; cd -; ~/.fzf/install --all"
 alias clean_node_modules="find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
-alias upall="upytdl; upneovim; uprust; uprustdeps; sau; zimfw update; zimfw upgrade; upfzf"
+alias clean_next="find . -name '.next' -type d -prune -exec rm -rf '{}' +"
+alias clean_dist="find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
+alias clean_target="find . -name 'target' -type d -prune -exec rm -rf '{}' +"
+alias upall="upytdl; upneovim; uprust; uprustdeps; sau;  upfzf"
+
 
 function vaporwave() {
-  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .m4a).vaporwave${2:-0.66}.m4a"
+  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "`basename $1 .m4a`.vaporwave${2:-0.66}.m4a"
 }
 
+
 function vaporwavemp3() {
-  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .mp3).vaporwave${2:-0.66}.mp3"
+  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "`basename $1 .mp3`.vaporwave${2:-0.66}.mp3"
 }
 
 function vaporvideo() {
-  ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "$(basename $1 .mp4).vaporwave${2:-0.66}.mp4"
+  ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "`basename $1 .mp4`.vaporwave${2:-0.66}.mp4"
 }
 
 function vaporwaveogg() {
-  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .ogg).vaporwave${2:-0.66}.ogg"
+  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "`basename $1 .ogg`.vaporwave${2:-0.66}.ogg"
 }
+
 
 function sortgff() {
-  grep "^#" $1
-  grep -v "^#" $1 | sort -t"$(printf '\t')" -k1,1 -k4,4n
+  grep "^#" $1;
+  grep -v "^#" $1 | sort -t"`printf '\t'`" -k1,1 -k4,4n;
 }
 
+
 function md() {
-  pandoc $1 >/tmp/$1.html
+  pandoc $1 > /tmp/$1.html
   xdg-open /tmp/$1.html
 }
 
@@ -92,10 +122,14 @@ export TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling
 export DEBUG_PRINT_LIMIT=0
 export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
-eval "$(fnm env)"
+eval "`fnm env`"
+
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 export PATH=$PATH:~/.local/bin/
 
+
+
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+source /etc/profile.d/sra-tools.sh
