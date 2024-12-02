@@ -31,19 +31,20 @@ For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 ## Details about my setup
 
 - Computer - Dell laptop with 32gb RAM, 512GB SSD
-- OS - Ubuntu 23.04
+- OS - Ubuntu 24.10
 - Music player - [fml9000](https://github.com/cmdcolin/fml9000) or
   [ytshuffle](https://cmdcolin.github.io/ytshuffle/)
-- Text editor - neovim nightly 0.10 + built-in lsp + treesitter + telescope
-- Browser - Firefox (switched from Chrome Oct 2022)
+- Text editor - neovim nightly
+- Browser - Firefox
 - Browser Add-ons - Dark Reader, uBlock origin
 
-I perform a lot of work in tmux+neovim where I split the screen vertically (two
-halves side by side) with tmux and then do either tests on one side of the
-screen or have two split screens. If needed I make a new tmux tab. I close and
-re-open vim a lot which is kind of crazy in a way, but seems to work for me I
-don't use any NERDTree type sidebar, and instead use a lot of telescope search
-bars
+I perform a lot of work in tmux+neovim where I split the screen vertically and/or horizontally
+
+If needed I make a new tmux tab
+
+I close and re-open nvim a lot in doing so
+
+I don't use any file browser type sidebar, and instead just use a lot of quick searches
 
 ## Screenshot
 
