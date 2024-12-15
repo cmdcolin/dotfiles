@@ -35,6 +35,18 @@ vim.g.mapleader = ','
 
 
 require('lazy').setup({
+  {
+    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
+    -- used for completion, annotations and signatures of Neovim apis
+    'folke/lazydev.nvim',
+    ft = 'lua',
+    opts = {
+      library = {
+        -- Load luvit types when the `vim.uv` word is found
+        { path = 'luvit-meta/library', words = { 'vim%.uv' } },
+      },
+    },
+  },
   { "refractalize/oil-git-status.nvim", config = true, },
   { 'rebelot/kanagawa.nvim' },
   {
@@ -64,6 +76,43 @@ require('lazy').setup({
     opts = {
       enable_close_on_slash = false,
     }
+  },
+  { -- Collection of various small independent plugins/modules
+    'echasnovski/mini.nvim',
+    config = function()
+      -- Better Around/Inside textobjects
+      --
+      -- Examples:
+      --  - va)  - [V]isually select [A]round [)]paren
+      --  - yinq - [Y]ank [I]nside [N]ext [Q]uote
+      --  - ci'  - [C]hange [I]nside [']quote
+      require('mini.ai').setup { n_lines = 500 }
+
+      -- Add/delete/replace surroundings (brackets, quotes, etc.)
+      --
+      -- - saiw) - [S]urround [A]dd [I]nner [W]ord [)]Paren
+      -- - sd'   - [S]urround [D]elete [']quotes
+      -- - sr)'  - [S]urround [R]eplace [)] [']
+      require('mini.surround').setup()
+
+      -- Simple and easy statusline.
+      --  You could remove this setup call if you don't like it,
+      --  and try some other statusline plugin
+      local statusline = require 'mini.statusline'
+      -- set use_icons to true if you have a Nerd Font
+      statusline.setup { use_icons = vim.g.have_nerd_font }
+
+      -- You can configure sections in the statusline by overriding their
+      -- default behavior. For example, here we set the section for
+      -- cursor location to LINE:COLUMN
+      ---@diagnostic disable-next-line: duplicate-set-field
+      statusline.section_location = function()
+        return '%2l:%-2v'
+      end
+
+      -- ... and there is more!
+      --  Check out: https://github.com/echasnovski/mini.nvim
+    end,
   },
   {
     'goolord/alpha-nvim',
@@ -233,19 +282,11 @@ vim.api.nvim_create_autocmd('LspAttach', {
 })
 
 
+
+
 local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-require('mason').setup({})
-require('mason-lspconfig').setup({
-  ensure_installed = {},
-  handlers = {
-    function(server_name)
-      require('lspconfig')[server_name].setup({
-        capabilities = lsp_capabilities,
-      })
-    end,
-  },
-})
+
 
 local cmp = require('cmp')
 
@@ -272,7 +313,7 @@ cmp.setup({
 
 
 
-require('mason').setup({})
+require('mason').setup()
 require('mason-lspconfig').setup({
   ensure_installed = {
     'ts_ls',
@@ -285,8 +326,21 @@ require('mason-lspconfig').setup({
         capabilities = lsp_capabilities,
       })
     end,
-  },
+  }
 })
+
+require('mason-lspconfig').setup {
+  handlers = {
+    function(server_name)
+      local server = servers[server_name] or {}
+      -- This handles overriding only values explicitly passed
+      -- by the server configuration above. Useful when disabling
+      -- certain features of an LSP (for example, turning off formatting for ts_ls)
+      server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
+      require('lspconfig')[server_name].setup(server)
+    end,
+  },
+}
 
 
 vim.cmd.colorscheme('kanagawa')
