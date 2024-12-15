@@ -36,6 +36,7 @@ alias ss="yarn start"
 alias fd="fdfind"
 alias bn="y build:esm --watch  --preserveWatchOutput"
 alias gg="git grep"
+alias gm="git commit -m"
 alias ggg="git commit --amend --no-edit"
 alias gggg="git add . && git commit --amend --no-edit"
 alias ggggg="git add . && git commit --amend --no-edit && git push -f"
@@ -130,3 +131,4 @@ export PATH=$PATH:~/.local/bin/
 
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 source /etc/profile.d/sra-tools.sh
+source ~/.env
