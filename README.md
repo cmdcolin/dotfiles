@@ -20,19 +20,9 @@ For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 - OS - Ubuntu 24.10
 - Music player - [fml9000](https://github.com/cmdcolin/fml9000) or
   [ytshuffle](https://cmdcolin.github.io/ytshuffle/)
-- Text editor - neovim nightly
+- Text editor - neovim
 - Browser - Firefox
 - Browser Add-ons - Dark Reader, uBlock origin
-
-I perform a lot of work in tmux+neovim where I split the screen vertically
-and/or horizontally
-
-If needed I make a new tmux tab
-
-I close and re-open nvim a lot in doing so
-
-I don't use any file browser type sidebar, and instead just use a lot of quick
-searches
 
 ## Screenshot
 
