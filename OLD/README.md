@@ -2,7 +2,7 @@
 
 ## Vim setup iterations
 
-- Used very raw setup for a long time with no plugins
+- Used basically a zero config vim setup for a long time with no plugins
 - Then got vim-plug and used w0rp/ale plugin for auto-lint-on-save
 - Then tried to get Nerdtree to work with my setup
 - Then tried to get vim-vinegar to display in a sidebar as an alternative
@@ -10,8 +10,10 @@
 - Then moved to coc.nvim and neovim for LSP support
 - Was hard for me to understand native LSP, and the larger amount of boilerplate
   config still is tedious though the fine grained control is interestingly
+- Used lsp-zero for a long time until it was discontinued. Tried briefly to use
+  kickstart.nvim but just a lot of boilerplate to manage. Trying lazyvim now
 
-# Music players
+# Music player history
 
 ## Old music player setups
 
@@ -105,3 +107,4 @@ recently added and recently played text files using the cmus file browser
 - Learning the ropes of command line at University of Missouri
 - Vim on MacBook pro, spending a lot of time in SSH to web servers
 - coc.nvim, very helpful
+- until 2025, used lsp-zero and neovim, also very helpful

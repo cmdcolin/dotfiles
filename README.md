@@ -24,13 +24,7 @@ For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 - Browser - Firefox
 - Browser Add-ons - Dark Reader, uBlock origin
 
-## Screenshot
-
-![](img/1.png)
-
-## Random other notes
-
-### Music player setup
+## Music player setup
 
 I started creating my own music player to try to bring my foobar2000 to native
 linux with gtk4-rs
