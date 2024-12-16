@@ -1,3 +1,4 @@
+vim.g.mapleader = ','
 vim.schedule(function()
   vim.opt.clipboard = 'unnamedplus'
 end)
@@ -5,10 +6,10 @@ vim.g.have_nerd_font = true
 vim.opt.undofile = true
 vim.opt.nu = true
 vim.opt.cmdheight = 0
-vim.opt.timeoutlen = 300
 vim.opt.splitright = true
 vim.opt.splitbelow = true
 vim.opt.cursorline = true
+vim.opt.timeoutlen = 300
 
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, {
@@ -33,7 +34,6 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 
-vim.g.mapleader = ','
 
 
 require('lazy').setup({
@@ -51,10 +51,13 @@ require('lazy').setup({
   },
   { "refractalize/oil-git-status.nvim", config = true, },
   { -- You can easily change to a different colorscheme.
+
     -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
+    -- change the command in the config to whatever the name of that
+    -- colorscheme is.
     --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
+    -- If you want to see what colorschemes are already installed, you can use
+    -- `:Telescope colorscheme`.
     'folke/tokyonight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     opts = {
@@ -91,14 +94,9 @@ require('lazy').setup({
   { 'hrsh7th/cmp-nvim-lua' },
   { 'windwp/nvim-autopairs',            opts = {} },
   { 'stevearc/dressing.nvim',           opts = {} },
-  {
-    'windwp/nvim-ts-autotag',
-    opts = {
-      enable_close_on_slash = false,
-    }
-  },
 
-  { -- Autocompletion
+
+  {
     'hrsh7th/nvim-cmp',
     event = 'InsertEnter',
     dependencies = {
@@ -123,8 +121,6 @@ require('lazy').setup({
 
         -- For an understanding of why these mappings were
         -- chosen, you will need to read `:help ins-completion`
-        --
-        -- No, but seriously. Please read `:help ins-completion`, it is really good!
         mapping = cmp.mapping.preset.insert {
           -- Select the [n]ext item
           ['<C-n>'] = cmp.mapping.select_next_item(),
@@ -138,10 +134,11 @@ require('lazy').setup({
           -- Accept ([y]es) the completion.
           --  This will auto-import if your LSP supports it.
           --  This will expand snippets if the LSP sent a snippet.
-          ['<C-y>'] = cmp.mapping.confirm { select = true },
+          ['<CR>'] = cmp.mapping.confirm { select = true },
 
           -- If you prefer more traditional completion keymaps,
           -- you can uncomment the following lines
+          --
           --['<CR>'] = cmp.mapping.confirm { select = true },
           --['<Tab>'] = cmp.mapping.select_next_item(),
           --['<S-Tab>'] = cmp.mapping.select_prev_item(),
@@ -152,12 +149,15 @@ require('lazy').setup({
           ['<C-Space>'] = cmp.mapping.complete {},
 
           -- Think of <c-l> as moving to the right of your snippet expansion.
+          --
           --  So if you have a snippet that's like:
           --  function $name($args)
           --    $body
           --  end
           --
-          -- <c-l> will move you to the right of each of the expansion locations.
+          -- <c-l> will move you to the right of each of the expansion
+          -- locations.
+          --
           -- <c-h> is similar, except moving you backwards.
           ['<C-l>'] = cmp.mapping(function()
             if luasnip.expand_or_locally_jumpable() then
@@ -170,13 +170,15 @@ require('lazy').setup({
             end
           end, { 'i', 's' }),
 
-          -- For more advanced Luasnip keymaps (e.g. selecting choice nodes, expansion) see:
+          -- For more advanced Luasnip keymaps (e.g. selecting choice nodes,
+          -- expansion) see:
           --    https://github.com/L3MON4D3/LuaSnip?tab=readme-ov-file#keymaps
         },
         sources = {
           {
             name = 'lazydev',
-            -- set group index to 0 to skip loading LuaLS completions as lazydev recommends it
+            -- set group index to 0 to skip loading LuaLS completions as
+            -- lazydev recommends it
             group_index = 0,
           },
           { name = 'nvim_lsp' },
@@ -186,7 +188,10 @@ require('lazy').setup({
       }
     end,
   },
-  { -- Collection of various small independent plugins/modules
+  { "windwp/nvim-ts-autotag",   opts = {} },
+  { "kylechui/nvim-surround",   opts = {} },
+  { "roobert/surround-ui.nvim", opts = {} },
+  {
     'echasnovski/mini.nvim',
     config = function()
       -- Better Around/Inside textobjects
@@ -212,10 +217,6 @@ require('lazy').setup({
       statusline.setup {
         use_icons = vim.g.have_nerd_font
       }
-
-
-      -- ... and there is more!
-      --  Check out: https://github.com/echasnovski/mini.nvim
     end,
   },
   {
@@ -309,7 +310,6 @@ require('lazy').setup({
       },
     },
   },
-
   {
     'folke/which-key.nvim',
     event = 'VimEnter', -- Sets the loading event to 'VimEnter'
@@ -317,8 +317,9 @@ require('lazy').setup({
       icons = {
         -- set icon mappings to true if you have a Nerd Font
         mappings = vim.g.have_nerd_font,
-        -- If you are using a Nerd Font: set icons.keys to an empty table which will use the
-        -- default which-key.nvim defined Nerd Font icons, otherwise define a string table
+        -- If you are using a Nerd Font: set icons.keys to an empty table which
+        -- will use the default which-key.nvim defined Nerd Font icons,
+        -- otherwise define a string table
         keys = vim.g.have_nerd_font and {} or {
           Up = '<Up> ',
           Down = '<Down> ',
@@ -368,7 +369,8 @@ require('lazy').setup({
   { 'nvim-telescope/telescope.nvim' },
   { 'nvim-lua/plenary.nvim' },
   { 'j-hui/fidget.nvim',                   opts = {} },
-  { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+  { 'lukas-reineke/indent-blankline.nvim', main = 'ibl', opts = {} },
+
   checker = {
     enabled = true
   },
@@ -452,22 +454,22 @@ require('mason-lspconfig').setup({
 
 
 
-
-require('nvim-ts-autotag').setup {
-  ensure_installed = {
-    'typescript',
-    'tsx',
-    'r',
-    'javascript',
-    'lua',
-    'rust',
-    'java'
-  },
-  highlight = { enable = true },
-  indent = { enable = true },
-  auto_install = true,
-  autotag = { enable = true },
-}
+--
+-- require('nvim-ts-autotag').setup {
+--   ensure_installed = {
+--     'typescript',
+--     'tsx',
+--     'r',
+--     'javascript',
+--     'lua',
+--     'rust',
+--     'java'
+--   },
+--   highlight = { enable = true },
+--   indent = { enable = true },
+--   auto_install = true,
+--   autotag = { enable = true },
+-- }
 
 
 

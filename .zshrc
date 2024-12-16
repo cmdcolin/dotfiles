@@ -73,14 +73,11 @@ alias cpuspeed="glances --enable-plugin sensors"
 alias gitbranch="git log --oneline --graph --all --no-decorate"
 alias uprust="rustup update"
 alias uprustdeps="cargo install-update -a"
-alias upytdl="wget https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp_linux && chmod +x yt-dlp_linux && mv yt-dlp_linux ~/.local/bin/youtube-dl"
-alias upneovim="wget https://github.com/neovim/neovim/releases/download/nightly/nvim.appimage && chmod +x nvim.appimage && mv nvim.appimage ~/.local/bin/nvim"
-alias upfzf="cd ~/.fzf; git pull; cd -; ~/.fzf/install --all"
 alias clean_node_modules="find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
 alias clean_next="find . -name '.next' -type d -prune -exec rm -rf '{}' +"
 alias clean_dist="find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
 alias clean_target="find . -name 'target' -type d -prune -exec rm -rf '{}' +"
-alias upall="upytdl; upneovim; uprust; uprustdeps; sau;  upfzf"
+alias upall="brew upgrade; uprust; uprustdeps; sau;  upfzf"
 
 
 function vaporwave() {
