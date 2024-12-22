@@ -230,7 +230,14 @@ vim.opt.rtp:prepend(lazypath)
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
-
+  {
+    'ruifm/gitlinker.nvim',
+    opts = {},
+  },
+  {
+    'j-hui/fidget.nvim',
+    opts = {},
+  },
   {
     'goolord/alpha-nvim',
     dependencies = {
@@ -336,12 +343,10 @@ require('lazy').setup({
         'MeanderingProgrammer/render-markdown.nvim',
         opts = {
           file_types = {
-            'markdown',
             'Avante',
           },
         },
         ft = {
-          'markdown',
           'Avante',
         },
       },
@@ -698,7 +703,10 @@ require('lazy').setup({
       {
         '<leader>f',
         function()
-          require('conform').format { async = true, lsp_format = 'fallback' }
+          require('conform').format {
+            async = true,
+            lsp_format = 'fallback',
+          }
         end,
         mode = '',
         desc = '[F]ormat buffer',
@@ -724,6 +732,7 @@ require('lazy').setup({
       end,
       formatters_by_ft = {
         lua = { 'stylua' },
+        markdown = { 'prettier' },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
