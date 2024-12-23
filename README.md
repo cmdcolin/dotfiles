@@ -6,13 +6,11 @@ Includes
 
 - tmux
 - zsh
-- neovim w/ lazyvim
+- neovim
 
-## Install
+## Neovim config
 
-For nvim, cp init.lua to ~/.config/nvim/init.lua
-
-For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
+It is a fork of kickstart.nvim maintained here  https://github.com/cmdcolin/mysetup.nvim
 
 ## Details about my setup
 
@@ -20,7 +18,7 @@ For other stuff e.g. zsh, cp the .zshrc to ~/.zshrc and so on
 - OS - Ubuntu 24.10
 - Music player - [fml9000](https://github.com/cmdcolin/fml9000) or
   [ytshuffle](https://cmdcolin.github.io/ytshuffle/)
-- Text editor - neovim
+- Text editor - neovim, kickstart.nvim setup
 - Browser - Firefox
 - Browser Add-ons - Dark Reader, uBlock origin
 
