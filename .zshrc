@@ -80,7 +80,7 @@ alias clean_node_modules="find . -name 'node_modules' -type d -prune -exec rm -r
 alias clean_next="find . -name '.next' -type d -prune -exec rm -rf '{}' +"
 alias clean_dist="find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
 alias clean_target="find . -name 'target' -type d -prune -exec rm -rf '{}' +"
-alias upall="brew upgrade; uprust; uprustdeps; sau;  upfzf"
+alias upall="uprust; uprustdeps; sau;  upfzf"
 
 
 function vaporwave() {
@@ -129,6 +129,5 @@ export PATH=$PATH:~/.local/bin/
 
 
 
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 source /etc/profile.d/sra-tools.sh
 source ~/.env
