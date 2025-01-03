@@ -80,7 +80,7 @@ alias clean_node_modules="find . -name 'node_modules' -type d -prune -exec rm -r
 alias clean_next="find . -name '.next' -type d -prune -exec rm -rf '{}' +"
 alias clean_dist="find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
 alias clean_target="find . -name 'target' -type d -prune -exec rm -rf '{}' +"
-alias upall="uprust; uprustdeps; sau;  upfzf"
+alias upall="brew upgrade; uprust; uprustdeps; sau;  upfzf"
 
 
 function vaporwave() {
@@ -106,6 +106,13 @@ function sortgff() {
   grep -v "^#" $1 | sort -t"`printf '\t'`" -k1,1 -k4,4n;
 }
 
+function rg2() {
+  rg --pretty $1 |
+    perl -0 -pe 's/\n\n/\n\0/gm' |
+    fzf --read0 --ansi --multi --highlight-line --layout reverse |
+    perl -ne '/^([0-9]+:|$)/ or print' | xargs nvim 
+}
+
 
 function md() {
   pandoc $1 > /tmp/$1.html
@@ -129,5 +136,6 @@ export PATH=$PATH:~/.local/bin/
 
 
 
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 source /etc/profile.d/sra-tools.sh
 source ~/.env
