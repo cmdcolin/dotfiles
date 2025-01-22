@@ -6,11 +6,8 @@ Includes
 
 - tmux
 - zsh
-- neovim
-
-## Neovim config
-
-It is a fork of kickstart.nvim maintained here  https://github.com/cmdcolin/mysetup.nvim
+- neovim (not in this repo, I use a fork of kickstart.nvim maintained here
+  https://github.com/cmdcolin/mysetup.nvim)
 
 ## Details about my setup
 
