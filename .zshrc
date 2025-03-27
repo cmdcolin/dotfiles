@@ -160,12 +160,9 @@ eval "$(fnm env)"
 export PATH=$PATH:~/.local/bin/
 export SKIM_DEFAULT_COMMAND="fd --type f || git ls-tree -r --name-only HEAD || rg --files || find ."
 
-source /etc/profile.d/sra-tools.sh
-source ~/.env
-
 # fnm
 FNM_PATH="/home/cdiesh/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
   export PATH="/home/cdiesh/.local/share/fnm:$PATH"
-  eval "`fnm env`"
+  eval "$(fnm env)"
 fi
