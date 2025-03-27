@@ -162,3 +162,10 @@ export SKIM_DEFAULT_COMMAND="fd --type f || git ls-tree -r --name-only HEAD || r
 
 source /etc/profile.d/sra-tools.sh
 source ~/.env
+
+# fnm
+FNM_PATH="/home/cdiesh/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="/home/cdiesh/.local/share/fnm:$PATH"
+  eval "`fnm env`"
+fi
