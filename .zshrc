@@ -20,6 +20,7 @@ alias e="nvim"
 alias python="python3"
 alias vm="nvim"
 alias y="yarn"
+alias rmf="rm -f"
 alias p="z"
 alias c="cat"
 alias rmf="rm -rf"
@@ -39,7 +40,6 @@ alias yu="yarn upgrade"
 alias g="git status"
 alias oo="npm run dev"
 alias gd="git diff"
-alias gdd="git diff origin/main"
 alias ss="yarn start"
 alias fd="fdfind"
 alias bn="y build:esm --watch  --preserveWatchOutput"
@@ -62,11 +62,14 @@ alias bbb="sk |xargs nvim "
 alias ww="watch -n.1 \"cat /proc/cpuinfo | grep \\\"^[c]pu MHz\\\"\""
 alias upfzf="cd ~/.fzf; git pull; cd -; ~/.fzf/install --all"
 alias yy="yarn lint --cache"
+alias yyy="yarn lint --cache --fix"
 alias ff="yarn format --cache"
 alias ttt="yarn tsc --noEmit --watch"
 alias stp="git subtree push --prefix build origin gh-pages"
 alias sau="sudo apt update && sudo apt upgrade"
 alias ccc="yarn test --maxWorkers=25%"
+alias cccc="yarn test --maxWorkers=25% --watch"
+alias ccccc="yarn test --maxWorkers=25% --watch products/jbrowse-web/src/tests"
 alias ydl="youtube-dl"
 alias yda="youtube-dl -f 'bestaudio[ext=m4a]' "
 alias open="xdg-open"
@@ -122,6 +125,10 @@ function md() {
 
 function file_ends_with_newline() {
   [[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
+}
+
+function plaintxt() {
+  pandoc -i "$1" -t plain --wrap none | pbcopy
 }
 
 export TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling
