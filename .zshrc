@@ -94,8 +94,12 @@ function vaporwave() {
   ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .m4a).vaporwave${2:-0.66}.m4a"
 }
 
-function vaporwavemp3() {
-  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .mp3).vaporwave${2:-0.66}.mp3"
+function vp() {
+  youtube_url="$1"
+  effect_rate="${2:-0.66}" # Default effect rate if not provided
+
+  yt-dlp -f 'bestaudio[ext=m4a]' -o - "$youtube_url" |
+    ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${effect_rate},aresample=44100"
 }
 
 function vaporvideo() {
