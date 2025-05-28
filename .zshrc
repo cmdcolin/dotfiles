@@ -15,6 +15,8 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 export EDITOR="nvim"
+alias grep="grep --color=always"
+alias rg="rg --color=always"
 alias zz="source ~/.zshrc"
 alias e="nvim"
 alias python="python3"
@@ -27,13 +29,13 @@ alias rmf="rm -rf"
 alias pp="python"
 alias gap="git add -p"
 alias r="npm run"
+alias rscan="npx react-scan@latest http://localhost:3000"
 alias lg="lazygit"
 alias gti="git"
 alias grr="git rebase --continue"
 alias gmm="git mergetool"
-alias rr="npm run dev"
+alias rr="npm run dev --open"
 alias mm="git reset --hard origin/main"
-alias rrr="npm run dev --open"
 alias v="nvim"
 alias yl="yarn upgrade-interactive --latest"
 alias yu="yarn upgrade"
@@ -89,6 +91,18 @@ alias clean_next="find . -name '.next' -type d -prune -exec rm -rf '{}' +"
 alias clean_dist="find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
 alias clean_target="find . -name 'target' -type d -prune -exec rm -rf '{}' +"
 alias upall="uprust; uprustdeps; sau;  upfzf"
+
+pandoc_fzf() {
+  local selected_file
+  selected_file=$(find . -type f | fzf --prompt="Select file to convert: " --height=40% --border)
+
+  if [[ -n "$selected_file" ]]; then
+    pandoc "$selected_file" -t plain --wrap=none | pbcopy
+    echo "✓ Converted '$selected_file' to plain text and copied to clipboard"
+  else
+    echo "No file selected"
+  fi
+}
 
 function vaporwave() {
   ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .m4a).vaporwave${2:-0.66}.m4a"
