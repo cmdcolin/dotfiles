@@ -11,7 +11,7 @@
 
 # Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+	source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
 export EDITOR="nvim"
@@ -26,6 +26,9 @@ alias gmm="git commit -m"
 alias pzip="pigz"
 alias pgzip="bgzip -@8"
 alias gemini="gemini --yolo"
+alias grep="grep --color=always"
+alias claude="claude --dangerously-skip-permissions"
+alias rg="rg --color=always"
 alias zz="source ~/.zshrc"
 alias e="nvim"
 alias python="python3"
@@ -39,6 +42,7 @@ alias c="cat"
 alias claude="claude --dangerously-skip-permissions"
 alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
 alias rmf="rm -rf"
+alias youtube-dl="yt-dlp"
 alias pp="python"
 alias gap="git add -p"
 alias ga="git add"
@@ -57,9 +61,9 @@ alias yu="yarn upgrade"
 alias g="git status"
 alias gu="git status -uno"
 alias oo="npm run dev"
+alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
 alias gd="git diff"
 alias ss="yarn start"
-alias fd="fdfind"
 alias bn="y build:esm --watch  --preserveWatchOutput"
 alias gg="git grep"
 alias gm="git commit -m"
@@ -93,13 +97,9 @@ alias cccc="yarn test --maxWorkers=25% --watch"
 alias ccccc="yarn test --runInBand --watch products/jbrowse-web/src/tests"
 alias ydl="youtube-dl"
 alias yda="youtube-dl -f 'bestaudio[ext=m4a]' "
-alias open="xdg-open"
 alias unarx="parallel unar {} ::: *.7z *.rar *.zip"
 alias delarx="rm -rf *.zip *.7z *.rar"
-alias pbcopy='xclip -selection clipboard'
-alias pbpaste='xclip -selection clipboard -o'
-alias pserver='npx serve -L -S'
-alias pserver2='python3 -m http.server'
+alias pserver='npx serve'
 alias smaller="parallel convert -resize 50% {} resized.{} ::: *.png"
 alias cpuspeed="glances --enable-plugin sensors"
 alias gitbranch="git log --oneline --graph --all --no-decorate"
@@ -112,63 +112,63 @@ alias clean_dist="find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
 alias clean_target="find . -name 'target' -type d -prune -exec rm -rf '{}' +"
 alias clean_all="clean_node_modules && clean_dist && clean_next && clean_target"
 alias uppack="nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'"
-alias upall="uprust; uprustdeps; sau;  upfzf; uv self update; yt-dlp -U; upneo.sh; uppack"
+alias upall="uprust; uprustdeps; sau;  upfzf; brew upgrade; uv self update; yt-dlp -U; uppack"
 
 pandoc_fzf() {
-  local selected_file
-  selected_file=$(find . -type f | fzf --prompt="Select file to convert: " --height=40% --border)
+	local selected_file
+	selected_file=$(find . -type f | fzf --prompt="Select file to convert: " --height=40% --border)
 
-  if [[ -n "$selected_file" ]]; then
-    pandoc "$selected_file" -t plain --wrap=none | pbcopy
-    echo "✓ Converted '$selected_file' to plain text and copied to clipboard"
-  else
-    echo "No file selected"
-  fi
+	if [[ -n "$selected_file" ]]; then
+		pandoc "$selected_file" -t plain --wrap=none | pbcopy
+		echo "✓ Converted '$selected_file' to plain text and copied to clipboard"
+	else
+		echo "No file selected"
+	fi
 }
 
 function vaporwave() {
-  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .m4a).vaporwave${2:-0.66}.m4a"
+	ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .m4a).vaporwave${2:-0.66}.m4a"
 }
 
 function vp() {
-  youtube_url="$1"
-  effect_rate="${2:-0.66}" # Default effect rate if not provided
+	youtube_url="$1"
+	effect_rate="${2:-0.66}" # Default effect rate if not provided
 
-  yt-dlp -f 'bestaudio[ext=m4a]' -o - "$youtube_url" |
-    ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${effect_rate},aresample=44100"
+	yt-dlp -f 'bestaudio[ext=m4a]' -o - "$youtube_url" |
+		ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${effect_rate},aresample=44100"
 }
 
 function vaporvideo() {
-  ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "$(basename $1 .mp4).vaporwave${2:-0.66}.mp4"
+	ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "$(basename $1 .mp4).vaporwave${2:-0.66}.mp4"
 }
 
 function vaporwaveogg() {
-  ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .ogg).vaporwave${2:-0.66}.ogg"
+	ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .ogg).vaporwave${2:-0.66}.ogg"
 }
 
 function sortgff() {
-  grep "^#" $1
-  grep -v "^#" $1 | sort -t"$(printf '\t')" -k1,1 -k4,4n
+	grep "^#" $1
+	grep -v "^#" $1 | sort -t"$(printf '\t')" -k1,1 -k4,4n
 }
 
 function rg2() {
-  rg --pretty $1 |
-    perl -0 -pe 's/\n\n/\n\0/gm' |
-    fzf --read0 --ansi --multi --highlight-line --layout reverse |
-    perl -ne '/^([0-9]+:|$)/ or print' | xargs nvim
+	rg --pretty $1 |
+		perl -0 -pe 's/\n\n/\n\0/gm' |
+		fzf --read0 --ansi --multi --highlight-line --layout reverse |
+		perl -ne '/^([0-9]+:|$)/ or print' | xargs nvim
 }
 
 function md() {
-  pandoc $1 >/tmp/$1.html
-  xdg-open /tmp/$1.html
+	pandoc $1 >/tmp/$1.html
+	xdg-open /tmp/$1.html
 }
 
 function file_ends_with_newline() {
-  [[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
+	[[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
 }
 
 function plaintxt() {
-  pandoc -i "$1" -t plain --wrap none | pbcopy
+	pandoc -i "$1" -t plain --wrap none | pbcopy
 }
 
 function cdd() {
@@ -214,29 +214,17 @@ export ANDROID_HOME="$HOME/Android/Sdk"
 export PATH=$PATH:~/.local/bin/:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
 export SKIM_DEFAULT_COMMAND="fd --type f || git ls-tree -r --name-only HEAD || rg --files || find ."
 
-source /etc/profile.d/sra-tools.sh
 source ~/.env
 
-# cat out.txt | jq -r 'select(.type == "user") | .message.content'
-
-. "$HOME/.local/bin/env"
 eval "$(zoxide init zsh)"
 
-# bun completions
-[ -s "/home/cdiesh/.bun/_bun" ] && source "/home/cdiesh/.bun/_bun"
-
-# bun
-export BUN_INSTALL="$HOME/.bun"
-export PATH="$BUN_INSTALL/bin:$PATH"
-
 # pnpm
-export PNPM_HOME="/home/cdiesh/.local/share/pnpm"
+export PNPM_HOME="/Users/colin/Library/pnpm"
 case ":$PATH:" in
 *":$PNPM_HOME:"*) ;;
 *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
 # pnpm end
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 
 function gencom() {
   git commit -m "$(git diff --cached | claude -p 'Write a conventional commit message for this diff. Format: type(scope): description. Output only the message.')"
@@ -254,6 +242,4 @@ function firefile() {
   sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' "$1" | pbcopy
 }
 
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
+CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
