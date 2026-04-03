@@ -1,1 +1,5 @@
-plugin
+plugin/
+*.bak
+*.swp
+*.zip
+.DS_Store

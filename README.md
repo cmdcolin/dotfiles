@@ -9,6 +9,26 @@ Includes
 - neovim (not in this repo, I use a fork of kickstart.nvim maintained here
   https://github.com/cmdcolin/mysetup.nvim)
 
+## Installation
+
+```bash
+./install.sh # Install tools and link dotfiles
+./link.sh    # Just symlink files
+```
+
+## Modular Dotfile Structure
+
+Dotfiles are organized into "packages" (folders). Each folder is mirrored to
+your `$HOME` directory.
+
+- `git/`: contains `.gitconfig`
+- `zsh/`: contains `.zshrc`, `.zimrc`
+- `pnpm/`: contains `.config/pnpm/rc`
+- `hosts/$(hostname)/`: contains host-specific overrides
+
+To add a new config, just create a new directory and put the files in it,
+mirroring the structure you want in your home directory.
+
 ## Details about my setup
 
 - Computer - Dell laptop with 32gb RAM, 512GB SSD

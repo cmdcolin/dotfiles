@@ -1,6 +1,7 @@
 [user]
   email = <colin.diesh@gmail.com>
   name = Colin
+  signingkey = A73172047D7555CE
 [blame]
   date = short
 [http]
@@ -23,3 +24,7 @@
 
 [merge]
   conflictstyle = zdiff3
+[init]
+  defaultBranch = main
+[commit]
+  gpgsign = true
