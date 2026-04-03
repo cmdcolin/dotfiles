@@ -19,6 +19,7 @@ alias grep="grep --color=always"
 alias rg="rg --color=always"
 alias zz="source ~/.zshrc"
 alias e="nvim"
+alias claude="claude --dangerously-skip-permissions"
 alias python="python3"
 alias vm="nvim"
 alias y="yarn"
@@ -59,6 +60,7 @@ alias eee="PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/ cargo run"
 alias qq="exit"
 alias 00="exit"
 alias hh="htop"
+alias hhh="htop -u cdiesh"
 alias bb="git branch --sort=-committerdate| fzy |xargs git checkout "
 alias bbb="sk |xargs nvim "
 alias ww="watch -n.1 \"cat /proc/cpuinfo | grep \\\"^[c]pu MHz\\\"\""
@@ -153,12 +155,10 @@ export TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling
 export DEBUG_PRINT_LIMIT=0
 export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
-eval "$(fnm env)"
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-
-export PATH=$PATH:~/.local/bin/
+export PATH=~/.local/bin/:$PATH
 export SKIM_DEFAULT_COMMAND="fd --type f || git ls-tree -r --name-only HEAD || rg --files || find ."
+
+source ~/.env
 
 # fnm
 FNM_PATH="/home/cdiesh/.local/share/fnm"
@@ -166,3 +166,23 @@ if [ -d "$FNM_PATH" ]; then
   export PATH="/home/cdiesh/.local/share/fnm:$PATH"
   eval "$(fnm env)"
 fi
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# >>> conda initialize >>>
+# !! Contents within this block are managed by 'conda init' !!
+# __conda_setup="$('/home/cdiesh/miniconda3/bin/conda' 'shell.zsh' 'hook' 2>/dev/null)"
+# if [ $? -eq 0 ]; then
+#   eval "$__conda_setup"
+# else
+#   if [ -f "/home/cdiesh/miniconda3/etc/profile.d/conda.sh" ]; then
+#     . "/home/cdiesh/miniconda3/etc/profile.d/conda.sh"
+#   else
+#     export PATH="/home/cdiesh/miniconda3/bin:$PATH"
+#   fi
+# fi
+# unset __conda_setup
+# <<< conda initialize <<<
+
+. "$HOME/.local/bin/env"
+export PATH="/home/cdiesh/bin/pangenome:$PATH"
