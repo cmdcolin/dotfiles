@@ -6,7 +6,6 @@ esac
 
 export TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling
 
-alias upall="uprust; uprustdeps; upfzf; brew upgrade; uv self update; yt-dlp -U; uppack"
 alias pw="cd ~/src/jbrowse-components/products/jbrowse-web"
 
 eval "$(brew shellenv zsh)"

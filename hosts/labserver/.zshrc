@@ -8,8 +8,6 @@ alias sau="sudo apt update && sudo apt upgrade"
 alias eee="PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/ cargo run"
 alias ww="watch -n.1 \"cat /proc/cpuinfo | grep \\\"^[c]pu MHz\\\"\""
 
-alias upall="uprust; uprustdeps; sau; upfzf; uv self update; yt-dlp -U; uppack"
-
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 
 . "$HOME/.local/bin/env"

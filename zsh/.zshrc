@@ -15,75 +15,35 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
 fi
 
 export EDITOR="nvim"
-alias gitt="git tag --sort=committerdate"
-alias mkenv="python -m venv .venv; source .venv/bin/activate"
-alias ppp="pnpm install"
-alias aenv="source .venv/bin/activate"
-alias punzip="pigz -d"
-alias pzip="pigz"
-alias pgzip="bgzip -@8"
-alias gemini="gemini --yolo"
-alias grep="grep --color=always"
-alias claude="claude --dangerously-skip-permissions"
-alias rg="rg --color=always"
-alias zz="source ~/.zshrc"
 alias e="nvim"
-alias python="python3"
-alias vm="nvim"
-alias t="pnpm install"
+alias zz="source ~/.zshrc"
 alias rmf="rm -rf"
-alias gemmy="npx https://github.com/google-gemini/gemini-cli"
-alias p="z"
-alias c="cat"
-alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
+alias grep="grep --color=always"
+alias rg="rg --color=always"
+alias claude="claude --dangerously-skip-permissions"
 alias youtube-dl="yt-dlp"
-alias pp="python"
+alias mkenv="python -m venv .venv; source .venv/bin/activate"
+alias aenv="source .venv/bin/activate"
+alias t="pnpm install"
 alias r="npm run"
-alias rscan="npx react-scan@latest http://localhost:3000"
-alias lg="lazygit"
-alias rr="npm run dev"
-alias g="git status"
-alias mm='read -p "🔥 Reset to origin/main? (y/n) " -n1; echo; [[ $REPLY =~ ^[Yy]$ ]] && git reset --hard origin/main || echo "Cancelled"'
-alias v="nvim"
 alias y="yarn"
-alias yl="yarn upgrade-interactive --latest"
-alias yu="yarn upgrade"
-alias oo="npm run dev"
-alias ss="yarn start"
-alias bn="y build:esm --watch  --preserveWatchOutput"
-alias vim="nvim"
+alias g="git status"
 alias gggg="git add . && git commit --amend --no-edit"
 alias ggggg="git add . && git commit --amend --no-edit --no-verify"
-alias ee="cargo run"
-alias qq="exit"
-alias 00="exit"
-alias hh="htop"
+alias mm='read -p "🔥 Reset to origin/main? (y/n) " -n1; echo; [[ $REPLY =~ ^[Yy]$ ]] && git reset --hard origin/main || echo "Cancelled"'
+alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
+alias lg="lazygit"
 alias bb="git branch --sort=-committerdate| fzf |xargs git checkout "
 alias bbb="sk |xargs nvim "
-alias upfzf="cd ~/.fzf; git pull; cd -; ~/.fzf/install --all"
-alias yy="yarn lint --cache"
-alias yyy="yarn lint --cache --fix"
+alias clean_all="find . -name 'node_modules' -o -name '.next' -o -name 'dist' -o -name 'target' | xargs rm -rf"
+alias hh="htop"
+alias qq="exit"
+alias ee="cargo run"
+alias ss="yarn start"
+alias rr="npm run dev"
+alias p="z"
 alias ff="PRETTIER_EXPERIMENTAL_CLI=1 yarn format --cache"
-alias fff="yy --fix && ff"
-alias ttt="yarn tsc --noEmit --watch"
-alias ccc="yarn test --maxWorkers=25%"
-alias ydl="youtube-dl"
-alias yda="youtube-dl -f 'bestaudio[ext=m4a]' "
-alias unarx="parallel unar {} ::: *.7z *.rar *.zip"
-alias delarx="rm -rf *.zip *.7z *.rar"
 alias pserver='npx serve'
-alias smaller="parallel convert -resize 50% {} resized.{} ::: *.png"
-alias cpuspeed="glances --enable-plugin sensors"
-alias gitbranch="git log --oneline --graph --all --no-decorate"
-alias uprust="rustup update"
-alias uprustdeps="cargo install-update -a"
-alias upp='nvim --headless "+Lazy! sync" +qa'
-alias clean_node_modules="find . -name 'node_modules' -type d -prune -exec rm -rf '{}' +"
-alias clean_next="find . -name '.next' -type d -prune -exec rm -rf '{}' +"
-alias clean_dist="find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
-alias clean_target="find . -name 'target' -type d -prune -exec rm -rf '{}' +"
-alias clean_all="clean_node_modules && clean_dist && clean_next && clean_target"
-alias uppack="nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'"
 
 function vaporwave() {
 	ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .m4a).vaporwave${2:-0.66}.m4a"
@@ -137,6 +97,21 @@ eval "$(zoxide init zsh)"
 
 function gencom() {
   git commit -m "$(git diff --cached | claude -p 'Write a conventional commit message for this diff. Format: type(scope): description. Output only the message.')"
+}
+
+function upall() {
+	rustup update
+	cargo install-update -a
+	cd ~/.fzf && git pull && cd - && ~/.fzf/install --all
+	uv self update
+	yt-dlp -U
+	nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'
+
+	if [[ "$OSTYPE" == "darwin"* ]]; then
+		brew upgrade
+	elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+		sudo apt update && sudo apt upgrade
+	fi
 }
 
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
