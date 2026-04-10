@@ -34,14 +34,11 @@ alias e="nvim"
 alias python="python3"
 alias vm="nvim"
 alias t="pnpm install"
-alias rmf="rm -f"
+alias rmf="rm -rf"
 alias gemmy="npx https://github.com/google-gemini/gemini-cli"
 alias p="z"
-alias pw="cd ~/src/jbrowse-components/products/jbrowse-web"
 alias c="cat"
-alias claude="claude --dangerously-skip-permissions"
 alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
-alias rmf="rm -rf"
 alias youtube-dl="yt-dlp"
 alias pp="python"
 alias gap="git add -p"
@@ -76,13 +73,11 @@ alias comppng="pngquant *.png; mkdir pngquant; mv *fs8* pngquant; rm *.png;"
 alias gc="git checkout"
 alias gbb="git checkout -b"
 alias ee="cargo run"
-alias eee="PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/ cargo run"
 alias qq="exit"
 alias 00="exit"
 alias hh="htop"
 alias bb="git branch --sort=-committerdate| fzf |xargs git checkout "
 alias bbb="sk |xargs nvim "
-alias ww="watch -n.1 \"cat /proc/cpuinfo | grep \\\"^[c]pu MHz\\\"\""
 alias upfzf="cd ~/.fzf; git pull; cd -; ~/.fzf/install --all"
 alias yy="yarn lint --cache"
 alias yyy="yarn lint --cache --fix"
@@ -91,7 +86,6 @@ alias fff="yy --fix && ff"
 alias ttt="yarn tsc --noEmit --watch"
 alias tttt="yarn typecheck --noEmit --watch"
 alias stp="git subtree push --prefix build origin gh-pages"
-alias sau="sudo apt update && sudo apt upgrade"
 alias ccc="yarn test --maxWorkers=25%"
 alias cccc="yarn test --maxWorkers=25% --watch"
 alias ccccc="yarn test --runInBand --watch products/jbrowse-web/src/tests"
@@ -112,19 +106,6 @@ alias clean_dist="find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
 alias clean_target="find . -name 'target' -type d -prune -exec rm -rf '{}' +"
 alias clean_all="clean_node_modules && clean_dist && clean_next && clean_target"
 alias uppack="nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'"
-alias upall="uprust; uprustdeps; sau;  upfzf; brew upgrade; uv self update; yt-dlp -U; uppack"
-
-pandoc_fzf() {
-	local selected_file
-	selected_file=$(find . -type f | fzf --prompt="Select file to convert: " --height=40% --border)
-
-	if [[ -n "$selected_file" ]]; then
-		pandoc "$selected_file" -t plain --wrap=none | pbcopy
-		echo "✓ Converted '$selected_file' to plain text and copied to clipboard"
-	else
-		echo "No file selected"
-	fi
-}
 
 function vaporwave() {
 	ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .m4a).vaporwave${2:-0.66}.m4a"
@@ -158,51 +139,13 @@ function rg2() {
 		perl -ne '/^([0-9]+:|$)/ or print' | xargs nvim
 }
 
-function md() {
-	pandoc $1 >/tmp/$1.html
-	xdg-open /tmp/$1.html
-}
-
 function file_ends_with_newline() {
 	[[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
-}
-
-function plaintxt() {
-	pandoc -i "$1" -t plain --wrap none | pbcopy
-}
-
-function cdd() {
-  git ls-files | fzf --style full --scheme path \
-    --border --padding 1,2 \
-    --ghost 'Type in your query' \
-    --border-label ' Demo ' --input-label ' Input ' --header-label ' File Type ' \
-    --preview 'BAT_THEME=gruvbox-dark fzf-preview.sh {}' \
-    --bind 'result:bg-transform-list-label:
-        if [[ -z $FZF_QUERY ]]; then
-          echo " $FZF_MATCH_COUNT items "
-        else
-          echo " $FZF_MATCH_COUNT matches for [$FZF_QUERY] "
-        fi
-        ' \
-    --bind 'focus:bg-transform-preview-label:[[ -n {} ]] && printf " Previewing [%s] " {}' \
-    --bind 'focus:+bg-transform-header:[[ -n {} ]] && file --brief {}' \
-    --bind 'focus:+bg-transform-footer:if [[ -n {} ]]; then
-              echo "SHA1:   $(sha1sum < {})"
-              echo "SHA256: $(sha256sum < {})"
-            fi' \
-    --bind 'ctrl-r:change-list-label( Reloading the list )+reload(sleep 2; git ls-files)' \
-    --color 'border:#aaaaaa,label:#cccccc' \
-    --color 'preview-border:#9999cc,preview-label:#ccccff' \
-    --color 'list-border:#669966,list-label:#99cc99' \
-    --color 'input-border:#996666,input-label:#ffcccc' \
-    --color 'header-border:#6699cc,header-label:#99ccff' \
-    --color 'footer:#ccbbaa,footer-border:#cc9966,footer-label:#cc9966'
 }
 
 # Always save commands to history regardless of exit status
 zshaddhistory() { return 0 }
 
-export TSC_WATCHFILE=UseFsEventsWithFallbackDynamicPolling
 export DEBUG_PRINT_LIMIT=0
 export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
@@ -218,28 +161,8 @@ source ~/.env
 
 eval "$(zoxide init zsh)"
 
-# pnpm
-export PNPM_HOME="/Users/colin/Library/pnpm"
-case ":$PATH:" in
-*":$PNPM_HOME:"*) ;;
-*) export PATH="$PNPM_HOME:$PATH" ;;
-esac
-# pnpm end
-
 function gencom() {
   git commit -m "$(git diff --cached | claude -p 'Write a conventional commit message for this diff. Format: type(scope): description. Output only the message.')"
 }
 
-function chromeclip() {
-  pbpaste | sed 's/^[^:]*:[0-9]* //' | pbcopy
-}
-
-function fireclip() {
-  pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy
-}
-
-function firefile() {
-  sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' "$1" | pbcopy
-}
-
-CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
+export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000

@@ -1,12 +1,53 @@
 #!/bin/bash
 # A minimal, idempotent dotfile linker (Stow-like) with machine-specific support.
-# Usage: ./link.sh [host_override]
+# Usage: ./link.sh [mac|ubuntu|labserver]
 
 set -e
 
+# Show help
+show_help() {
+    cat << 'EOF'
+Usage: ./link.sh [HOST]
+
+Link dotfiles from this repo to your home directory.
+
+HOST (optional):
+    mac         Link common configs + macOS overrides
+    ubuntu      Link common configs + Ubuntu overrides
+    labserver   Link common configs + labserver overrides
+    -h, --help  Show this help message
+
+If no HOST is specified, common configs are linked without host overrides.
+
+Examples:
+    ./link.sh mac       # Link with macOS-specific configs
+    ./link.sh ubuntu    # Link with Ubuntu-specific configs
+    ./link.sh           # Link common configs only (no host overrides)
+EOF
+}
+
+# Parse arguments
+HOST=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+        -h|--help)
+            show_help
+            exit 0
+            ;;
+        mac|ubuntu|labserver)
+            HOST="$1"
+            shift
+            ;;
+        *)
+            echo "Error: Unknown argument '$1'"
+            echo "Run './link.sh --help' for usage"
+            exit 1
+            ;;
+    esac
+done
+
 # Configuration
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-HOST="${1:-$(hostname)}"
 HOME_DIR="$HOME"
 
 # Directories to skip (not dotfile folders)
@@ -70,9 +111,13 @@ for pkg in "$DOTFILES_DIR"/*/; do
 done
 
 # 2. Link Host Variations (Overrides common ones)
-if [ -d "$DOTFILES_DIR/hosts/$HOST" ]; then
-    echo -e "\n--- Processing Host Variations ($HOST) ---"
-    link_package "$DOTFILES_DIR/hosts/$HOST"
+if [ -n "$HOST" ]; then
+    if [ -d "$DOTFILES_DIR/hosts/$HOST" ]; then
+        echo -e "\n--- Processing Host Variations ($HOST) ---"
+        link_package "$DOTFILES_DIR/hosts/$HOST"
+    fi
+else
+    echo -e "\n⚠️  No host specified. Link your host configs with: ./link.sh mac|ubuntu|labserver"
 fi
 
 echo -e "\n✅ Done!"

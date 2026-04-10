@@ -12,9 +12,24 @@ Includes
 ## Installation
 
 ```bash
-./install.sh # Install tools and link dotfiles
-./link.sh    # Just symlink files
+./install.sh      # Install tools and dependencies
+./link.sh mac     # Link with macOS-specific configs
+./link.sh ubuntu  # Link with Ubuntu-specific configs
 ```
+
+### Usage
+
+Use `./link.sh --help` to see all available options:
+
+```bash
+./link.sh --help        # Show help
+./link.sh mac           # Link with macOS configs (primary secondary)
+./link.sh ubuntu        # Link with Ubuntu configs (primary primary)
+./link.sh labserver     # Link with labserver configs
+./link.sh               # Link common configs only (no OS-specific overrides)
+```
+
+The script applies host-specific overrides after linking common configs, so OS-specific settings like package managers, clipboard tools, and paths are correctly configured per machine.
 
 ## Modular Dotfile Structure
 
