@@ -58,7 +58,6 @@ alias yu="yarn upgrade"
 alias g="git status"
 alias gu="git status -uno"
 alias oo="npm run dev"
-alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
 alias gd="git diff"
 alias ss="yarn start"
 alias bn="y build:esm --watch  --preserveWatchOutput"
@@ -137,10 +136,6 @@ function rg2() {
 		perl -0 -pe 's/\n\n/\n\0/gm' |
 		fzf --read0 --ansi --multi --highlight-line --layout reverse |
 		perl -ne '/^([0-9]+:|$)/ or print' | xargs nvim
-}
-
-function file_ends_with_newline() {
-	[[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
 }
 
 # Always save commands to history regardless of exit status

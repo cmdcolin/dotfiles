@@ -51,7 +51,7 @@ DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 HOME_DIR="$HOME"
 
 # Directories to skip (not dotfile folders)
-SKIP=("hosts" "img" "OLD" "plugin" ".git")
+SKIP=("hosts" "img" "OLD" "plugin" ".git" "zsh")
 
 # Function to link a file
 link_file() {
@@ -92,7 +92,7 @@ link_package() {
     done
 }
 
-# 1. Link Common Packages
+# 1. Link Common Packages (except zsh which is handled specially below)
 for pkg in "$DOTFILES_DIR"/*/; do
     pkg_name=$(basename "$pkg")
     
@@ -109,6 +109,18 @@ for pkg in "$DOTFILES_DIR"/*/; do
         link_package "$pkg"
     fi
 done
+
+# 1b. Link zsh package (but skip .zimrc, only link .zshrc)
+if [ -d "$DOTFILES_DIR/zsh" ]; then
+    echo "--- Linking Package: zsh ---"
+    src="$DOTFILES_DIR/zsh/.zshrc"
+    dest="$HOME_DIR/.zshrc"
+    if [ -f "$src" ]; then
+        mkdir -p "$(dirname "$dest")"
+        [ -f "$dest" ] && [ ! -L "$dest" ] && mv "$dest" "$dest.bak"
+        ln -sfv "$src" "$dest"
+    fi
+fi
 
 # 2. Link Host Variations (Overrides common ones)
 if [ -n "$HOST" ]; then

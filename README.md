@@ -12,24 +12,32 @@ Includes
 ## Installation
 
 ```bash
-./install.sh      # Install tools and dependencies
-./link.sh mac     # Link with macOS-specific configs
-./link.sh ubuntu  # Link with Ubuntu-specific configs
+./install.sh mac     # Auto-install for macOS and link configs
+./install.sh ubuntu  # Auto-install for Ubuntu/Linux and link configs
 ```
 
-### Usage
+Or manually:
+
+```bash
+./install_mac.sh     # macOS setup script
+./install_linux.sh   # Linux setup script
+./link.sh mac        # Just link dotfiles (macOS)
+./link.sh ubuntu     # Just link dotfiles (Ubuntu)
+```
+
+### Linking
 
 Use `./link.sh --help` to see all available options:
 
 ```bash
 ./link.sh --help        # Show help
-./link.sh mac           # Link with macOS configs (primary secondary)
-./link.sh ubuntu        # Link with Ubuntu configs (primary primary)
-./link.sh labserver     # Link with labserver configs
+./link.sh mac           # Link with macOS-specific configs
+./link.sh ubuntu        # Link with Ubuntu-specific configs
+./link.sh labserver     # Link with labserver/server configs
 ./link.sh               # Link common configs only (no OS-specific overrides)
 ```
 
-The script applies host-specific overrides after linking common configs, so OS-specific settings like package managers, clipboard tools, and paths are correctly configured per machine.
+The scripts apply host-specific overrides (in `hosts/`) after linking common configs, so OS-specific settings like package managers, clipboard tools, and paths are correctly configured per machine.
 
 ## Modular Dotfile Structure
 
