@@ -77,6 +77,7 @@ zshaddhistory() { return 0 }
 export DEBUG_PRINT_LIMIT=0
 export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 export PRETTIER_EXPERIMENTAL_CLI=1
+export GPG_TTY=$(tty)
 
 eval "$(fnm env)"
 
