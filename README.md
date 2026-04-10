@@ -31,8 +31,8 @@ mirroring the structure you want in your home directory.
 
 ## Details about my setup
 
-- Computer - MacBook Pro (primary) / Dell laptop with 32gb RAM, 512GB SSD (backup)
-- OS - macOS (primary) / Ubuntu 24.10 (backup)
+- Computer - Dell laptop with 32gb RAM, 512GB SSD (primary) / MacBook Pro (secondary)
+- OS - Ubuntu 24.10 (primary) / macOS (secondary)
 - Music player - [fml9000](https://github.com/cmdcolin/fml9000) or
   [ytshuffle](https://cmdcolin.github.io/ytshuffle/)
 - Text editor - neovim, kickstart.nvim setup
