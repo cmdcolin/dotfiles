@@ -28,3 +28,22 @@
   defaultBranch = main
 [commit]
   gpgsign = true
+
+[alias]
+  s = status
+  a = add
+  aa = add .
+  c = commit -m
+  ca = commit --amend --no-edit
+  caa = commit -a --amend --no-edit
+  co = checkout
+  cob = checkout -b
+  d = diff
+  dc = diff --cached
+  l = log --oneline --graph --all
+  b = branch -vv
+  p = push
+  pl = pull
+  amend = commit --amend --no-edit
+  amenda = commit -a --amend --no-edit
+  sc = commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"
