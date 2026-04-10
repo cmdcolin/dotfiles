@@ -29,7 +29,6 @@ alias r="npm run"
 alias y="yarn"
 alias g="git status"
 alias gggg="git add . && git commit --amend --no-edit"
-alias ggggg="git add . && git commit --amend --no-edit --no-verify"
 alias mm='read -p "🔥 Reset to origin/main? (y/n) " -n1; echo; [[ $REPLY =~ ^[Yy]$ ]] && git reset --hard origin/main || echo "Cancelled"'
 alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
 alias lg="lazygit"
@@ -100,18 +99,31 @@ function gencom() {
 }
 
 function upall() {
+	echo "Updating Rust..."
 	rustup update
 	cargo install-update -a
+
+	echo "Updating fzf..."
 	cd ~/.fzf && git pull && cd - && ~/.fzf/install --all
+
+	echo "Updating CLI tools..."
 	uv self update
 	yt-dlp -U
+
+	echo "Updating Neovim plugins..."
 	nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'
 
 	if [[ "$OSTYPE" == "darwin"* ]]; then
+		echo "Updating Homebrew packages..."
+		brew update
 		brew upgrade
+		brew cleanup
 	elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-		sudo apt update && sudo apt upgrade
+		echo "Updating apt packages..."
+		sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
 	fi
+
+	echo "✅ All updates complete!"
 }
 
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
