@@ -26,7 +26,7 @@ alias mkenv="python -m venv .venv; source .venv/bin/activate"
 alias aenv="source .venv/bin/activate"
 alias t="pnpm install"
 alias r="npm run"
-alias y="yarn"
+alias y="pnpm"
 alias g="git status"
 alias gggg="git add . && git commit --amend --no-edit"
 alias mm='read -p "🔥 Reset to origin/main? (y/n) " -n1; echo; [[ $REPLY =~ ^[Yy]$ ]] && git reset --hard origin/main || echo "Cancelled"'
@@ -38,10 +38,10 @@ alias clean_all="find . -name 'node_modules' -o -name '.next' -o -name 'dist' -o
 alias hh="htop"
 alias qq="exit"
 alias ee="cargo run"
-alias ss="yarn start"
+alias ss="pnpm start"
 alias rr="npm run dev"
 alias p="z"
-alias ff="PRETTIER_EXPERIMENTAL_CLI=1 yarn format --cache"
+alias ff="PRETTIER_EXPERIMENTAL_CLI=1 pnpm format --cache"
 alias pserver='npx serve'
 
 function vaporwave() {
