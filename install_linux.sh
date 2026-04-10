@@ -24,4 +24,8 @@ curl -fsSL https://fnm.io/install | bash
 # Link dotfiles with Linux config
 ./link.sh ubuntu
 
+# Install zprezto for zsh configuration
+echo "Installing zprezto..."
+git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+
 echo "✅ Ubuntu/Linux setup complete!"

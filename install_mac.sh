@@ -37,4 +37,8 @@ cargo install ruplacer typos
 # Link dotfiles with macOS config
 ./link.sh mac
 
+# Install zprezto for zsh configuration
+echo "Installing zprezto..."
+git clone --recursive https://github.com/sorin-ionescu/prezto.git "${ZDOTDIR:-$HOME}/.zprezto"
+
 echo "✅ macOS setup complete!"
