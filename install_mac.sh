@@ -3,6 +3,9 @@ set -e
 
 echo "Installing macOS development environment..."
 
+echo "Installing Xcode Command Line Tools..."
+xcode-select --install 2>/dev/null || true
+
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source "$HOME/.cargo/env"
 
@@ -22,6 +25,11 @@ brew install zoxide
 brew install fzf
 brew install lazygit
 brew install tmux
+brew install gh
+brew install awscli
+brew install fd
+brew install jq
+brew install wget
 
 # Cargo tools
 cargo install ruplacer typos
