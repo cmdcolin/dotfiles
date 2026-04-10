@@ -13,6 +13,7 @@ if ! command -v brew &> /dev/null; then
 fi
 
 # Core tools
+brew install git
 brew install neovim
 brew install git-delta
 brew install ripgrep
