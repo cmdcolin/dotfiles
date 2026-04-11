@@ -45,4 +45,4 @@
   p = push
   pl = pull
 [gpg]
-	program = gpg
+  program = gpg

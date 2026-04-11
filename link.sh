@@ -110,16 +110,18 @@ for pkg in "$DOTFILES_DIR"/*/; do
     fi
 done
 
-# 1b. Link zsh package (but skip .zimrc, only link .zshrc)
+# 1b. Link zsh package files individually
 if [ -d "$DOTFILES_DIR/zsh" ]; then
     echo "--- Linking Package: zsh ---"
-    src="$DOTFILES_DIR/zsh/.zshrc"
-    dest="$HOME_DIR/.zshrc"
-    if [ -f "$src" ]; then
-        mkdir -p "$(dirname "$dest")"
-        [ -f "$dest" ] && [ ! -L "$dest" ] && mv "$dest" "$dest.bak"
-        ln -sfv "$src" "$dest"
-    fi
+    for zsh_file in .zshrc .zpreztorc; do
+        src="$DOTFILES_DIR/zsh/$zsh_file"
+        dest="$HOME_DIR/$zsh_file"
+        if [ -f "$src" ]; then
+            mkdir -p "$(dirname "$dest")"
+            [ -f "$dest" ] && [ ! -L "$dest" ] && mv "$dest" "$dest.bak"
+            ln -sfv "$src" "$dest"
+        fi
+    done
 fi
 
 # 2. Link Host Variations (Overrides common ones)

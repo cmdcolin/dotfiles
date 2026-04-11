@@ -133,8 +133,10 @@ function upall() {
 	rustup update
 	cargo install-update -a
 
-	echo "Updating fzf..."
-	(cd ~/.fzf && git pull) && ~/.fzf/install --all
+	if [[ -d ~/.fzf/.git ]]; then
+		echo "Updating fzf..."
+		(cd ~/.fzf && git pull) && ~/.fzf/install --all
+	fi
 
 	echo "Updating CLI tools..."
 	uv self update

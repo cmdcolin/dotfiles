@@ -17,6 +17,10 @@ fi
 
 brew install git neovim git-delta ripgrep fnm zoxide fzf lazygit tmux gh fd jq wget htop yt-dlp uv
 
+if [[ ! -d ~/.zprezto ]]; then
+    git clone --recursive https://github.com/sorin-ionescu/prezto.git ~/.zprezto
+fi
+
 cargo install ruplacer typos-cli cargo-update
 
 ./link.sh mac

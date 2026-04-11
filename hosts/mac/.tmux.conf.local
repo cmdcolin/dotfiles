@@ -1,1 +1,2 @@
 set -s copy-command 'pbcopy'
+set -g prefix C-b

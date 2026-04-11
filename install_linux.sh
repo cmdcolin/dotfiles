@@ -21,6 +21,10 @@ curl -fsSL https://fnm.io/install | bash
 # uv (Python package manager)
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
+if [[ ! -d ~/.zprezto ]]; then
+    git clone --recursive https://github.com/sorin-ionescu/prezto.git ~/.zprezto
+fi
+
 # yt-dlp
 uv tool install yt-dlp
 

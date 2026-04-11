@@ -4,8 +4,8 @@
 
 - `zsh/.zshrc` — common shell config for all machines
 - `tmux/.tmux.conf` — common tmux config for all machines
-- `hosts/<mac|ubuntu|labserver>/` — machine-specific overrides
-  - `.zshrc` and `.tmux.conf` are intentionally empty; use `.zshrc.local` and `.tmux.conf.local` instead (link.sh skips the non-local versions)
+- `hosts/<mac|ubuntu|labserver>/` — machine-specific overrides; use `.zshrc.local` and `.tmux.conf.local` (link.sh skips the non-local versions)
+- `zsh/.zpreztorc` — zprezto config (modules, theme, key bindings)
 
 ## Adding aliases or functions
 
