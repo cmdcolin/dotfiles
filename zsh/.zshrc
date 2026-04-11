@@ -18,12 +18,15 @@ alias rmf="rm -rf"
 # Skips the per-tool-call permissions prompt.
 alias claude="claude --dangerously-skip-permissions"
 
-# Creates .venv and activates it in one step.
 alias mkenv="python -m venv .venv; source .venv/bin/activate"
 alias aenv="source .venv/bin/activate"
 
 alias y="pnpm"
 alias g="git status"
+alias yy="pnpm lint --cache"
+alias yyy="pnpm lint --cache --fix"
+alias ttt="pnpm exec tsc --noEmit --watch"
+alias fff="yy --fix && ff"
 
 # Stage everything and amend last commit — useful for "oops, forgot a file".
 alias gggg="git add . && git commit --amend --no-edit"
@@ -38,9 +41,6 @@ alias lg="lazygit"
 
 # Sorted by most recently committed so fresh branches float to the top.
 alias bb="git branch --sort=-committerdate| fzf |xargs git checkout "
-
-# Fuzzy-pick a file with skim and open in nvim.
-alias bbb="sk |xargs nvim "
 
 # -type d -prune stops find from descending into found dirs, avoiding
 # nested matches (e.g. node_modules inside node_modules).
@@ -120,9 +120,6 @@ eval "$(fnm env)"
 export ANDROID_HOME="$HOME/Android/Sdk"
 export PATH=$PATH:~/.local/bin/:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
 
-# Fallback chain for skim when outside a git repo.
-export SKIM_DEFAULT_COMMAND="fd --type f || git ls-tree -r --name-only HEAD || rg --files || find ."
-
 [ -f ~/.env ] && source ~/.env
 
 eval "$(zoxide init zsh)"
@@ -134,7 +131,7 @@ function upall() {
 	cargo install-update -a
 
 	echo "Updating fzf..."
-	cd ~/.fzf && git pull && cd - && ~/.fzf/install --all
+	(cd ~/.fzf && git pull) && ~/.fzf/install --all
 
 	echo "Updating CLI tools..."
 	uv self update

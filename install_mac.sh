@@ -9,32 +9,15 @@ xcode-select --install 2>/dev/null || true
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 source "$HOME/.cargo/env"
 
-# Ensure Homebrew is installed
 if ! command -v brew &> /dev/null; then
     echo "Installing Homebrew..."
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 fi
 
-# Core tools
-brew install git
-brew install neovim
-brew install git-delta
-brew install ripgrep
-brew install fnm
-brew install zoxide
-brew install fzf
-brew install lazygit
-brew install tmux
-brew install gh
-brew install awscli
-brew install fd
-brew install jq
-brew install wget
+brew install git neovim git-delta ripgrep fnm zoxide fzf lazygit tmux gh fd jq wget htop yt-dlp uv
 
-# Cargo tools
-cargo install ruplacer typos
+cargo install ruplacer typos cargo-update
 
-# Link dotfiles with macOS config
 ./link.sh mac
 
 echo "✅ macOS setup complete!"
