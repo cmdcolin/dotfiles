@@ -44,7 +44,7 @@ alias bb="git branch --sort=-committerdate| fzf |xargs git checkout "
 
 # -type d -prune stops find from descending into found dirs, avoiding
 # nested matches (e.g. node_modules inside node_modules).
-alias clean_all="find . \( -name 'node_modules' -o -name '.next' -o -name 'dist' -o -name 'target' \) -type d -prune | xargs rm -rf"
+alias clean_all="find . \( -name 'node_modules' -o -name '.next' -o -name 'dist' -o -name 'target' \) -type d -prune -exec rm -rf {} +"
 
 alias hh="htop"
 alias qq="exit"
@@ -117,8 +117,11 @@ eval "$(fnm env)"
 # Ctrl-R history search, Ctrl-T file picker, Alt-C directory jump.
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export ANDROID_HOME="$HOME/Android/Sdk"
-export PATH=$PATH:~/.local/bin/:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
+if [[ -d "$HOME/Android/Sdk" ]]; then
+  export ANDROID_HOME="$HOME/Android/Sdk"
+  export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
+fi
+export PATH=$PATH:~/.local/bin/
 
 [ -f ~/.env ] && source ~/.env
 

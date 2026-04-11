@@ -22,8 +22,7 @@ curl -fsSL https://fnm.io/install | bash
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # yt-dlp
-curl -L https://github.com/yt-dlp/yt-dlp/releases/latest/download/yt-dlp -o ~/.local/bin/yt-dlp
-chmod +x ~/.local/bin/yt-dlp
+uv tool install yt-dlp
 
 ./link.sh ubuntu
 
