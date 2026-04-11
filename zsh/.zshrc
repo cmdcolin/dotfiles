@@ -98,8 +98,7 @@ fi
 [[ -d "$PNPM_HOME" ]] && export PATH="$PNPM_HOME:$PATH"
 
 # Version managers and integrations
-command -v fnm &>/dev/null && eval "$(fnm env)"
-command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
+eval "$(zoxide init zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Android
@@ -143,3 +142,10 @@ export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
 
 # Machine-specific overrides sourced last so they can override anything above.
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
+
+# fnm
+FNM_PATH="/home/cdiesh/.local/share/fnm"
+if [ -d "$FNM_PATH" ]; then
+  export PATH="$FNM_PATH:$PATH"
+  eval "$(fnm env --shell zsh)"
+fi
