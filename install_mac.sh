@@ -3,10 +3,11 @@ set -e
 
 echo "Installing macOS development environment..."
 
-echo "Installing Xcode Command Line Tools..."
-xcode-select --install 2>/dev/null || true
+xcode-select -p &>/dev/null || xcode-select --install
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+if ! command -v rustup &> /dev/null; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+fi
 source "$HOME/.cargo/env"
 
 if ! command -v brew &> /dev/null; then
@@ -16,7 +17,7 @@ fi
 
 brew install git neovim git-delta ripgrep fnm zoxide fzf lazygit tmux gh fd jq wget htop yt-dlp uv
 
-cargo install ruplacer typos cargo-update
+cargo install ruplacer typos-cli cargo-update
 
 ./link.sh mac
 

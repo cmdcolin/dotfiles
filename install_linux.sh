@@ -6,12 +6,14 @@ echo "Installing Ubuntu/Linux development environment..."
 sudo apt update
 sudo apt install -y build-essential curl git htop
 
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+if ! command -v rustup &> /dev/null; then
+    curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
+fi
 source "$HOME/.cargo/env"
 
 sudo apt install -y neovim git zoxide fzf lazygit tmux gh fd-find jq wget
 
-cargo install git-delta ruplacer ripgrep typos cargo-update
+cargo install git-delta ruplacer ripgrep typos-cli cargo-update
 
 # fnm (Node version manager)
 curl -fsSL https://fnm.io/install | bash
