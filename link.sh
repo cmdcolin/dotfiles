@@ -123,10 +123,27 @@ if [ -d "$DOTFILES_DIR/zsh" ]; then
 fi
 
 # 2. Link Host Variations (Overrides common ones)
+# .zshrc and .tmux.conf are handled by the base config + .local override pattern
+HOST_SKIP_FILES=(".zshrc" ".tmux.conf")
+
 if [ -n "$HOST" ]; then
     if [ -d "$DOTFILES_DIR/hosts/$HOST" ]; then
         echo -e "\n--- Processing Host Variations ($HOST) ---"
-        link_package "$DOTFILES_DIR/hosts/$HOST"
+        find "$DOTFILES_DIR/hosts/$HOST" -type f | while read -r src; do
+            rel_path="${src#$DOTFILES_DIR/hosts/$HOST/}"
+            is_skip=0
+            for s in "${HOST_SKIP_FILES[@]}"; do
+                if [[ "$rel_path" == "$s" ]]; then
+                    is_skip=1
+                    break
+                fi
+            done
+            if [ "$is_skip" -eq 1 ]; then
+                echo "  (skipped $rel_path — use .${rel_path}.local for host overrides)"
+            else
+                link_file "$src" "$HOME_DIR/$rel_path"
+            fi
+        done
     fi
 else
     echo -e "\n⚠️  No host specified. Link your host configs with: ./link.sh mac|ubuntu|labserver"

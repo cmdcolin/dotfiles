@@ -48,4 +48,4 @@
   amenda = commit -a --amend --no-edit
   sc = commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"
 [gpg]
-	program = /usr/local/bin/gpg
+	program = gpg
