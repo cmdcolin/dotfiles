@@ -1,35 +1,70 @@
-# Customize to your needs...
-[[ -z "$TMUX" ]] && exec tmux -2
+# Must come before the tmux exec: skips this file for non-interactive shells
+# (scripts, scp, rsync over SSH) so they don't accidentally spawn tmux.
 [[ $- != *i* ]] && return
 
-#
-# Executes commands at the start of an interactive session.
-#
-# Authors:
-#   Sorin Ionescu <sorin.ionescu@gmail.com>
-#
+# Automatically spawn tmux for interactive shells.
+[[ -z "$TMUX" ]] && exec tmux
 
-# Source Prezto.
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-	source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
 export EDITOR="nvim"
+
 alias e="nvim"
 alias zz="source ~/.zshrc"
 alias rmf="rm -rf"
+
+# Skips the per-tool-call permissions prompt.
 alias claude="claude --dangerously-skip-permissions"
+
 alias mkenv="python -m venv .venv; source .venv/bin/activate"
 alias aenv="source .venv/bin/activate"
+
 alias y="pnpm"
 alias g="git status"
+alias yy="pnpm lint --cache"
+alias yyy="pnpm lint --cache --fix"
+alias ttt="pnpm exec tsc --noEmit --watch"
+alias fff="yy --fix && ff"
+
+# Stage everything and amend last commit — useful for "oops, forgot a file".
 alias gggg="git add . && git commit --amend --no-edit"
+
+# Hard-reset to origin/main with a confirmation prompt.
 alias mm='read -p "🔥 Reset to origin/main? (y/n) " -n1; echo; [[ $REPLY =~ ^[Yy]$ ]] && git reset --hard origin/main || echo "Cancelled"'
+
+# Amends last commit to prepend [skip ci], preventing a CI run on push.
 alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
-alias lg="lazygit"
+
+# Sorted by most recently committed so fresh branches float to the top.
 alias bb="git branch --sort=-committerdate| fzf |xargs git checkout "
-alias bbb="sk |xargs nvim "
-alias clean_all="find . -name 'node_modules' -o -name '.next' -o -name 'dist' -o -name 'target' | xargs rm -rf"
+
+# Linux-specific helpers (Shared across Ubuntu/Labserver)
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  # Clipboard workaround if xclip is available
+  if command -v xclip &>/dev/null; then
+    alias pbcopy='xclip -selection clipboard'
+    alias pbpaste='xclip -selection clipboard -o'
+  fi
+
+  # Pandoc helpers
+  function plaintxt() { pandoc -i "$1" -t plain --wrap none | pbcopy; }
+  function md() { pandoc "$1" >/tmp/$(basename "$1").html && xdg-open /tmp/$(basename "$1").html; }
+  function pandoc_fzf() {
+    local file=$(find . -maxdepth 2 -type f | fzf)
+    [[ -n "$file" ]] && plaintxt "$file" && echo "✓ Copied '$file' as plain text"
+  }
+
+  # Browser log cleaning helpers
+  function chromeclip() { pbpaste | sed 's/^[^:]*:[0-9]* //' | pbcopy; }
+  function fireclip() { pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy; }
+  function firefile() { sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' "$1" | pbcopy; }
+
+  # Brew on Linux
+  [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+fi
+
 alias hh="htop"
 alias qq="exit"
 alias ee="cargo run"
@@ -39,87 +74,72 @@ alias p="z"
 alias ff="pnpm format --cache"
 alias pserver='npx serve'
 
-function vaporwave() {
-	ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .m4a).vaporwave${2:-0.66}.m4a"
-}
+# Vaporwave: Pitch-down and slow-down audio/video.
+vwave() { ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
+vvid() { ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
+vpv() { mpv --speed="${2:-0.66}" --audio-pitch-correction=no "$1"; }
+vp() { yt-dlp -f 'bestaudio[ext=m4a]' -o - "$1" | ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${2:-0.66},aresample=44100"; }
 
-function vp() {
-	youtube_url="$1"
-	effect_rate="${2:-0.66}" # Default effect rate if not provided
+alias clean_all="fd -H -t d '^(node_modules|\.next|dist|target)$' -X rm -rf"
 
-	yt-dlp -f 'bestaudio[ext=m4a]' -o - "$youtube_url" |
-		ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${effect_rate},aresample=44100"
-}
+# By default zsh drops commands that exit non-zero from history.
+zshaddhistory() { return 0; }
 
-function vaporvideo() {
-	ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "$(basename $1 .mp4).vaporwave${2:-0.66}.mp4"
-}
-
-function vaporwaveogg() {
-	ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .ogg).vaporwave${2:-0.66}.ogg"
-}
-
-function sortgff() {
-	grep "^#" $1
-	grep -v "^#" $1 | sort -t"$(printf '\t')" -k1,1 -k4,4n
-}
-
-function rg2() {
-	rg --pretty $1 |
-		perl -0 -pe 's/\n\n/\n\0/gm' |
-		fzf --read0 --ansi --multi --highlight-line --layout reverse |
-		perl -ne '/^([0-9]+:|$)/ or print' | xargs nvim
-}
-
-# Always save commands to history regardless of exit status
-zshaddhistory() { return 0 }
-
-export DEBUG_PRINT_LIMIT=0
+# Sparse protocol fetches only the index entries you actually need, much
+# faster than the legacy git-based full-clone approach.
 export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
-export PRETTIER_EXPERIMENTAL_CLI=1
 
-eval "$(fnm env)"
+# Node / PNPM
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+else
+  export PNPM_HOME="$HOME/.local/share/pnpm"
+fi
+[[ -d "$PNPM_HOME" ]] && export PATH="$PNPM_HOME:$PATH"
 
+# Version managers and integrations
+command -v fnm &>/dev/null && eval "$(fnm env)"
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
-export ANDROID_HOME="$HOME/Android/Sdk"
-export PATH=$PATH:~/.local/bin/:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
-export SKIM_DEFAULT_COMMAND="fd --type f || git ls-tree -r --name-only HEAD || rg --files || find ."
+# Android
+if [[ -d "$HOME/Android/Sdk" ]]; then
+  export ANDROID_HOME="$HOME/Android/Sdk"
+  export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
+fi
+export PATH=$PATH:~/.local/bin/
 
-source ~/.env
+[ -f ~/.env ] && source ~/.env
 
-eval "$(zoxide init zsh)"
-
-function gencom() {
-  git commit -m "$(git diff --cached | claude -p 'Write a conventional commit message for this diff. Format: type(scope): description. Output only the message.')"
-}
-
+# Update all tools
 function upall() {
-	echo "Updating Rust..."
-	rustup update
-	cargo install-update -a
+  echo "Updating Rust & Cargo..."
+  rustup update && cargo install-update -a
 
-	echo "Updating fzf..."
-	cd ~/.fzf && git pull && cd - && ~/.fzf/install --all
+  if [[ -d ~/.fzf/.git ]]; then
+    echo "Updating fzf..."
+    (cd ~/.fzf && git pull) && ~/.fzf/install --all
+  fi
 
-	echo "Updating CLI tools..."
-	uv self update
-	yt-dlp -U
+  echo "Updating CLI tools (uv, yt-dlp)..."
+  command -v uv &>/dev/null && uv self update
+  command -v yt-dlp &>/dev/null && yt-dlp -U
 
-	echo "Updating Neovim plugins..."
-	nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'
+  echo "Updating Neovim plugins..."
+  nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'
 
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		echo "Updating Homebrew packages..."
-		brew update
-		brew upgrade
-		brew cleanup
-	elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-		echo "Updating apt packages..."
-		sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
-	fi
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Updating Homebrew..."
+    brew update && brew upgrade && brew cleanup
+  elif command -v apt &>/dev/null; then
+    echo "Updating apt..."
+    sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
+  fi
 
-	echo "✅ All updates complete!"
+  echo "✅ All updates complete!"
 }
 
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
+
+# Machine-specific overrides sourced last so they can override anything above.
+[ -f ~/.zshrc.local ] && source ~/.zshrc.local

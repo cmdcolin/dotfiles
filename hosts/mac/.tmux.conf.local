@@ -1,0 +1,4 @@
+# Use Ctrl+A as prefix locally on Mac to avoid conflicts with remote tmux
+set -g prefix C-a
+unbind C-b
+bind C-a send-prefix
