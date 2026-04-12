@@ -14,16 +14,32 @@
 - Linux (ubuntu) → `hosts/ubuntu/.zshrc.local`
 - Labserver → `hosts/labserver/.zshrc.local` — keep minimal; labserver is a shared machine so avoid apt, brew, cargo installs, and anything requiring xclip or a display
 
-## Linking
+## Deploying Configs (Symlinking)
+
+To "activate" these dotfiles, use `link.sh`. This creates symbolic links from this repository to your home directory (`$HOME`), allowing you to edit files here and have the changes take effect immediately.
 
 ```sh
-./link.sh mac|ubuntu|labserver
+./link.sh [mac|ubuntu|labserver]
 ```
 
-Symlinks all configs to `$HOME`. Idempotent — safe to re-run. Backs up existing real files to `.bak`.
+- **Idempotent**: Safe to run multiple times.
+- **Backups**: Existing real files in your `$HOME` are moved to `.bak` before the link is created.
+- **Host Overrides**: Applies machine-specific overrides from `hosts/` after common configs.
 
-## Install scripts
+## Installation
 
-- `install_mac.sh` — full dev setup via brew + cargo
-- `install_linux.sh` — full dev setup via apt + cargo (for ubuntu, not labserver)
-- No install script for labserver — set up manually and minimally
+```sh
+./install.sh [mac|ubuntu|linux]
+```
+
+- Installs basic dev tools (brew, apt, cargo, fnm, uv, etc.)
+- Sets up Zsh Prezto
+- Runs `link.sh` automatically
+
+## Formatting
+
+```sh
+./format_shell.sh
+```
+
+- Formats all shell and zsh files in the repo using `shfmt` (2-space indent).

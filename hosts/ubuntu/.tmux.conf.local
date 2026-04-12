@@ -1,0 +1,7 @@
+# right hand only thing i use on my ubuntu computer
+set -g prefix C-]
+
+
+# Open splits in the current pane's directory, not the session root.
+bind = split-window -h -c "#{pane_current_path}"
+bind - split-window -v -c "#{pane_current_path}"

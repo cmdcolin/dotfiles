@@ -5,6 +5,7 @@ tmux, zsh, git, etc. Neovim config is separate: https://github.com/cmdcolin/myse
 ## install
 
 ```bash
+./install.sh         # Auto-detects OS
 ./install.sh mac     # macOS
 ./install.sh ubuntu  # Ubuntu/Linux
 ```

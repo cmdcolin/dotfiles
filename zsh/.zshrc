@@ -2,11 +2,11 @@
 # (scripts, scp, rsync over SSH) so they don't accidentally spawn tmux.
 [[ $- != *i* ]] && return
 
-# -2 forces 256-color mode regardless of $TERM.
-[[ -z "$TMUX" ]] && exec tmux -2
+# Automatically spawn tmux for interactive shells.
+[[ -z "$TMUX" ]] && exec tmux
 
 if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
-	source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
+  source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
 export EDITOR="nvim"
@@ -37,14 +37,33 @@ alias mm='read -p "🔥 Reset to origin/main? (y/n) " -n1; echo; [[ $REPLY =~ ^[
 # Amends last commit to prepend [skip ci], preventing a CI run on push.
 alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
 
-alias lg="lazygit"
-
 # Sorted by most recently committed so fresh branches float to the top.
 alias bb="git branch --sort=-committerdate| fzf |xargs git checkout "
 
-# -type d -prune stops find from descending into found dirs, avoiding
-# nested matches (e.g. node_modules inside node_modules).
-alias clean_all="find . \( -name 'node_modules' -o -name '.next' -o -name 'dist' -o -name 'target' \) -type d -prune -exec rm -rf {} +"
+# Linux-specific helpers (Shared across Ubuntu/Labserver)
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+  # Clipboard workaround if xclip is available
+  if command -v xclip &>/dev/null; then
+    alias pbcopy='xclip -selection clipboard'
+    alias pbpaste='xclip -selection clipboard -o'
+  fi
+
+  # Pandoc helpers
+  function plaintxt() { pandoc -i "$1" -t plain --wrap none | pbcopy; }
+  function md() { pandoc "$1" >/tmp/$(basename "$1").html && xdg-open /tmp/$(basename "$1").html; }
+  function pandoc_fzf() {
+    local file=$(find . -maxdepth 2 -type f | fzf)
+    [[ -n "$file" ]] && plaintxt "$file" && echo "✓ Copied '$file' as plain text"
+  }
+
+  # Browser log cleaning helpers
+  function chromeclip() { pbpaste | sed 's/^[^:]*:[0-9]* //' | pbcopy; }
+  function fireclip() { pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy; }
+  function firefile() { sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' "$1" | pbcopy; }
+
+  # Brew on Linux
+  [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
+fi
 
 alias hh="htop"
 alias qq="exit"
@@ -55,68 +74,35 @@ alias p="z"
 alias ff="pnpm format --cache"
 alias pserver='npx serve'
 
-# Slow down audio to a vaporwave pitch/speed (default 0.66x).
-# asetrate fakes a slowdown by changing the declared sample rate without
-# resampling — then aresample brings it back to 44100 so players handle it.
-# Usage: vaporwave input.m4a [rate]
-function vaporwave() {
-	ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .m4a).vaporwave${2:-0.66}.m4a"
-}
+# Vaporwave: Pitch-down and slow-down audio/video.
+vwave() { ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
+vvid() { ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
+vpv() { mpv --speed="${2:-0.66}" --audio-pitch-correction=no "$1"; }
+vp() { yt-dlp -f 'bestaudio[ext=m4a]' -o - "$1" | ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${2:-0.66},aresample=44100"; }
 
-# Stream a YouTube URL through yt-dlp → ffplay with vaporwave pitch effect.
-# Usage: vp <youtube-url> [rate]
-function vp() {
-	youtube_url="$1"
-	effect_rate="${2:-0.66}"
-
-	yt-dlp -f 'bestaudio[ext=m4a]' -o - "$youtube_url" |
-		ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${effect_rate},aresample=44100"
-}
-
-# setpts=1/rate*PTS slows video frame timestamps; audio uses the same asetrate trick.
-# Usage: vaporvideo input.mp4 [rate]
-function vaporvideo() {
-	ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "$(basename $1 .mp4).vaporwave${2:-0.66}.mp4"
-}
-
-function vaporwaveogg() {
-	ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "$(basename $1 .ogg).vaporwave${2:-0.66}.ogg"
-}
-
-# Prints comment lines first, then data rows sorted by chromosome (col 1)
-# and start position (col 4, numeric).
-function sortgff() {
-	grep "^#" "$1"
-	grep -v "^#" "$1" | sort -t"$(printf '\t')" -k1,1 -k4,4n
-}
-
-# ripgrep → fzf multi-select → nvim. The perl passes convert rg's blank-line
-# separators into null bytes so fzf treats each file block as one item.
-# The second perl strips line-number prefixes, leaving only filenames for nvim.
-function rg2() {
-	rg --pretty $1 |
-		perl -0 -pe 's/\n\n/\n\0/gm' |
-		fzf --read0 --ansi --multi --highlight-line --layout reverse |
-		perl -ne '/^([0-9]+:|$)/ or print' | xargs nvim
-}
+alias clean_all="fd -H -t d '^(node_modules|\.next|dist|target)$' -X rm -rf"
 
 # By default zsh drops commands that exit non-zero from history.
-zshaddhistory() { return 0 }
-
-export DEBUG_PRINT_LIMIT=0
+zshaddhistory() { return 0; }
 
 # Sparse protocol fetches only the index entries you actually need, much
 # faster than the legacy git-based full-clone approach.
 export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
 
-# Opt into Prettier's v3 CLI rewrite. Remove once it becomes the default.
-export PRETTIER_EXPERIMENTAL_CLI=1
+# Node / PNPM
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+else
+  export PNPM_HOME="$HOME/.local/share/pnpm"
+fi
+[[ -d "$PNPM_HOME" ]] && export PATH="$PNPM_HOME:$PATH"
 
-eval "$(fnm env)"
-
-# Ctrl-R history search, Ctrl-T file picker, Alt-C directory jump.
+# Version managers and integrations
+command -v fnm &>/dev/null && eval "$(fnm env)"
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
+# Android
 if [[ -d "$HOME/Android/Sdk" ]]; then
   export ANDROID_HOME="$HOME/Android/Sdk"
   export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
@@ -125,37 +111,32 @@ export PATH=$PATH:~/.local/bin/
 
 [ -f ~/.env ] && source ~/.env
 
-eval "$(zoxide init zsh)"
-
-# cargo install-update -a requires the cargo-update crate to be installed first.
+# Update all tools
 function upall() {
-	echo "Updating Rust..."
-	rustup update
-	cargo install-update -a
+  echo "Updating Rust & Cargo..."
+  rustup update && cargo install-update -a
 
-	if [[ -d ~/.fzf/.git ]]; then
-		echo "Updating fzf..."
-		(cd ~/.fzf && git pull) && ~/.fzf/install --all
-	fi
+  if [[ -d ~/.fzf/.git ]]; then
+    echo "Updating fzf..."
+    (cd ~/.fzf && git pull) && ~/.fzf/install --all
+  fi
 
-	echo "Updating CLI tools..."
-	uv self update
-	yt-dlp -U
+  echo "Updating CLI tools (uv, yt-dlp)..."
+  command -v uv &>/dev/null && uv self update
+  command -v yt-dlp &>/dev/null && yt-dlp -U
 
-	echo "Updating Neovim plugins..."
-	nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'
+  echo "Updating Neovim plugins..."
+  nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'
 
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		echo "Updating Homebrew packages..."
-		brew update
-		brew upgrade
-		brew cleanup
-	elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-		echo "Updating apt packages..."
-		sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
-	fi
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "Updating Homebrew..."
+    brew update && brew upgrade && brew cleanup
+  elif command -v apt &>/dev/null; then
+    echo "Updating apt..."
+    sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
+  fi
 
-	echo "✅ All updates complete!"
+  echo "✅ All updates complete!"
 }
 
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
