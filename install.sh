@@ -1,5 +1,4 @@
 #!/bin/bash
-# Unified dotfiles installer
 set -e
 
 # Detect OS
@@ -12,58 +11,47 @@ else
   exit 1
 fi
 
-echo "🚀 Installing development environment for $OS..."
+# Package Managers
+HOST="${1:-$OS}"
+echo "🚀 Installing for $HOST..."
 
-# 1. Package Managers & Basic Tools
 if [[ "$OS" == "mac" ]]; then
   xcode-select -p &>/dev/null || xcode-select --install
-  if ! command -v brew &>/dev/null; then
-    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  fi
+  command -v brew &>/dev/null || /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   brew install git neovim git-delta ripgrep fnm zoxide fzf lazygit tmux gh fd jq wget htop yt-dlp uv
 else
-  sudo apt update && sudo apt install -y build-essential curl git htop neovim zoxide fzf lazygit tmux gh jq wget
-  # On Ubuntu, fd is often 'fdfind'
-  sudo apt install -y fd-find || true
+  # Linux Essentials
+  PKGS="build-essential curl git htop tmux wget jq"
+  [[ "$HOST" != "labserver" ]] && PKGS="$PKGS neovim fzf lazygit gh"
+  sudo apt update && sudo apt install -y $PKGS || echo "⚠️  Apt failed (likely no sudo), continuing..."
 fi
 
-# 2. Rust
-if ! command -v rustup &>/dev/null; then
-  curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-fi
+# Rust & Tools
+command -v rustup &>/dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source "$HOME/.cargo/env"
-cargo install ruplacer typos-cli cargo-update git-delta ripgrep || true
+cargo install ruplacer typos-cli cargo-update git-delta ripgrep zoxide fd-find || true
 
-# 3. Version Managers (Linux specific installs)
+# Version Managers & CLI Tools
 if [[ "$OS" == "linux" ]]; then
-  command -v fnm &>/dev/null || curl -fsSL https://fnm.io/install | bash
+  # fnm
+  if ! command -v fnm &>/dev/null; then
+    curl -fsSL https://fnm.io/install | bash
+    export PATH="$HOME/.local/share/fnm:$PATH"
+    eval "$(fnm env)"
+  fi
+  fnm install --lts && fnm use --lts
+
+  # uv
   command -v uv &>/dev/null || curl -LsSf https://astral.sh/uv/install.sh | sh
-  # Ensure yt-dlp is available (via uv)
-  ~/.local/bin/uv tool install yt-dlp || true
+  export PATH="$HOME/.local/bin:$PATH"
+  uv tool install yt-dlp || true
 
-  # 3b. Nerd Fonts (Linux)
-  echo "📦 Installing Nerd Fonts..."
-  fonts="CascadiaCode FiraCode Hack JetBrainsMono UbuntuMono"
-  version=$(curl -s 'https://api.github.com/repos/ryanoasis/nerd-fonts/releases/latest' | jq -r '.name // "v3.2.1"')
-  fonts_dir="${HOME}/.local/share/fonts"
-  mkdir -p "$fonts_dir"
-  for font in $fonts; do
-    if [[ ! -d "$fonts_dir/$font" ]]; then
-      echo "Downloading $font ($version)..."
-      wget -qO "/tmp/${font}.zip" "https://github.com/ryanoasis/nerd-fonts/releases/download/${version}/${font}.zip"
-      unzip -o "/tmp/${font}.zip" -d "$fonts_dir" && rm "/tmp/${font}.zip"
-    fi
-  done
-  find "$fonts_dir" -name 'Windows Compatible' -delete
-  command -v fc-cache &>/dev/null && fc-cache -f
+  # fzf
+  [[ ! -d ~/.fzf ]] && git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install --all
 fi
 
-# 4. Zsh Prezto
-if [[ ! -d ~/.zprezto ]]; then
-  git clone --recursive https://github.com/sorin-ionescu/prezto.git ~/.zprezto
-fi
+# Prezto & Link
+[[ ! -d ~/.zprezto ]] && git clone --recursive https://github.com/sorin-ionescu/prezto.git ~/.zprezto
+./link.sh "$HOST"
 
-# 5. Link dotfiles
-./link.sh "$([[ "$OS" == "mac" ]] && echo "mac" || echo "ubuntu")"
-
-echo "✅ Setup complete!"
+echo "✅ Done!"

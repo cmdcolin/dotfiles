@@ -86,7 +86,7 @@ link_package() {
   done
 }
 
-# 1. Link Common Packages
+# Link Common Packages
 for pkg in "$DOTFILES_DIR"/*/; do
   pkg_name=$(basename "$pkg")
 
@@ -99,7 +99,7 @@ for pkg in "$DOTFILES_DIR"/*/; do
   [[ "$is_skip" -eq 0 ]] && link_package "$pkg"
 done
 
-# 2. Link Host Variations (Overrides common ones)
+# Link Host Variations (Overrides common ones)
 # .zshrc and .tmux.conf are handled by the base config + .local override pattern
 HOST_SKIP_FILES=(".zshrc" ".tmux.conf")
 
