@@ -12,6 +12,7 @@ fi
 export EDITOR="nvim"
 
 alias e="nvim"
+alias vim="nvim"
 alias zz="source ~/.zshrc"
 alias rmf="rm -rf"
 
@@ -108,7 +109,7 @@ if [[ -d "$HOME/Android/Sdk" ]]; then
   export ANDROID_HOME="$HOME/Android/Sdk"
   export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
 fi
-export PATH=$PATH:~/.local/bin/
+export PATH="$PATH":"/home/cdiesh/.local/bin"
 
 [ -f ~/.env ] && source ~/.env
 
