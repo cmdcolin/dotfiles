@@ -26,14 +26,13 @@ alias y="pnpm"
 alias g="git status"
 alias yy="pnpm lint --cache"
 alias yyy="pnpm lint --cache --fix"
-alias ttt="pnpm exec tsc --noEmit --watch"
+alias ttt="pnpm typecheck --noEmit --watch"
 alias fff="yy --fix && ff"
 
 # Stage everything and amend last commit — useful for "oops, forgot a file".
 alias gggg="git add . && git commit --amend --no-edit"
 
-# Hard-reset to origin/main with a confirmation prompt.
-alias mm='read -p "🔥 Reset to origin/main? (y/n) " -n1; echo; [[ $REPLY =~ ^[Yy]$ ]] && git reset --hard origin/main || echo "Cancelled"'
+alias mm='git reset --hard origin/main'
 
 # Amends last commit to prepend [skip ci], preventing a CI run on push.
 alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
@@ -78,7 +77,7 @@ alias ff="pnpm format --cache"
 alias pserver='npx serve'
 
 # Vaporwave: Pitch-down and slow-down audio/video.
-vwave() { ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
+vaporwave() { ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
 vvid() { ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
 vpv() { mpv --speed="${2:-0.66}" --audio-pitch-correction=no "$1"; }
 vp() { yt-dlp -f 'bestaudio[ext=m4a]' -o - "$1" | ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${2:-0.66},aresample=44100"; }
