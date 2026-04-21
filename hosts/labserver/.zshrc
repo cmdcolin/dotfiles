@@ -1,5 +1,0 @@
-# Ensure GPG knows which TTY to use for prompts
-export GPG_TTY=$(tty)
-
-# Refresh the gpg-agent connection
-gpg-connect-agent updatestartuptty /bye > /dev/null

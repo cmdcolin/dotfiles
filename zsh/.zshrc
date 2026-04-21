@@ -61,6 +61,8 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   function fireclip() { pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy; }
   function firefile() { sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' "$1" | pbcopy; }
 
+  alias ww="watch -n.1 \"cat /proc/cpuinfo | grep \\\"^[c]pu MHz\\\"\""
+
   # Brew on Linux
   [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 fi
@@ -98,7 +100,7 @@ fi
 [[ -d "$PNPM_HOME" ]] && export PATH="$PNPM_HOME:$PATH"
 
 # Version managers and integrations
-eval "$(zoxide init zsh)"
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 # Android
@@ -130,7 +132,7 @@ function upall() {
   if [[ "$OSTYPE" == "darwin"* ]]; then
     echo "Updating Homebrew..."
     brew update && brew upgrade && brew cleanup
-  elif command -v apt &>/dev/null; then
+  elif command -v apt &>/dev/null && sudo -n true 2>/dev/null; then
     echo "Updating apt..."
     sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
   fi
@@ -144,7 +146,7 @@ export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
 [ -f ~/.zshrc.local ] && source ~/.zshrc.local
 
 # fnm
-FNM_PATH="/home/cdiesh/.local/share/fnm"
+FNM_PATH="$HOME/.local/share/fnm"
 if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"
   eval "$(fnm env --shell zsh)"
