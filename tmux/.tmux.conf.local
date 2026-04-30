@@ -1,4 +1,1 @@
-# ~/.tmux.conf.local
-
-# Use xclip for system clipboard integration
-bind-key -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"
+bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "xclip -in -selection clipboard"

@@ -37,7 +37,7 @@ setup_macos_deps_via_brew() {
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
   log_info "Installing essential macOS tools via Homebrew..."
-  brew install git neovim git-delta ripgrep fnm zoxide fzf lazygit tmux gh fd jq wget htop yt-dlp uv
+  brew install git neovim git-delta ripgrep fnm zoxide fzf lazygit tmux gh fd jq wget htop yt-dlp uv miniserve
   log_success "macOS dependencies installed via Homebrew."
 }
 
@@ -63,11 +63,6 @@ setup_linux_deps_via_apt() {
   log_success "Linux dependencies installed via apt."
 }
 
-<<<<<<< HEAD
-command -v rustup &>/dev/null || curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-source "$HOME/.cargo/env"
-rustup update
-
 install_rust_and_cargo_tools() {
   log_info "Installing Rust and Cargo..."
   if ! command -v rustup &>/dev/null; then
@@ -78,7 +73,7 @@ install_rust_and_cargo_tools() {
   fi
   source "$HOME/.cargo/env"
   log_info "Installing Cargo tools..."
-  cargo install ruplacer typos-cli cargo-update git-delta ripgrep || log_info "Some Cargo tools failed to install, might be optional."
+  cargo install ruplacer typos-cli cargo-update git-delta ripgrep miniserve || log_info "Some Cargo tools failed to install, might be optional."
   log_success "Rust and Cargo tools installed."
 }
 

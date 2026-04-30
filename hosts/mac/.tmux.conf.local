@@ -2,3 +2,8 @@
 set -g prefix C-a
 unbind C-b
 bind C-a send-prefix
+
+unbind -T copy-mode-vi Enter
+bind -T copy-mode-vi Enter send-keys -X copy-pipe-and-cancel "pbcopy"
+bind -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-pipe-and-cancel "pbcopy"
+bind -T copy-mode-vi y send-keys -X copy-pipe-and-cancel "pbcopy"
