@@ -82,9 +82,6 @@ install_fnm() {
   if ! command -v fnm &>/dev/null; then
     curl -fsSL https://fnm.io/install | bash
     eval "$(fnm env)"
-  else
-    log_info "FNM already installed. Updating..."
-    fnm self-update
   fi
   log_success "FNM installed."
 }

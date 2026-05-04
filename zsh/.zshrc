@@ -17,6 +17,7 @@ alias mkenv="python -m venv .venv && source .venv/bin/activate"
 alias aenv="source .venv/bin/activate"
 
 alias y="pnpm"
+alias python="python3"
 alias g="git status"
 alias yy="pnpm lint --cache"
 alias yyy="pnpm lint --cache --fix"
@@ -119,3 +120,11 @@ if [ -d "$FNM_PATH" ]; then
   export PATH="$FNM_PATH:$PATH"
   eval "$(fnm env --shell zsh)"
 fi
+
+# pnpm
+export PNPM_HOME="/home/cdiesh/.local/share/pnpm"
+case ":$PATH:" in
+*":$PNPM_HOME/bin:"*) ;;
+*) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
