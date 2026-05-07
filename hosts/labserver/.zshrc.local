@@ -3,3 +3,5 @@ export GPG_TTY=$(tty)
 
 # Refresh the gpg-agent connection
 gpg-connect-agent updatestartuptty /bye &>/dev/null
+
+alias ww="watch -n.1 \"cat /proc/cpuinfo | grep '^[c]pu MHz'\""

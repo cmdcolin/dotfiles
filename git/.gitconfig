@@ -4,12 +4,9 @@
   signingkey = A73172047D7555CE
 [blame]
   date = short
-[http]
-  sslVerify = true
 [pull]
   rebase = true
 [push]
-  default = simple
   autoSetupRemote = true
 [credential]
   helper = cache
@@ -42,5 +39,3 @@
   b = branch -vv
   p = push
   pl = pull
-[gpg]
-  program = gpg

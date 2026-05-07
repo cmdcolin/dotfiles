@@ -1,2 +1,2 @@
 minimum-release-age=10080
-minimum-release-age-exclude=@gmod/*
+minimum-release-age-exclude=@gmod/*,@jbrowse/*
