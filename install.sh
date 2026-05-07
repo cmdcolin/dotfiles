@@ -115,51 +115,39 @@ install_fzf() {
 }
 
 install_neovim() {
-  log_info "Installing Neovim from master branch (nightly) by compiling from source..."
-
   if command -v nvim &>/dev/null; then
-    log_info "Neovim is already installed and available in PATH. Skipping compilation."
+    log_info "Neovim already installed. Skipping."
     return 0
-  fi
-
-  if [[ "$OS" == "linux" ]]; then
-    if ! command -v make &>/dev/null || ! command -v cmake &>/dev/null || ! command -v git &>/dev/null; then
-      log_error "Make, CMake, and Git are required for compiling Neovim on Linux. Please ensure they are installed via apt."
-      return 1
-    fi
-  elif [[ "$OS" == "mac" ]]; then
-    if ! command -v make &>/dev/null || ! command -v cmake &>/dev/null || ! command -v git &>/dev/null; then
-      log_error "Make, CMake, and Git are required for compiling Neovim on macOS. Please ensure they are installed via brew."
-      return 1
-    fi
-  fi
-
-  local NVIM_BIN_PATH="$NVIM_INSTALL_PREFIX/bin/nvim"
-
-  log_info "Cloning or updating Neovim from master branch..."
-  if [[ ! -d "$NVIM_SRC_DIR" ]]; then
-    git clone https://github.com/neovim/neovim.git "$NVIM_SRC_DIR"
-  else
-    log_info "Updating existing Neovim source directory..."
-    (cd "$NVIM_SRC_DIR" && git pull origin master && git submodule update --init)
   fi
 
   if [[ "$HOST" == "labserver" ]]; then
-    log_info "Labserver: skipping Neovim compilation from source (use system package if needed)"
+    log_info "Installing Neovim pre-built binary..."
+    local version tarball install_dir
+    version=$(curl -s "https://api.github.com/repos/neovim/neovim/releases/latest" | grep '"tag_name"' | cut -d'"' -f4)
+    tarball="nvim-linux-x86_64.tar.gz"
+    install_dir="$HOME/.local/nvim"
+    curl -sSL "https://github.com/neovim/neovim/releases/download/${version}/${tarball}" -o "/tmp/${tarball}"
+    rm -rf "$install_dir" && mkdir -p "$install_dir"
+    tar -xzf "/tmp/${tarball}" -C "$install_dir" --strip-components=1
+    rm "/tmp/${tarball}"
+    ln -sf "$install_dir/bin/nvim" "$HOME/.local/bin/nvim"
+    log_success "Neovim ${version} installed."
     return 0
   fi
 
-  log_info "Compiling Neovim..."
-  mkdir -p "$NVIM_INSTALL_PREFIX/bin"
-  (cd "$NVIM_SRC_DIR" && make clean && make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$NVIM_INSTALL_PREFIX" install)
-
-  if [[ -f "$NVIM_BIN_PATH" ]]; then
-    log_success "Neovim compiled and installed. Binary is at $NVIM_BIN_PATH."
-  else
-    log_error "Neovim compilation failed or binary not found at $NVIM_BIN_PATH."
+  log_info "Compiling Neovim from source..."
+  if ! command -v make &>/dev/null || ! command -v cmake &>/dev/null; then
+    log_error "make and cmake are required to compile Neovim."
     return 1
   fi
-  log_success "Neovim installation/update complete."
+  if [[ ! -d "$NEOVIM_SRC_DIR" ]]; then
+    git clone https://github.com/neovim/neovim.git "$NEOVIM_SRC_DIR"
+  else
+    (cd "$NEOVIM_SRC_DIR" && git pull origin master && git submodule update --init)
+  fi
+  mkdir -p "$NVIM_INSTALL_PREFIX/bin"
+  (cd "$NEOVIM_SRC_DIR" && make clean && make CMAKE_BUILD_TYPE=RelWithDebInfo CMAKE_INSTALL_PREFIX="$NVIM_INSTALL_PREFIX" install)
+  log_success "Neovim compiled and installed."
 }
 
 install_fonts() {
@@ -219,7 +207,7 @@ main() {
     fi
   fi
 
-  install_rust_and_cargo_tools
+  [[ "$HOST" != "labserver" ]] && install_rust_and_cargo_tools
   install_fnm
   install_uv_and_yt_dlp
   install_fzf

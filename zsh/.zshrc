@@ -1,11 +1,11 @@
-# Skip non-interactive shells (scp, rsync) to avoid spawning tmux.
 [[ $- != *i* ]] && return
 
-[[ -z "$TMUX" ]] && exec tmux
+command -v tmux &>/dev/null && [[ -z "$TMUX" ]] && exec tmux
 
 [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]] && source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 
 export EDITOR="nvim"
+export GPG_TTY=$(tty)
 
 alias e="nvim"
 alias vim="nvim"
@@ -37,20 +37,26 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     alias pbpaste='xclip -selection clipboard -o'
   fi
 
-  function plaintxt() { pandoc -i "$1" -t plain --wrap none | pbcopy; }
-  function md() { pandoc "$1" >/tmp/$(basename "$1").html && xdg-open /tmp/$(basename "$1").html; }
-  function pandoc_fzf() {
+  plaintxt() { pandoc -i "$1" -t plain --wrap none | pbcopy; }
+  md() { pandoc "$1" >/tmp/$(basename "$1").html && xdg-open /tmp/$(basename "$1").html; }
+  pandoc_fzf() {
     local file=$(find . -maxdepth 2 -type f | fzf)
     [[ -n "$file" ]] && plaintxt "$file" && echo "✓ Copied '$file' as plain text"
   }
 
-  function chromeclip() { pbpaste | sed 's/^[^:]*:[0-9]* //' | pbcopy; }
-  function fireclip() { pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy; }
+  chromeclip() { pbpaste | sed 's/^[^:]*:[0-9]* //' | pbcopy; }
+  fireclip() { pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy; }
 
-  # Brew on Linux
+  alias ww="watch -n.1 \"cat /proc/cpuinfo | grep '^[c]pu MHz'\""
+  alias sau="sudo apt update && sudo apt upgrade"
+  alias eee="PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/ cargo run"
+
+  command -v gpg-connect-agent &>/dev/null && gpg-connect-agent updatestartuptty /bye &>/dev/null
+
   [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 fi
 
+alias ll="ls -l"
 alias hh="htop"
 alias qq="exit"
 alias ee="cargo run"
@@ -70,8 +76,6 @@ vp() { yt-dlp -f 'bestaudio[ext=m4a]' -o - "$1" | ffplay -hide_banner -loglevel 
 # Keep failed commands in history.
 zshaddhistory() { return 0; }
 
-export CARGO_REGISTRIES_CRATES_IO_PROTOCOL=sparse
-
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PNPM_HOME="$HOME/Library/pnpm"
 else
@@ -79,29 +83,29 @@ else
 fi
 [[ -d "$PNPM_HOME" ]] && export PATH="$PNPM_HOME:$PATH"
 
-# Version managers and integrations
-export PATH="$PATH:$HOME/.local/bin"
+export PATH="$HOME/.local/bin:$PATH"
 
-command -v fnm &>/dev/null && eval "$(fnm env)"
+FNM_PATH="$HOME/.local/share/fnm"
+[[ -d "$FNM_PATH" ]] && export PATH="$FNM_PATH:$PATH"
+command -v fnm &>/dev/null && eval "$(fnm env --shell zsh)"
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
 if [[ -d "$HOME/Android/Sdk" ]]; then
   export ANDROID_HOME="$HOME/Android/Sdk"
-  export PATH=$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin
+  export PATH="$PATH:$ANDROID_HOME/emulator:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin"
 fi
 
-[ -f ~/.env ] && source ~/.env
+[[ -f ~/.env ]] && source ~/.env
 
-function upall() {
+upall() {
   if command -v rustup &>/dev/null; then
     rustup update && cargo install-update -a
   fi
   if [[ -d ~/.fzf/.git ]]; then
     (cd ~/.fzf && git pull) && ~/.fzf/install --all
   fi
-  command -v uv &>/dev/null && uv self update
-  command -v yt-dlp &>/dev/null && yt-dlp -U
+  command -v uv &>/dev/null && uv self update && uv tool upgrade yt-dlp
   nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'
   if [[ "$OSTYPE" == "darwin"* ]]; then
     brew update && brew upgrade && brew cleanup
@@ -112,23 +116,4 @@ function upall() {
 
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
 
-[ -f ~/.zshrc.local ] && source ~/.zshrc.local
-
-# fnm
-FNM_PATH="$HOME/.local/share/fnm"
-if [ -d "$FNM_PATH" ]; then
-  export PATH="$FNM_PATH:$PATH"
-  eval "$(fnm env --shell zsh)"
-fi
-
-#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
-export SDKMAN_DIR="$HOME/.sdkman"
-[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
-
-# pnpm
-export PNPM_HOME="/home/cdiesh/.local/share/pnpm"
-case ":$PATH:" in
-*":$PNPM_HOME/bin:"*) ;;
-*) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local

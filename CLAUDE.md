@@ -2,17 +2,12 @@
 
 ## Structure
 
-- `zsh/.zshrc` — common shell config for all machines
-- `tmux/.tmux.conf` — common tmux config for all machines
-- `hosts/<mac|ubuntu|labserver>/` — machine-specific overrides; use `.zshrc.local` and `.tmux.conf.local` (link.sh skips the non-local versions)
-- `zsh/.zpreztorc` — zprezto config (modules, theme, key bindings)
+- `zsh/.zshrc` — shell config; OS-specific bits live inside `if [[ "$OSTYPE" == "linux-gnu"* ]]` / `darwin` blocks
+- `zsh/.zpreztorc` — zprezto config
+- `tmux/.tmux.conf` — tmux config (linux defaults)
+- `hosts/mac/.tmux.conf.local` — mac-only tmux override (different prefix, pbcopy)
 
-## Adding aliases or functions
-
-- Cross-platform → `zsh/.zshrc`
-- macOS-only → `hosts/mac/.zshrc.local`
-- Linux (ubuntu) → `hosts/ubuntu/.zshrc.local`
-- Labserver → `hosts/labserver/.zshrc.local` — keep minimal; labserver is a shared machine so avoid apt, brew, cargo installs, and anything requiring xclip or a display
+Labserver is a shared machine — avoid apt/brew/cargo installs and anything requiring xclip or a display when adding to `.zshrc`.
 
 ## Deploying Configs (Symlinking)
 
@@ -29,7 +24,7 @@ To "activate" these dotfiles, use `link.sh`. This creates symbolic links from th
 ## Installation
 
 ```sh
-./install.sh [mac|ubuntu|linux]
+./install.sh [mac|ubuntu|labserver]
 ```
 
 - Installs basic dev tools (brew, apt, cargo, fnm, uv, etc.)
@@ -39,7 +34,5 @@ To "activate" these dotfiles, use `link.sh`. This creates symbolic links from th
 ## Formatting
 
 ```sh
-./format_shell.sh
+find . \( -name "*.sh" -o -name ".zshrc" -o -name ".zshrc.local" -o -name ".zpreztorc" \) | xargs shfmt -w -i 2
 ```
-
-- Formats all shell and zsh files in the repo using `shfmt` (2-space indent).
