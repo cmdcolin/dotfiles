@@ -64,7 +64,7 @@ alias ss="pnpm start"
 alias rr="pnpm run dev"
 alias p="z"
 alias ff="pnpm format --cache"
-alias pserver='miniserve'
+alias pserver='miniserve .'
 alias clean_all="fd -H -t d '^(node_modules|\.next|dist|target|\.venv)$' -X rm -rf"
 
 # Pitch-down/slow-down audio and video.

@@ -180,7 +180,7 @@ install_zprezto() {
 
 link_dotfiles() {
   log_info "Linking dotfiles..."
-  ./link.sh "$HOST"
+  ./link.sh
   log_success "Dotfiles linked."
 }
 

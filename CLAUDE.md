@@ -4,8 +4,7 @@
 
 - `zsh/.zshrc` — shell config; OS-specific bits live inside `if [[ "$OSTYPE" == "linux-gnu"* ]]` / `darwin` blocks
 - `zsh/.zpreztorc` — zprezto config
-- `tmux/.tmux.conf` — tmux config (linux defaults)
-- `hosts/mac/.tmux.conf.local` — mac-only tmux override (different prefix, pbcopy)
+- `tmux/.tmux.conf` — tmux config; mac overrides live in a `%if "#{==:#(uname -s),Darwin}"` block
 
 Labserver is a shared machine — avoid apt/brew/cargo installs and anything requiring xclip or a display when adding to `.zshrc`.
 
