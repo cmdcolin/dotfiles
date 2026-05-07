@@ -59,7 +59,7 @@ alias rr="pnpm run dev"
 alias p="z"
 alias ff="pnpm format --cache"
 alias pserver='miniserve'
-alias clean_all="fd -H -t d '^(node_modules|\.next|dist|target)$' -X rm -rf"
+alias clean_all="fd -H -t d '^(node_modules|\.next|dist|target|\.venv)$' -X rm -rf"
 
 # Pitch-down/slow-down audio and video.
 vaporwave() { ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }

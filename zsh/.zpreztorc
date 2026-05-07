@@ -7,7 +7,6 @@ zstyle ':prezto:load' pmodule \
   'history' \
   'directory' \
   'spectrum' \
-  'utility' \
   'completion' \
   'git' \
   'syntax-highlighting' \
