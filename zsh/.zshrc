@@ -57,6 +57,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 fi
 
 alias claude2='CLAUDE_CONFIG_DIR=~/.claude2 claude'
+alias claude3='CLAUDE_CONFIG_DIR=~/.claude3 claude'
 alias ll="ls -l"
 alias hh="htop"
 alias qq="exit"
@@ -127,7 +128,6 @@ case ":$PATH:" in
 esac
 # pnpm end
 #
-
 
 # Added by Antigravity CLI installer
 export PATH="/home/cdiesh/.local/bin:$PATH"
