@@ -56,6 +56,7 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   [[ -f /home/linuxbrew/.linuxbrew/bin/brew ]] && eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv zsh)"
 fi
 
+alias claude2='CLAUDE_CONFIG_DIR=~/.claude2 claude'
 alias ll="ls -l"
 alias hh="htop"
 alias qq="exit"
@@ -100,7 +101,7 @@ fi
 
 upall() {
   if command -v rustup &>/dev/null; then
-    rustup update && cargo install-update -a
+    rustup update && cargo install-update -a --locked
   fi
   if [[ -d ~/.fzf/.git ]]; then
     (cd ~/.fzf && git pull) && ~/.fzf/install --all
@@ -121,7 +122,12 @@ export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
 # pnpm
 export PNPM_HOME="/home/cdiesh/.local/share/pnpm"
 case ":$PATH:" in
-  *":$PNPM_HOME/bin:"*) ;;
-  *) export PATH="$PNPM_HOME/bin:$PATH" ;;
+*":$PNPM_HOME/bin:"*) ;;
+*) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
 # pnpm end
+#
+
+
+# Added by Antigravity CLI installer
+export PATH="/home/cdiesh/.local/bin:$PATH"

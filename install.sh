@@ -73,7 +73,7 @@ install_rust_and_cargo_tools() {
   fi
   source "$HOME/.cargo/env"
   log_info "Installing Cargo tools..."
-  cargo install ruplacer typos-cli cargo-update git-delta ripgrep miniserve || log_info "Some Cargo tools failed to install, might be optional."
+  cargo install --locked ruplacer typos-cli cargo-update git-delta ripgrep miniserve || log_info "Some Cargo tools failed to install, might be optional."
   log_success "Rust and Cargo tools installed."
 }
 
