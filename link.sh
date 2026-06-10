@@ -10,7 +10,7 @@ link() {
 
 for pkg in "$DOTFILES_DIR"/*/; do
   name=$(basename "$pkg")
-  [[ "$name" =~ ^(img|OLD|.git|plugin)$ ]] && continue
+  [[ "$name" =~ ^(img|OLD|\.git|plugin)$ ]] && continue
 
   find "$pkg" -type f | while read -r src; do
     dest="$HOME/${src#$pkg}"

@@ -190,21 +190,9 @@ main() {
   setup_environment
 
   if [[ "$OS" == "mac" ]]; then
-    if command -v brew &>/dev/null; then
-      log_info "Homebrew found. Installing macOS dependencies..."
-      setup_macos_deps_via_brew
-    else
-      log_info "Homebrew not found. Skipping brew installations."
-      log_info "Essential macOS tools might need to be installed manually."
-    fi
+    setup_macos_deps_via_brew
   else
-    if command -v sudo &>/dev/null && command -v apt &>/dev/null; then
-      log_info "Sudo and apt found. Installing Linux dependencies via apt..."
-      setup_linux_deps_via_apt
-    else
-      log_info "Sudo or apt not found/available. Skipping apt installations."
-      log_info "Essential Linux tools might need to be installed manually or via alternative methods."
-    fi
+    setup_linux_deps_via_apt
   fi
 
   [[ "$HOST" != "labserver" ]] && install_rust_and_cargo_tools

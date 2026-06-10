@@ -22,7 +22,7 @@ alias g="git status"
 alias yy="pnpm lint --cache"
 alias yyy="pnpm lint --cache --fix"
 alias ttt="pnpm typecheck --noEmit --watch"
-alias fff="yy --fix && ff"
+alias fff="yyy && ff"
 # Stage everything and amend — "oops, forgot a file".
 alias gggg="git add . && git commit --amend --no-edit"
 alias mm='git reset --hard origin/main'
@@ -35,19 +35,18 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   if command -v xclip &>/dev/null; then
     alias pbcopy='xclip -selection clipboard'
     alias pbpaste='xclip -selection clipboard -o'
+    chromeclip() { pbpaste | sed 's/^[^:]*:[0-9]* //' | pbcopy; }
+    fireclip() { pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy; }
+    plaintxt() { pandoc -i "$1" -t plain --wrap none | pbcopy; }
+    pandoc_fzf() {
+      local file=$(find . -maxdepth 2 -type f | fzf)
+      [[ -n "$file" ]] && plaintxt "$file" && echo "✓ Copied '$file' as plain text"
+    }
   fi
 
-  plaintxt() { pandoc -i "$1" -t plain --wrap none | pbcopy; }
   md() { pandoc "$1" >/tmp/$(basename "$1").html && xdg-open /tmp/$(basename "$1").html; }
-  pandoc_fzf() {
-    local file=$(find . -maxdepth 2 -type f | fzf)
-    [[ -n "$file" ]] && plaintxt "$file" && echo "✓ Copied '$file' as plain text"
-  }
 
-  chromeclip() { pbpaste | sed 's/^[^:]*:[0-9]* //' | pbcopy; }
-  fireclip() { pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy; }
-
-  alias ww="watch -n.1 \"cat /proc/cpuinfo | grep '^[c]pu MHz'\""
+  alias ww="watch -n.1 \"grep '^[c]pu MHz' /proc/cpuinfo\""
   alias sau="sudo apt update && sudo apt upgrade"
   alias eee="PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/ cargo run"
 
@@ -78,12 +77,14 @@ vp() { yt-dlp -f 'bestaudio[ext=m4a]' -o - "$1" | ffplay -hide_banner -loglevel 
 # Keep failed commands in history.
 zshaddhistory() { return 0; }
 
+# pnpm
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PNPM_HOME="$HOME/Library/pnpm"
 else
   export PNPM_HOME="$HOME/.local/share/pnpm"
 fi
 [[ -d "$PNPM_HOME" ]] && export PATH="$PNPM_HOME:$PATH"
+# pnpm end
 
 export PATH="$HOME/.local/bin:$PATH"
 
@@ -119,15 +120,3 @@ upall() {
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
-
-# pnpm
-export PNPM_HOME="/home/cdiesh/.local/share/pnpm"
-case ":$PATH:" in
-*":$PNPM_HOME/bin:"*) ;;
-*) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
-#
-
-# Added by Antigravity CLI installer
-export PATH="/home/cdiesh/.local/bin:$PATH"
