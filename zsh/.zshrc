@@ -77,20 +77,24 @@ vp() { yt-dlp -f 'bestaudio[ext=m4a]' -o - "$1" | ffplay -hide_banner -loglevel 
 # Keep failed commands in history.
 zshaddhistory() { return 0; }
 
-# pnpm
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  export PNPM_HOME="$HOME/Library/pnpm"
-else
-  export PNPM_HOME="$HOME/.local/share/pnpm"
-fi
-[[ -d "$PNPM_HOME" ]] && export PATH="$PNPM_HOME:$PATH"
-# pnpm end
-
 export PATH="$HOME/.local/bin:$PATH"
 
 FNM_PATH="$HOME/.local/share/fnm"
 [[ -d "$FNM_PATH" ]] && export PATH="$FNM_PATH:$PATH"
 command -v fnm &>/dev/null && eval "$(fnm env --shell zsh)"
+
+# pnpm (after fnm so the standalone pnpm wins over corepack's shim)
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  export PNPM_HOME="$HOME/Library/pnpm"
+else
+  export PNPM_HOME="$HOME/.local/share/pnpm"
+fi
+case ":$PATH:" in
+*":$PNPM_HOME/bin:"*) ;;
+*) export PATH="$PNPM_HOME/bin:$PATH" ;;
+esac
+# pnpm end
+
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
