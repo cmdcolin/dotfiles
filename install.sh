@@ -37,7 +37,7 @@ setup_macos_deps_via_brew() {
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
   log_info "Installing essential macOS tools via Homebrew..."
-  brew install git neovim git-delta ripgrep fnm zoxide fzf lazygit tmux gh fd jq wget htop yt-dlp uv miniserve
+  brew install git neovim git-delta ripgrep fnm zoxide fzf lazygit tmux gh fd jq wget htop uv miniserve
   log_success "macOS dependencies installed via Homebrew."
 }
 
