@@ -1,0 +1,36 @@
+#!/bin/sh
+# Pick a pinentry that fits the current session instead of a hardcoded one.
+#
+# gpg-agent invokes this with the session's DISPLAY/tty (kept fresh by the
+# `gpg-connect-agent updatestartuptty` line in .zshrc). The default on this box
+# is pinentry-gnome3, which — with no DISPLAY (tmux / ssh / headless) — falls
+# back to a full-screen ncurses box that repaints the terminal and stomps tmux.
+#
+#   GUI present   -> pinentry-gnome3 (popup window)
+#   terminal/tmux -> pinentry-tty (inline prompt, no full-screen takeover)
+#   fallback      -> pinentry-curses (e.g. labserver where pinentry-tty is
+#                    not installed and can't be apt-installed without sudo)
+#
+# gpg-agent may be launched (systemd/boot) with a PATH that lacks ~/.local/bin,
+# so add it explicitly — that's where the no-sudo user-local pinentry-tty lives.
+PATH="$HOME/.local/bin:$PATH"
+
+choose() {
+  for p in "$@"; do
+    if command -v "$p" >/dev/null 2>&1; then
+      echo "$p"
+      return 0
+    fi
+  done
+  return 1
+}
+
+PIN=""
+if [ -n "$DISPLAY" ] || [ -n "$WAYLAND_DISPLAY" ]; then
+  PIN=$(choose pinentry-gnome3 pinentry-x11 pinentry-gtk-2 pinentry-qt)
+fi
+if [ -z "$PIN" ]; then
+  PIN=$(choose pinentry-tty pinentry-curses pinentry)
+fi
+
+exec "$PIN" "$@"

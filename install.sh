@@ -47,22 +47,43 @@ setup_macos_deps_via_brew() {
   log_success "macOS dependencies installed via Homebrew."
 }
 
+# Get pinentry-tty without root: download the .deb and extract just the binary
+# into ~/.local/bin. Its shared libs (libassuan, libgpg-error) already ship with
+# the other pinentry packages, so the extracted binary runs as-is. The
+# pinentry-auto wrapper prefers it so tmux/ssh signing prompts inline instead of
+# drawing a full-screen ncurses box.
+ensure_pinentry_tty_userlocal() {
+  command -v pinentry-tty &>/dev/null && return 0
+  command -v apt-get &>/dev/null && command -v dpkg-deb &>/dev/null || return 0
+  local tmp
+  tmp="$(mktemp -d)"
+  if (cd "$tmp" && apt-get download pinentry-tty && dpkg-deb -x pinentry-tty*.deb x) &>/dev/null &&
+    [[ -x "$tmp/x/usr/bin/pinentry-tty" ]]; then
+    mkdir -p "$HOME/.local/bin"
+    install -m755 "$tmp/x/usr/bin/pinentry-tty" "$HOME/.local/bin/pinentry-tty"
+    log_success "pinentry-tty installed user-locally (~/.local/bin)"
+  fi
+  rm -rf "$tmp"
+}
+
 setup_linux_deps_via_apt() {
   log_info "Attempting to install Linux dependencies via apt..."
   if [[ "$HOST" == "labserver" ]]; then
     log_info "⚠️  Labserver: skipping sudo apt, using user-local installs only"
+    ensure_pinentry_tty_userlocal
     return 0
   fi
   if ! command -v sudo &>/dev/null || ! command -v apt &>/dev/null; then
     log_error "Sudo or apt not found/available. Skipping apt installations."
     log_info "Essential Linux tools might need to be installed manually or via alternative methods."
+    ensure_pinentry_tty_userlocal
     return 1
   fi
   log_info "Running apt update and install..."
   sudo apt update
   # One package at a time: gh isn't in every release's repos, and a
   # single missing name would otherwise abort the whole install.
-  for pkg in build-essential curl git htop zoxide tmux gh jq wget ninja-build gettext cmake unzip fd-find fzf ripgrep xclip; do
+  for pkg in build-essential curl git htop zoxide tmux gh jq wget ninja-build gettext cmake unzip fd-find fzf ripgrep xclip pinentry-tty; do
     sudo apt install -y "$pkg" || log_error "apt: $pkg unavailable, skipping."
   done
   if [[ -f /usr/bin/fdfind ]]; then
