@@ -1,0 +1,3 @@
+# Solve YouTube JS "n" challenges: needs a JS runtime (deno) + the EJS solver script.
+# Without these, YouTube returns a misleading "This video is not available".
+--remote-components ejs:github

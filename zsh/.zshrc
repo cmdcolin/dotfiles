@@ -95,6 +95,7 @@ case ":$PATH:" in
 esac
 # pnpm end
 
+[[ -d "$HOME/.deno/bin" ]] && export PATH="$HOME/.deno/bin:$PATH"
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 [[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
 
