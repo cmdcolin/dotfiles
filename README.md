@@ -16,6 +16,21 @@ Or just link configs without installing packages:
 ./link.sh mac|ubuntu|labserver
 ```
 
+## tmux
+
+Prefix is `C-]`. Splits:
+
+- `C-]` `=` — split side-by-side
+- `C-]` `-` — split stacked
+
+### nested tmux (e.g. ssh'd into a server)
+
+The local tmux eats the prefix first, so hit it twice to pass it through to the
+remote session (`bind C-] send-prefix`):
+
+- `C-]` `C-]` `=` — split the remote tmux side-by-side
+- `C-]` `C-]` `-` — split the remote tmux stacked
+
 ## setup
 
 - Machine: Dell laptop 32gb/512GB (primary), MacBook Pro (secondary)
