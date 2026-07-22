@@ -42,6 +42,9 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
       local file=$(find . -maxdepth 2 -type f | fzf)
       [[ -n "$file" ]] && plaintxt "$file" && echo "✓ Copied '$file' as plain text"
     }
+  else
+    # No X display (labserver): OSC 52 hands the text to the local terminal.
+    pbcopy() { printf '\033]52;c;%s\a' "$(base64 | tr -d '\n')" >/dev/tty; }
   fi
 
   md() { pandoc "$1" >/tmp/$(basename "$1").html && xdg-open /tmp/$(basename "$1").html; }
@@ -77,27 +80,31 @@ vp() { yt-dlp -f 'bestaudio[ext=m4a]' -o - "$1" | ffplay -hide_banner -loglevel 
 # Keep failed commands in history.
 zshaddhistory() { return 0; }
 
-export PATH="$HOME/.local/bin:$PATH"
+# Idempotent so re-sourcing (zz) doesn't keep growing $PATH.
+prepend_path() {
+  [[ -d "$1" ]] || return 0
+  case ":$PATH:" in
+  *":$1:"*) ;;
+  *) export PATH="$1:$PATH" ;;
+  esac
+}
 
-FNM_PATH="$HOME/.local/share/fnm"
-[[ -d "$FNM_PATH" ]] && export PATH="$FNM_PATH:$PATH"
+prepend_path "$HOME/.local/bin"
+prepend_path "$HOME/.local/share/fnm"
 command -v fnm &>/dev/null && eval "$(fnm env --shell zsh)"
 
-# pnpm (after fnm so the standalone pnpm wins over corepack's shim)
+# after fnm so the standalone pnpm wins over corepack's shim
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PNPM_HOME="$HOME/Library/pnpm"
 else
   export PNPM_HOME="$HOME/.local/share/pnpm"
 fi
-case ":$PATH:" in
-*":$PNPM_HOME/bin:"*) ;;
-*) export PATH="$PNPM_HOME/bin:$PATH" ;;
-esac
-# pnpm end
+prepend_path "$PNPM_HOME/bin"
 
-[[ -d "$HOME/.deno/bin" ]] && export PATH="$HOME/.deno/bin:$PATH"
+prepend_path "$HOME/.deno/bin"
+prepend_path "$HOME/.fzf/bin"
 command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
-[[ -f ~/.fzf.zsh ]] && source ~/.fzf.zsh
+command -v fzf &>/dev/null && eval "$(fzf --zsh)"
 
 if [[ -d "$HOME/Android/Sdk" ]]; then
   export ANDROID_HOME="$HOME/Android/Sdk"

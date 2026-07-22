@@ -54,7 +54,11 @@ setup_linux_deps_via_apt() {
   fi
   log_info "Running apt update and install..."
   sudo apt update
-  sudo apt install -y build-essential curl git htop zoxide lazygit tmux gh jq wget ninja-build gettext cmake unzip fd-find
+  # One package at a time: lazygit/gh aren't in every release's repos, and a
+  # single missing name would otherwise abort the whole install.
+  for pkg in build-essential curl git htop zoxide lazygit tmux gh jq wget ninja-build gettext cmake unzip fd-find fzf ripgrep xclip; do
+    sudo apt install -y "$pkg" || log_error "apt: $pkg unavailable, skipping."
+  done
   if [[ -f /usr/bin/fdfind ]]; then
     ln -sf /usr/bin/fdfind "$HOME/.local/bin/fd"
   else
@@ -73,7 +77,10 @@ install_rust_and_cargo_tools() {
   fi
   source "$HOME/.cargo/env"
   log_info "Installing Cargo tools..."
-  cargo install --locked ruplacer typos-cli cargo-update git-delta ripgrep miniserve || log_info "Some Cargo tools failed to install, might be optional."
+  local tools=(ruplacer typos-cli cargo-update)
+  # brew already covers these on mac; only build them where apt won't.
+  [[ "$OS" != "mac" ]] && tools+=(git-delta ripgrep miniserve)
+  cargo install --locked "${tools[@]}" || log_info "Some Cargo tools failed to install, might be optional."
   log_success "Rust and Cargo tools installed."
 }
 
@@ -104,13 +111,14 @@ install_uv_and_yt_dlp() {
 }
 
 install_fzf() {
-  log_info "Installing FZF (Fuzzy Finder)..."
-  if [[ ! -d ~/.fzf ]]; then
-    git clone --depth 1 "$FZF_REPO" ~/.fzf
-    ~/.fzf/install --all
-  else
+  # brew/apt provide fzf; the git clone is only for hosts with no package manager.
+  if command -v fzf &>/dev/null || [[ -d ~/.fzf ]]; then
     log_info "FZF already installed. Skipping."
+    return 0
   fi
+  log_info "Installing FZF (Fuzzy Finder)..."
+  git clone --depth 1 "$FZF_REPO" ~/.fzf
+  ~/.fzf/install --bin
   log_success "FZF installed."
 }
 
@@ -180,7 +188,7 @@ install_zprezto() {
 
 link_dotfiles() {
   log_info "Linking dotfiles..."
-  ./link.sh
+  "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/link.sh"
   log_success "Dotfiles linked."
 }
 

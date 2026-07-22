@@ -13,12 +13,19 @@ Labserver is a shared machine — avoid apt/brew/cargo installs and anything req
 To "activate" these dotfiles, use `link.sh`. This creates symbolic links from this repository to your home directory (`$HOME`), allowing you to edit files here and have the changes take effect immediately.
 
 ```sh
-./link.sh [mac|ubuntu|labserver]
+./link.sh
 ```
 
-- **Idempotent**: Safe to run multiple times.
-- **Backups**: Existing real files in your `$HOME` are moved to `.bak` before the link is created.
-- **Host Overrides**: Applies machine-specific overrides from `hosts/` after common configs.
+Every file under each top-level dir (except `img/` and `OLD/`) is mirrored into
+`$HOME` at the same relative path — so `zsh/.zshrc` becomes `~/.zshrc` and
+`claude/.claude/CLAUDE.md` becomes `~/.claude/CLAUDE.md`.
+
+- **Idempotent**: Safe to run multiple times. Takes no arguments — there are no
+  per-host config variants.
+- **Backups**: Existing real files in `$HOME` are moved to `.bak` first.
+- **Cleanup**: Dangling `$HOME` symlinks pointing into this repo are removed.
+- Per-machine settings that shouldn't be committed go in `~/.zshrc.local`, which
+  `.zshrc` sources if present.
 
 ## Installation
 

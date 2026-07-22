@@ -4,18 +4,32 @@ set -e
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 link() {
-  mkdir -p "$(dirname "$2")"
-  ln -sfv "$1" "$2"
+  local src="$1" dest="$2"
+  mkdir -p "$(dirname "$dest")"
+  # Real file in the way: keep a copy rather than silently losing it.
+  if [[ -e "$dest" && ! -L "$dest" ]]; then
+    mv "$dest" "$dest.bak"
+    echo "backed up $dest -> $dest.bak"
+  fi
+  ln -sfn "$src" "$dest"
+  echo "$dest -> $src"
 }
 
 for pkg in "$DOTFILES_DIR"/*/; do
   name=$(basename "$pkg")
-  [[ "$name" =~ ^(img|OLD|\.git|plugin)$ ]] && continue
+  [[ "$name" =~ ^(img|OLD)$ ]] && continue
 
-  find "$pkg" -type f | while read -r src; do
-    dest="$HOME/${src#$pkg}"
-    link "$src" "$dest"
-  done
+  while IFS= read -r src; do
+    link "$src" "$HOME/${src#"$pkg"}"
+  done < <(find "$pkg" -type f)
 done
+
+# Drop links into this repo whose target is gone (e.g. the deleted hosts/ dir).
+while IFS= read -r stale; do
+  if [[ "$(readlink "$stale")" == "$DOTFILES_DIR"/* ]]; then
+    rm "$stale"
+    echo "removed dangling link $stale"
+  fi
+done < <(find "$HOME" -maxdepth 1 -type l ! -exec test -e {} \; -print)
 
 echo "✅ Done!"
