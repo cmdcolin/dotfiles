@@ -39,10 +39,10 @@ Every file under each top-level dir (except `img/` and `OLD/`) is mirrored into
 
 ## Git
 
-Always commit with an explicit pathspec (`git commit -- <paths>`), never `git
-add` plus a bare `git commit`. Another agent may be working in the same worktree,
-and the git index is shared, so a bare commit silently sweeps up whatever they
-have staged (and theirs sweeps up yours).
+Strongly prefer committing with an explicit pathspec (`git commit -- <paths>`)
+over `git add` plus a bare `git commit`. Another agent may be working in the same
+worktree, and the git index is shared, so a bare commit silently sweeps up
+whatever they have staged (and theirs sweeps up yours).
 
 This applies to `--amend` too, where it's worse: the stray files land in a commit
 that already exists rather than a new one, so the mistake is behind you before
