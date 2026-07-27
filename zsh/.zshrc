@@ -7,6 +7,13 @@ command -v tmux &>/dev/null && [[ -z "$TMUX" ]] && exec tmux
 export EDITOR="nvim"
 export GPG_TTY=$(tty)
 
+# Prompt (zprezto sorin theme) runs git-info on every precmd, which refreshes
+# the index and briefly takes .git/index.lock — this races other git processes
+# (e.g. Claude Code) running in the same repo. Optional locks off skips that
+# stat-refresh lock for read-only ops like status/diff without affecting real
+# writes like commit/add.
+export GIT_OPTIONAL_LOCKS=0
+
 alias e="nvim"
 alias vim="nvim"
 alias zz="source ~/.zshrc"
