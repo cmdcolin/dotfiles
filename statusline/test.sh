@@ -61,40 +61,46 @@ check() {
   fi
 }
 
-now_iso() { date -u -d "$1" +%Y-%m-%dT%H:%M:%S.000Z; }
+# Minute offsets via node, not `date -d` / `stat -c`: those are GNU-only and
+# absent on macOS, while node is already required for the parity check. The
+# offset goes through the environment because node reads a leading-dash argv
+# entry like -180 as one of its own CLI options.
+now_iso() { OFFSET_MIN=$1 node -e 'process.stdout.write(new Date(Date.now() + Number(process.env.OFFSET_MIN) * 60000).toISOString())'; }
+filesize() { wc -c <"$1" | tr -d ' '; }
 
 # --- fixtures -------------------------------------------------------------
-line false "$(now_iso 'now')" 1000 48898 1h >"$FIX/basic.jsonl"
-line false "$(now_iso 'now')" 1000 48898 5m >"$FIX/ttl5m.jsonl"
-line false "$(now_iso '-3 hours')" 1000 48898 1h >"$FIX/expired.jsonl"
-line false "$(now_iso 'now')" 5000 894898 1h >"$FIX/huge.jsonl"
+line false "$(now_iso 0)" 1000 48898 1h >"$FIX/basic.jsonl"
+line false "$(now_iso 0)" 1000 48898 5m >"$FIX/ttl5m.jsonl"
+line false "$(now_iso -180)" 1000 48898 1h >"$FIX/expired.jsonl"
+line false "$(now_iso 0)" 5000 894898 1h >"$FIX/huge.jsonl"
 
 # main thread at ~50k, then a subagent at ~900k: must report the main thread.
 {
-  line false "$(now_iso 'now')" 1000 48898 1h
-  line true "$(now_iso 'now')" 5000 894898 1h
+  line false "$(now_iso 0)" 1000 48898 1h
+  line true "$(now_iso 0)" 5000 894898 1h
 } >"$FIX/sidechain.jsonl"
 
 # usage record sits >64KB from EOF, forcing the read window to widen.
 {
-  line false "$(now_iso 'now')" 1000 48898 1h
+  line false "$(now_iso 0)" 1000 48898 1h
   for _ in $(seq 900); do printf '{"type":"user","pad":"%0100d"}\n' 0; done
 } >"$FIX/farback.jsonl"
 
 # 30-minute span with no total_duration_ms: burn rate must come from the
 # transcript's own first->last timestamps, so cost/0.5h == 2x cost.
 {
-  line false "$(now_iso '-30 minutes')" 1000 20000 1h
-  line false "$(now_iso 'now')" 1000 48898 1h
+  line false "$(now_iso -30)" 1000 20000 1h
+  line false "$(now_iso 0)" 1000 48898 1h
 } >"$FIX/span.jsonl"
 
 # newest turn created no cache blocks; TTL must come from an older turn.
 {
-  line false "$(now_iso '-2 minutes')" 1000 48898 1h
-  line false "$(now_iso 'now')" 0 49898 none
+  line false "$(now_iso -2)" 1000 48898 1h
+  line false "$(now_iso 0)" 0 49898 none
 } >"$FIX/nocreate.jsonl"
 
-echo "fixture sizes: farback=$(stat -c%s "$FIX/farback.jsonl") bytes (window widening $([ "$(stat -c%s "$FIX/farback.jsonl")" -gt 65536 ] && echo exercised || echo 'NOT exercised'))"
+farback_size=$(filesize "$FIX/farback.jsonl")
+echo "fixture sizes: farback=$farback_size bytes (window widening $([ "$farback_size" -gt 65536 ] && echo exercised || echo 'NOT exercised'))"
 echo
 
 # --- cases ----------------------------------------------------------------
@@ -104,6 +110,7 @@ check "1m window" "50k/1M" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1.2345)"
 check "cost rounding" '$1.23' "$(payload "$FIX/basic.jsonl" "$O" "$D" 1.2345)"
 check "model suffix" "Opus 5 1M" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1)"
 check "200k window" "50k/200k" "$(payload "$FIX/basic.jsonl" 'claude-opus-5' 'Opus 5' 0.07)"
+check "-1m id" "50k/1M" "$(payload "$FIX/basic.jsonl" 'claude-opus-5-1m' 'Opus 5' 1)"
 check "over-200k promo" "/1M" "$(payload "$FIX/huge.jsonl" 'claude-opus-5' 'Opus 5' 9.99)"
 check "5m ttl" "cache" "$(payload "$FIX/ttl5m.jsonl" "$O" "$D" 1)"
 check "expired cache" "cache expired" "$(payload "$FIX/expired.jsonl" "$O" "$D" 1)"

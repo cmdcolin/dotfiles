@@ -137,7 +137,9 @@ if (tail) {
     (u.output_tokens || 0)
 
   const id = (data.model && data.model.id) || ''
-  let limit = /\[1m\]|-1m\b/i.test(id) ? 1_000_000 : 200_000
+  // Plain substring match, matching the Rust build's `contains` — a \b here
+  // would make the two disagree on ids like "…-1million".
+  let limit = /\[1m\]|-1m/i.test(id) ? 1_000_000 : 200_000
   if (used > limit) limit = 1_000_000 // model id didn't advertise it; trust the count
 
   const pct = Math.round((used / limit) * 100)

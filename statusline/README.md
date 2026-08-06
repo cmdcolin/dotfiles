@@ -50,7 +50,7 @@ No cwd or git branch, deliberately — that would add a subprocess per render.
 cargo build --release && ./test.sh
 ```
 
-24 cases over generated fixtures. Asserts the Rust and Node builds render
+25 cases over generated fixtures. Asserts the Rust and Node builds render
 byte-identically, and covers what is easy to get wrong: sidechain skipping,
 read-window widening, TTL inherited from an older turn, the 200k->1M promotion,
 and both burn-rate sources. Fixtures are synthesised per run so the suite does
