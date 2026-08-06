@@ -12,6 +12,8 @@
   helper = cache
 [core]
   editor = nvim
+  # Needs delta on PATH: brew/cargo on mac+ubuntu, prebuilt binary on labserver.
+  pager = delta
 
 [interactive]
   diffFilter = delta --color-only
