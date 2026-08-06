@@ -43,7 +43,7 @@ setup_macos_deps_via_brew() {
   log_info "Installing essential macOS tools via Homebrew..."
   # No fzf: install_fzf clones ~/.fzf for its own binary and the ~/.fzf.zsh
   # that .zshrc sources, so a brew copy is a second, unused fzf on PATH.
-  brew install git neovim git-delta ripgrep fnm zoxide lazygit tmux gh fd jq wget htop uv miniserve
+  brew install git neovim git-delta ripgrep fnm zoxide tmux gh fd jq wget htop uv miniserve
   log_success "macOS dependencies installed via Homebrew."
 }
 
@@ -60,9 +60,9 @@ setup_linux_deps_via_apt() {
   fi
   log_info "Running apt update and install..."
   sudo apt update
-  # One package at a time: lazygit/gh aren't in every release's repos, and a
+  # One package at a time: gh isn't in every release's repos, and a
   # single missing name would otherwise abort the whole install.
-  for pkg in build-essential curl git htop zoxide lazygit tmux gh jq wget ninja-build gettext cmake unzip fd-find fzf ripgrep xclip; do
+  for pkg in build-essential curl git htop zoxide tmux gh jq wget ninja-build gettext cmake unzip fd-find fzf ripgrep xclip; do
     sudo apt install -y "$pkg" || log_error "apt: $pkg unavailable, skipping."
   done
   if [[ -f /usr/bin/fdfind ]]; then
@@ -88,6 +88,48 @@ install_rust_and_cargo_tools() {
   [[ "$OS" == "mac" ]] || tools+=(git-delta ripgrep miniserve)
   cargo install --locked "${tools[@]}" || log_info "Some Cargo tools failed to install, might be optional."
   log_success "Rust and Cargo tools installed."
+}
+
+# Labserver allows no apt/brew/cargo, so the tools that would otherwise come
+# from cargo are fetched as static musl binaries instead. Projects disagree on
+# whether the tarball has a top-level directory, so the binary is located by
+# name after extraction rather than by a hardcoded path.
+install_prebuilt_binary() {
+  local repo=$1 bin=$2 url tmp found
+  if command -v "$bin" &>/dev/null; then
+    log_info "$bin already installed. Skipping."
+    return 0
+  fi
+  url=$(curl -fsSL "https://api.github.com/repos/$repo/releases/latest" |
+    grep -oE '"browser_download_url": *"[^"]+"' | cut -d'"' -f4 |
+    grep -E 'x86_64-unknown-linux-musl\.tar\.gz$' | head -1)
+  if [[ -z "$url" ]]; then
+    log_error "No musl asset for $repo (rate limited?). Skipping $bin."
+    return 1
+  fi
+  tmp=$(mktemp -d)
+  if curl -fsSL "$url" -o "$tmp/asset.tar.gz" && tar -xzf "$tmp/asset.tar.gz" -C "$tmp"; then
+    found=$(find "$tmp" -type f -name "$bin" | head -1)
+  fi
+  if [[ -n "${found:-}" ]]; then
+    install -m755 "$found" "$HOME/.local/bin/$bin"
+    log_success "$bin installed from $repo."
+  else
+    log_error "No '$bin' binary inside $url."
+  fi
+  rm -rf "$tmp"
+}
+
+install_labserver_prebuilts() {
+  if [[ "$(uname -m)" != "x86_64" ]]; then
+    log_info "Not x86_64 — skipping prebuilt binaries."
+    return 0
+  fi
+  log_info "Installing prebuilt binaries in place of the cargo tools..."
+  install_prebuilt_binary BurntSushi/ripgrep rg || true
+  install_prebuilt_binary sharkdp/fd fd || true
+  install_prebuilt_binary ajeetdsouza/zoxide zoxide || true
+  install_prebuilt_binary dandavison/delta delta || true
 }
 
 install_fnm() {
@@ -219,6 +261,8 @@ main() {
 
   if [[ "$HOST" != "labserver" ]]; then
     install_rust_and_cargo_tools
+  else
+    install_labserver_prebuilts
   fi
   install_fnm
   install_uv_and_yt_dlp
