@@ -52,5 +52,9 @@ it's visible.
 ## Formatting
 
 ```sh
-find . \( -name "*.sh" -o -name ".zshrc" -o -name ".zshrc.local" -o -name ".zpreztorc" \) | xargs shfmt -w -i 2
+find . -path ./statusline/target -prune -o -name "*.sh" -print | xargs shfmt -w -i 2
 ```
+
+shfmt only parses bash, so the zsh files (`.zshrc`, `.zpreztorc`) are formatted
+by hand — `.zshrc` uses zsh-only syntax such as glob qualifiers (`*(N)`) that
+shfmt rejects outright.
