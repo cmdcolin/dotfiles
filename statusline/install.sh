@@ -8,9 +8,12 @@ set -e
 DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 CFG="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 
+# BSD install (macOS) has no -D, so create the directories separately.
+mkdir -p "$CFG/bin"
+
 if command -v cargo >/dev/null 2>&1; then
   cargo build --release --manifest-path "$DIR/Cargo.toml"
-  install -Dm755 "$DIR/target/release/statusline" "$CFG/bin/statusline"
+  install -m755 "$DIR/target/release/statusline" "$CFG/bin/statusline"
   command="$CFG/bin/statusline"
 else
   echo "No cargo found — installing the Node fallback instead (~20x slower)."
@@ -19,7 +22,7 @@ fi
 
 # Always install the Node build too; it is the fallback on machines without a
 # Rust toolchain, and test.sh diffs the two.
-install -Dm644 "$DIR/statusline.cjs" "$CFG/statusline.cjs"
+install -m644 "$DIR/statusline.cjs" "$CFG/statusline.cjs"
 
 echo
 echo "Installed to $CFG. Add to $CFG/settings.json:"

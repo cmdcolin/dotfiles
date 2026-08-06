@@ -6,7 +6,7 @@
 # deterministic and does not rot when sessions are deleted.
 
 set -uo pipefail
-cd "$(dirname "$0")"
+cd "$(dirname "$0")" || exit 1
 
 RS=${RS:-./target/release/statusline}
 CJS=${CJS:-./statusline.cjs}
