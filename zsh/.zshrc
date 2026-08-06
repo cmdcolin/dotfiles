@@ -70,7 +70,34 @@ alias rr="pnpm run dev"
 alias p="z"
 alias ff="pnpm format"
 alias pserver='miniserve .'
-alias clean_all="fd -H -t d '^(node_modules|\.next|dist|target|\.venv)$' -X rm -rf"
+
+# Delete build/dependency dirs under the given paths (cwd if none), after
+# showing what will go. A function, not an alias: with an alias the paths land
+# after `-X rm -rf` and become arguments to rm, so `clean_all ~/src/foo` would
+# delete all of foo. -I because these dirs are gitignored in exactly the repos
+# worth cleaning; --prune so a nested node_modules isn't listed under its own
+# parent.
+clean_all() {
+  local -a targets found
+  targets=("$@")
+  (($#targets)) || targets=(.)
+
+  # Split on NUL, then drop the empty trailing field in a separate step — the
+  # nested ${(@)${(0)...}:#} form parses but never applies the :# filter.
+  found=("${(0)$(fd -H -I --prune -t d '^(node_modules|\.next|dist|target|\.venv)$' -0 "${targets[@]}")}")
+  found=("${(@)found:#}")
+  if ! (($#found)); then
+    print "clean_all: nothing to remove under ${(j:, :)targets}"
+    return 0
+  fi
+
+  print -rl -- "$found[@]"
+  print -n "clean_all: remove these $#found dir(s), $(du -shc "$found[@]" 2>/dev/null | tail -1 | cut -f1) total? [y/N] "
+  local reply
+  read -r reply
+  [[ "$reply" == [yY]* ]] || { print "clean_all: aborted"; return 1 }
+  rm -rf -- "$found[@]"
+}
 
 # Pitch-down/slow-down audio and video.
 vaporwave() { ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
