@@ -45,19 +45,10 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     alias pbpaste='xclip -selection clipboard -o'
     chromeclip() { pbpaste | sed 's/^[^:]*:[0-9]* //' | pbcopy; }
     fireclip() { pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy; }
-    plaintxt() { pandoc -i "$1" -t plain --wrap none | pbcopy; }
-    pandoc_fzf() {
-      local file=$(find . -maxdepth 2 -type f | fzf)
-      [[ -n "$file" ]] && plaintxt "$file" && echo "✓ Copied '$file' as plain text"
-    }
   else
     # No X display (labserver): OSC 52 hands the text to the local terminal.
     pbcopy() { printf '\033]52;c;%s\a' "$(base64 | tr -d '\n')" >/dev/tty; }
   fi
-
-  # mktemp, not /tmp/<name>.html — /tmp is shared on labserver and a same-named
-  # file owned by someone else makes the redirect fail.
-  md() { local out && out=$(mktemp --suffix=.html) && pandoc "$1" >"$out" && xdg-open "$out"; }
 
   alias ww="watch -n.1 \"grep '^[c]pu MHz' /proc/cpuinfo\""
   alias sau="sudo apt update && sudo apt upgrade"
