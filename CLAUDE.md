@@ -5,6 +5,7 @@
 - `zsh/.zshrc` — shell config; OS-specific bits live inside `if [[ "$OSTYPE" == "linux-gnu"* ]]` / `darwin` blocks
 - `zsh/.zpreztorc` — zprezto config
 - `tmux/.tmux.conf` — tmux config; branch on OS with `if-shell 'uname -s | grep -q Darwin'`, never `%if "#{==:#(uname -s),Darwin}"` — `#()` evaluates to empty during config parsing, so that form silently takes the else branch
+- `statusline/` — Claude Code statusline (Rust, with a Node fallback). Built rather than symlinked, so `link.sh` skips it; run `statusline/install.sh`. See its README.
 
 Labserver is a shared machine — avoid apt/brew/cargo installs and anything requiring xclip or a display when adding to `.zshrc`.
 
