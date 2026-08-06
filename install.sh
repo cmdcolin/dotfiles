@@ -1,6 +1,7 @@
 #!/bin/bash
 set -eo pipefail
 
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ZPREZTO_REPO="https://github.com/sorin-ionescu/prezto.git"
 NEOVIM_SRC_DIR="$HOME/src/neovim"
 NVIM_INSTALL_PREFIX="$HOME/.local"
@@ -27,6 +28,9 @@ get_host() {
 setup_environment() {
   log_info "Setting up environment..."
   mkdir -p "$HOME/.local/bin"
+  # Freshly installed tools land here; put it on PATH now so later steps in this
+  # same run can call them without a shell restart.
+  export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$PATH"
   log_success "Local bin directory created."
 }
 
@@ -75,11 +79,11 @@ install_rust_and_cargo_tools() {
     log_info "Rustup already installed. Updating..."
     rustup update
   fi
-  source "$HOME/.cargo/env"
+  [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
   log_info "Installing Cargo tools..."
   local tools=(ruplacer typos-cli cargo-update)
-  # brew already covers these on mac; only build them where apt won't.
-  [[ "$OS" != "mac" ]] && tools+=(git-delta ripgrep miniserve)
+  # No apt packages for these; on mac brew already supplied them.
+  [[ "$OS" == "mac" ]] || tools+=(git-delta ripgrep miniserve)
   cargo install --locked "${tools[@]}" || log_info "Some Cargo tools failed to install, might be optional."
   log_success "Rust and Cargo tools installed."
 }
@@ -88,8 +92,9 @@ install_fnm() {
   log_info "Installing FNM (Node Version Manager)..."
   if ! command -v fnm &>/dev/null; then
     curl -fsSL https://fnm.io/install | bash
-    eval "$(fnm env)"
+    hash -r
   fi
+  command -v fnm &>/dev/null && eval "$(fnm env)"
   log_success "FNM installed."
 }
 
@@ -97,14 +102,15 @@ install_uv_and_yt_dlp() {
   log_info "Installing UV (Python Tool Manager)..."
   if ! command -v uv &>/dev/null; then
     curl -LsSf https://astral.sh/uv/install.sh | sh
-    if ! command -v uv &>/dev/null; then
-      export PATH="$HOME/.local/bin:$PATH"
-    fi
+    hash -r
   else
     log_info "UV already installed. Update is usually handled by 'uv tool install'."
   fi
-  log_success "UV installed."
 
+  if ! command -v uv &>/dev/null; then
+    log_error "uv not on PATH after install. Skipping yt-dlp."
+    return 0
+  fi
   log_info "Installing yt-dlp using UV..."
   uv tool install yt-dlp
   log_success "yt-dlp installed."
@@ -132,6 +138,10 @@ install_neovim() {
     log_info "Installing Neovim pre-built binary..."
     local version tarball install_dir
     version=$(curl -s "https://api.github.com/repos/neovim/neovim/releases/latest" | grep '"tag_name"' | cut -d'"' -f4)
+    if [[ -z "$version" ]]; then
+      log_error "Could not resolve latest Neovim release (rate limited?)."
+      return 1
+    fi
     tarball="nvim-linux-x86_64.tar.gz"
     install_dir="$HOME/.local/nvim"
     curl -sSL "https://github.com/neovim/neovim/releases/download/${version}/${tarball}" -o "/tmp/${tarball}"
@@ -188,7 +198,7 @@ install_zprezto() {
 
 link_dotfiles() {
   log_info "Linking dotfiles..."
-  "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/link.sh"
+  "$DOTFILES_DIR/link.sh"
   log_success "Dotfiles linked."
 }
 
@@ -197,17 +207,21 @@ main() {
   get_host "$1"
   setup_environment
 
+  # A step that reports it is skipping returns non-zero; under set -e that would
+  # abort the whole run, so the optional ones are explicitly tolerated.
   if [[ "$OS" == "mac" ]]; then
     setup_macos_deps_via_brew
   else
-    setup_linux_deps_via_apt
+    setup_linux_deps_via_apt || log_info "Continuing without apt packages."
   fi
 
-  [[ "$HOST" != "labserver" ]] && install_rust_and_cargo_tools
+  if [[ "$HOST" != "labserver" ]]; then
+    install_rust_and_cargo_tools
+  fi
   install_fnm
   install_uv_and_yt_dlp
   install_fzf
-  install_neovim
+  install_neovim || log_info "Continuing without Neovim."
   install_fonts
 
   install_zprezto
