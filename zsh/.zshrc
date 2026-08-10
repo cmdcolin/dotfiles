@@ -40,14 +40,18 @@ alias ggl="glances --disable-plugin gpu"
 alias bb="git branch --sort=-committerdate | fzf | xargs git checkout"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  if command -v xclip &>/dev/null; then
-    alias pbcopy='xclip -selection clipboard'
-    alias pbpaste='xclip -selection clipboard -o'
+  # prezto's utility module already aliases pbcopy/pbpaste to xclip or xsel,
+  # whichever it finds, so we only need to handle the case it can't: no
+  # clipboard tool at all (labserver, no X display). `function pbcopy { }`
+  # (not `pbcopy() { }`) avoids zsh's "defining function based on alias"
+  # parse error when prezto's alias is already in scope, since it's parsed
+  # unambiguously as a function definition regardless of any existing alias.
+  if command -v xclip &>/dev/null || command -v xsel &>/dev/null; then
     chromeclip() { pbpaste | sed 's/^[^:]*:[0-9]* //' | pbcopy; }
     fireclip() { pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy; }
   else
     # No X display (labserver): OSC 52 hands the text to the local terminal.
-    pbcopy() { printf '\033]52;c;%s\a' "$(base64 | tr -d '\n')" >/dev/tty; }
+    function pbcopy { printf '\033]52;c;%s\a' "$(base64 | tr -d '\n')" >/dev/tty; }
   fi
 
   alias ww="watch -n.1 \"grep '^[c]pu MHz' /proc/cpuinfo\""
