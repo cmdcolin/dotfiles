@@ -14,8 +14,6 @@
     "mode": "hold"
   },
   "enabledPlugins": {
-    "cache-ttl-statusline@claude-statusline-widgets": false,
-    "typescript-lsp@claude-plugins-official": false,
-    "rust-analyzer-lsp@claude-plugins-official": false
+    "typescript-lsp@claude-plugins-official": false
   }
 }
