@@ -188,9 +188,8 @@ fn clock(ms: i64) -> String {
 }
 
 /// Refresh the usage cache out of band. Credentials are read here rather than
-/// in the renderer so the macOS keychain fallback costs nothing per render, and
-/// the token goes through the environment rather than argv, where `ps` would
-/// show it. The write is atomic so a render never sees a half-written file.
+/// in the renderer so the macOS keychain fallback costs nothing per render. The
+/// write is atomic so a render never sees a half-written file.
 const REFRESH_SH: &str = r#"
 trap 'rm -f "$LOCK"' EXIT
 CFG="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
@@ -199,11 +198,13 @@ TOK=$(cat "$CFG/.credentials.json" 2>/dev/null | token)
 [ -n "$TOK" ] || TOK=$(security find-generic-password -s 'Claude Code-credentials' -w 2>/dev/null | token)
 [ -n "$TOK" ] || exit 0
 TMP="$CACHE.$$"
-export TOK
-curl -sf --max-time 10 \
-  -H "Authorization: Bearer $TOK" \
-  -H 'anthropic-beta: oauth-2025-04-20' \
-  https://api.anthropic.com/api/oauth/usage -o "$TMP" || { rm -f "$TMP"; exit 0; }
+# Through a -K config on stdin, not -H: a shell-expanded header would put the
+# token in curl's argv, where /proc/PID/cmdline shows it to any local user.
+curl -sf --max-time 10 -K - \
+  https://api.anthropic.com/api/oauth/usage -o "$TMP" <<CFG || { rm -f "$TMP"; exit 0; }
+header = "Authorization: Bearer $TOK"
+header = "anthropic-beta: oauth-2025-04-20"
+CFG
 mv -f "$TMP" "$CACHE"
 "#;
 
@@ -318,11 +319,16 @@ fn usage_segment(usage: &Value, key: &str, label: &str) -> Option<String> {
         .and_then(Value::as_str)
         .and_then(|at| DateTime::parse_from_rfc3339(at).ok())
         .map(|at| at.timestamp_millis() - Utc::now().timestamp_millis());
+    // Past its reset the window has rolled over, so the cached percentage
+    // describes a window that no longer exists. That only happens when the
+    // refresh has been failing — an expired token, no curl, no network — and a
+    // frozen "80%" over a window that is actually empty is worse than silence.
+    if left.is_some_and(|left| left <= 0) {
+        return None;
+    }
     if let Some(left) = left {
-        if left > 0 {
-            segment.push(' ');
-            segment.push_str(&dim(&until(left)));
-        }
+        segment.push(' ');
+        segment.push_str(&dim(&until(left)));
     }
     Some(segment)
 }

@@ -75,8 +75,13 @@ Details that are easy to get wrong:
   `O_EXCL` lock file, taken over only if a previous refresh died holding it —
   this machine runs several sessions at once, each rendering constantly.
 - **The token never reaches argv.** Credentials are read inside the forked
-  shell (file, then the macOS keychain) and passed to `curl` through the
-  environment, where `ps` will not show it.
+  shell (file, then the macOS keychain) and reach `curl` through a `-K` config
+  on stdin. A shell-expanded `-H "Authorization: Bearer $TOK"` would put the
+  token in `curl`'s argv, which `/proc/PID/cmdline` shows to any local user.
+- **A window past its reset is dropped, not frozen.** If the refresh is failing
+  — expired token, no `curl`, no network — the cache eventually describes a
+  window that has already rolled over. Rendering nothing beats rendering a
+  confident `7d 80%` over a window that is actually empty.
 - **The write is atomic** — fetch to a temp file, then `mv` — so a render can
   never see a half-written cache.
 
@@ -90,13 +95,13 @@ because the suite must never touch the network or real credentials.
 cargo build --release && ./test.sh
 ```
 
-37 cases over generated fixtures. Asserts the Rust and Node builds render
+42 cases over generated fixtures. Asserts the Rust and Node builds render
 byte-identically, and covers what is easy to get wrong: sidechain skipping,
 read-window widening, TTL inherited from an older turn, the 200k->1M promotion,
 both burn-rate sources, and the usage windows either side of their threshold —
-including a stale cache, a corrupt one, and a reset that has already passed.
-Fixtures are synthesised per run so the suite does not rot when real sessions
-are deleted.
+including a stale cache, a corrupt one, and a reset that has already passed. A
+`want` prefixed with `!` asserts absence instead. Fixtures are synthesised per
+run so the suite does not rot when real sessions are deleted.
 
 ## Notes
 

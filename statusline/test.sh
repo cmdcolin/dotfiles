@@ -42,9 +42,9 @@ payload() { # transcript id display cost [duration_ms]
   fi
 }
 
-# Compares Rust vs Node, then asserts the rendered text contains $2.
-# A minute boundary can tick between the two runs, so a mismatch is retried
-# once before it is called a failure.
+# Compares Rust vs Node, then asserts the rendered text contains $2 — or, when
+# $2 is prefixed with '!', that it does not. A minute boundary can tick between
+# the two runs, so a mismatch is retried once before it is called a failure.
 check() {
   local name=$1 want=$2 json=$3 a b
   a=$(printf '%s' "$json" | "$RS")
@@ -59,7 +59,10 @@ check() {
     fail=$((fail + 1))
     printf '  FAIL  %-26s rust/node differ\n          rust: %s\n          node: %s\n' \
       "$name" "$text" "$(printf '%s' "$b" | plain)"
-  elif [ -n "$want" ] && [[ "$text" != *"$want"* ]]; then
+  elif [ "${want#!}" != "$want" ] && [[ "$text" == *"${want#!}"* ]]; then
+    fail=$((fail + 1))
+    printf '  FAIL  %-26s unwanted %-14s got: %s\n' "$name" "'${want#!}'" "$text"
+  elif [ -n "$want" ] && [ "${want#!}" = "$want" ] && [[ "$text" != *"$want"* ]]; then
     fail=$((fail + 1))
     printf '  FAIL  %-26s want %-18s got: %s\n' "$name" "'$want'" "$text"
   else
@@ -178,11 +181,27 @@ check "both shown 7d" "7d 88%" "$B"
 usage_cache 62 47 20 4320
 check "5h minutes only" "5h 62% 46m" "$B"
 
-# A window already past its reset shows no countdown rather than a negative.
-# The 7d window is pushed high here only so a separator follows the 5h one,
-# which is what makes the missing countdown assertable.
+# A window past its reset is dropped, not shown frozen: the cached percentage
+# describes a window that has already rolled over. Only 7d should survive here.
 usage_cache 62 -5 79 4320
-check "5h reset passed" "5h 62% |" "$B"
+check "5h reset passed" "!5h" "$B"
+check "5h reset passed 7d" "7d 79% 2d23h" "$B"
+
+# Both past their reset -> no usage segments at all.
+usage_cache 62 -5 79 -60
+check "both reset passed" "!5h" "$B"
+check "both reset passed 7d" "!7d" "$B"
+
+# An unparseable timestamp renders the percentage with no countdown. Guards a
+# real divergence: Date.parse gives NaN where Rust's parse gives None.
+printf '{"five_hour":{"utilization":62,"resets_at":"not-a-date"},"seven_day":null}' \
+  >"$CLAUDE_STATUSLINE_USAGE_CACHE"
+check "unparseable reset" "5h 62%" "$B"
+
+# resets_at absent entirely: same shape, no countdown.
+printf '{"five_hour":{"utilization":62},"seven_day":null}' \
+  >"$CLAUDE_STATUSLINE_USAGE_CACHE"
+check "no reset field" "5h 62%" "$B"
 
 # Stale cache still renders: the countdown is derived from resets_at, so only
 # the percentage ages. Backdated well past USAGE_TTL, which is why the suite

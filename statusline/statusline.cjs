@@ -128,9 +128,8 @@ function clock(ms) {
 }
 
 // Refresh the usage cache out of band. Credentials are read here rather than
-// in the renderer so the macOS keychain fallback costs nothing per render, and
-// the token goes through the environment rather than argv, where `ps` would
-// show it. The write is atomic so a render never sees a half-written file.
+// in the renderer so the macOS keychain fallback costs nothing per render. The
+// write is atomic so a render never sees a half-written file.
 const REFRESH_SH = `
 trap 'rm -f "$LOCK"' EXIT
 CFG="\${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
@@ -139,11 +138,13 @@ TOK=$(cat "$CFG/.credentials.json" 2>/dev/null | token)
 [ -n "$TOK" ] || TOK=$(security find-generic-password -s 'Claude Code-credentials' -w 2>/dev/null | token)
 [ -n "$TOK" ] || exit 0
 TMP="$CACHE.$$"
-export TOK
-curl -sf --max-time 10 \\
-  -H "Authorization: Bearer $TOK" \\
-  -H 'anthropic-beta: oauth-2025-04-20' \\
-  https://api.anthropic.com/api/oauth/usage -o "$TMP" || { rm -f "$TMP"; exit 0; }
+# Through a -K config on stdin, not -H: a shell-expanded header would put the
+# token in curl's argv, where /proc/PID/cmdline shows it to any local user.
+curl -sf --max-time 10 -K - \\
+  https://api.anthropic.com/api/oauth/usage -o "$TMP" <<CFG || { rm -f "$TMP"; exit 0; }
+header = "Authorization: Bearer $TOK"
+header = "anthropic-beta: oauth-2025-04-20"
+CFG
 mv -f "$TMP" "$CACHE"
 `
 
@@ -239,10 +240,17 @@ function usageSegment(usage, key, label) {
   if (pct < USAGE_SHOW_AT_PCT) return null
   const color = pct >= 85 ? 31 : pct >= 65 ? 33 : 32
   let segment = `${dim(label)} ${paint(color, `${pct}%`)}`
-  if (window.resets_at) {
-    const left = Date.parse(window.resets_at) - Date.now()
-    if (left > 0) segment += ` ${dim(until(left))}`
-  }
+  // Date.parse yields NaN where Rust's parse yields None; both must land on
+  // null, or an unparseable timestamp renders "NaNhNaNm" in the Node build
+  // alone and the two stop agreeing.
+  const at = window.resets_at ? Date.parse(window.resets_at) : NaN
+  const left = Number.isNaN(at) ? null : at - Date.now()
+  // Past its reset the window has rolled over, so the cached percentage
+  // describes a window that no longer exists. That only happens when the
+  // refresh has been failing — an expired token, no curl, no network — and a
+  // frozen "80%" over a window that is actually empty is worse than silence.
+  if (left !== null && left <= 0) return null
+  if (left !== null) segment += ` ${dim(until(left))}`
   return segment
 }
 
