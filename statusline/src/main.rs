@@ -19,6 +19,9 @@ const FIVE_MIN_MS: i64 = 300_000;
 /// Rate-limit windows move slowly, and the reset countdown is computed locally
 /// from the cached `resets_at`, so only the percentage ages between refreshes.
 const USAGE_TTL_SECS: u64 = 300;
+/// Ceiling for the failure backoff. The endpoint goes down often enough that a
+/// fixed retry interval turns an outage into a steady drip of doomed forks.
+const USAGE_MAX_BACKOFF_SECS: u64 = 3600;
 const USAGE_LOCK_STALE_SECS: u64 = 120;
 /// Below this the window is not worth the width; it is the tail that matters.
 const USAGE_SHOW_AT_PCT: i64 = 50;
@@ -192,20 +195,32 @@ fn clock(ms: i64) -> String {
 /// write is atomic so a render never sees a half-written file.
 const REFRESH_SH: &str = r#"
 trap 'rm -f "$LOCK"' EXIT
+# Every exit that leaves the cache unwritten bumps the failure count, which is
+# what the renderer backs off on. Success clears it, so recovery is immediate.
+fail() {
+  n=$(cat "$FAIL" 2>/dev/null)
+  case "$n" in ''|*[!0-9]*) n=0 ;; esac
+  echo $((n + 1)) > "$FAIL"
+  exit 0
+}
 CFG="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 token() { grep -o '"accessToken":"[^"]*"' | head -1 | cut -d'"' -f4; }
 TOK=$(cat "$CFG/.credentials.json" 2>/dev/null | token)
 [ -n "$TOK" ] || TOK=$(security find-generic-password -s 'Claude Code-credentials' -w 2>/dev/null | token)
-[ -n "$TOK" ] || exit 0
+[ -n "$TOK" ] || fail
 TMP="$CACHE.$$"
 # Through a -K config on stdin, not -H: a shell-expanded header would put the
 # token in curl's argv, where /proc/PID/cmdline shows it to any local user.
 curl -sf --max-time 10 -K - \
-  https://api.anthropic.com/api/oauth/usage -o "$TMP" <<CFG || { rm -f "$TMP"; exit 0; }
+  https://api.anthropic.com/api/oauth/usage -o "$TMP" <<HDR || { rm -f "$TMP"; fail; }
 header = "Authorization: Bearer $TOK"
 header = "anthropic-beta: oauth-2025-04-20"
-CFG
+HDR
+# A 200 carrying an error page or a truncated body would otherwise be cached as
+# a success and served for the full TTL.
+grep -q '"five_hour"' "$TMP" || { rm -f "$TMP"; fail; }
 mv -f "$TMP" "$CACHE"
+rm -f "$FAIL"
 "#;
 
 fn config_dir() -> PathBuf {
@@ -240,6 +255,34 @@ fn age_secs(path: &Path) -> Option<u64> {
         .map(|age| age.as_secs())
 }
 
+/// How long to wait after `fails` consecutive failures: 5m, 10m, 20m, 40m,
+/// then hourly. Zero failures is the ordinary TTL.
+fn backoff_secs(fails: u32) -> u64 {
+    USAGE_TTL_SECS
+        .saturating_mul(1u64 << fails.min(8))
+        .min(USAGE_MAX_BACKOFF_SECS)
+}
+
+/// Whether enough time has passed since the last attempt. The cache is
+/// rewritten on success and the fail file on failure, so the fresher of the two
+/// is when the endpoint was last called.
+fn should_refresh(cache: &Path, fails: &Path) -> bool {
+    let wait = backoff_secs(
+        std::fs::read_to_string(fails)
+            .ok()
+            .and_then(|n| n.trim().parse().ok())
+            .unwrap_or(0),
+    );
+    match [age_secs(cache), age_secs(fails)]
+        .into_iter()
+        .flatten()
+        .min()
+    {
+        None => true,
+        Some(since_attempt) => since_attempt >= wait,
+    }
+}
+
 /// Fire-and-forget refresh. The lock keeps concurrent sessions from stampeding
 /// the endpoint; it is taken over if a previous refresh died holding it.
 fn spawn_refresh(cache: &Path) {
@@ -266,6 +309,7 @@ fn spawn_refresh(cache: &Path) {
         .arg(REFRESH_SH)
         .env("CACHE", cache)
         .env("LOCK", &lock)
+        .env("FAIL", cache.with_extension("fail"))
         .stdin(Stdio::null())
         .stdout(Stdio::null())
         .stderr(Stdio::null())
@@ -277,13 +321,8 @@ fn spawn_refresh(cache: &Path) {
 /// when the fetch happened.
 fn read_usage() -> Option<Value> {
     let path = usage_cache_path();
-    match age_secs(&path) {
-        None => {
-            spawn_refresh(&path);
-            return None;
-        }
-        Some(age) if age >= USAGE_TTL_SECS => spawn_refresh(&path),
-        _ => {}
+    if should_refresh(&path, &path.with_extension("fail")) {
+        spawn_refresh(&path);
     }
     serde_json::from_str(&std::fs::read_to_string(&path).ok()?).ok()
 }

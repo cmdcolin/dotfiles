@@ -216,6 +216,107 @@ check "corrupt cache" "cache" "$B"
 printf '{"five_hour":null,"seven_day":{}}' >"$CLAUDE_STATUSLINE_USAGE_CACHE"
 check "null window" "cache" "$B"
 
+# --- refresh + failure backoff --------------------------------------------
+# The only cases that exercise the refresh chain, so NO_REFRESH comes off and
+# a stub curl goes on PATH. Nothing here touches the network or real creds.
+unset CLAUDE_STATUSLINE_NO_REFRESH
+mkdir -p "$CLAUDE_CONFIG_DIR" "$FIX/bin"
+printf '{"claudeAiOauth":{"accessToken":"fake-token-for-tests"}}' \
+  >"$CLAUDE_CONFIG_DIR/.credentials.json"
+cat >"$FIX/bin/curl" <<'STUB'
+#!/bin/sh
+# Fails unless $FIX/curl-ok exists; when it succeeds, writes a usage payload to
+# whatever -o names. Reads its config from stdin exactly as the real one does.
+cat >/dev/null
+[ -f "$STUB_FIX/curl-ok" ] || exit 22
+out=""; while [ $# -gt 0 ]; do [ "$1" = "-o" ] && out=$2; shift; done
+printf '{"five_hour":{"utilization":62},"seven_day":{"utilization":10}}' >"$out"
+STUB
+chmod +x "$FIX/bin/curl"
+export PATH="$FIX/bin:$PATH" STUB_FIX="$FIX"
+
+CACHE=$CLAUDE_STATUSLINE_USAGE_CACHE
+FAILF=${CACHE%.json}.fail
+LOCKF=${CACHE%.json}.lock
+
+# Wait for the detached refresh to land rather than sleeping a fixed amount.
+settle() {
+  for _ in $(seq 100); do
+    [ -f "$LOCKF" ] || { [ -f "$1" ] && return 0; }
+    sleep 0.05
+  done
+  return 1
+}
+refresh_case() {
+  local name=$1 want=$2 runner=$3
+  printf '%s' "$B" | $runner >/dev/null 2>&1
+  settle "$want" || true
+  if [ -f "$want" ]; then
+    pass=$((pass + 1)); printf '  ok    %-26s %s\n' "$name" "$(basename "$want")$(
+      [ "$want" = "$FAILF" ] && printf '=%s' "$(cat "$FAILF")")"
+  else
+    fail=$((fail + 1)); printf '  FAIL  %-26s no %s\n' "$name" "$want"
+  fi
+}
+
+rm -f "$CACHE" "$FAILF" "$LOCKF" "$FIX/curl-ok"
+
+# A failing endpoint records a failure instead of silently retrying forever.
+refresh_case "refresh fail counts" "$FAILF" "$RS"
+[ "$(cat "$FAILF" 2>/dev/null)" = 1 ] &&
+  { pass=$((pass + 1)); printf '  ok    %-26s 1\n' "fail count starts at 1"; } ||
+  { fail=$((fail + 1)); printf '  FAIL  %-26s got %s\n' "fail count starts at 1" "$(cat "$FAILF" 2>/dev/null)"; }
+
+# Backoff: with one failure recorded the wait is 10m, so a render seconds later
+# must not fork again. The count staying at 1 is the proof.
+printf '%s' "$B" | "$RS" >/dev/null 2>&1
+sleep 0.4
+[ "$(cat "$FAILF")" = 1 ] &&
+  { pass=$((pass + 1)); printf '  ok    %-26s still 1\n' "backoff suppresses retry"; } ||
+  { fail=$((fail + 1)); printf '  FAIL  %-26s got %s\n' "backoff suppresses retry" "$(cat "$FAILF")"; }
+
+# Backdating past the 10m wait lets exactly one more attempt through.
+F="$FAILF" node -e 't=Date.now()/1000-1200;require("fs").utimesSync(process.env.F,t,t)'
+refresh_case "backoff expiry retries" "$FAILF" "$RS"
+[ "$(cat "$FAILF")" = 2 ] &&
+  { pass=$((pass + 1)); printf '  ok    %-26s 2\n' "fail count increments"; } ||
+  { fail=$((fail + 1)); printf '  FAIL  %-26s got %s\n' "fail count increments" "$(cat "$FAILF")"; }
+
+# A 200 with a body that is not a usage payload counts as a failure, not a
+# success cached for the full TTL.
+touch "$FIX/curl-ok"
+cat >"$FIX/bin/curl" <<'STUB'
+#!/bin/sh
+cat >/dev/null
+out=""; while [ $# -gt 0 ]; do [ "$1" = "-o" ] && out=$2; shift; done
+printf '<html>502 Bad Gateway</html>' >"$out"
+STUB
+chmod +x "$FIX/bin/curl"
+F="$FAILF" node -e 't=Date.now()/1000-7200;require("fs").utimesSync(process.env.F,t,t)'
+printf '%s' "$B" | "$RS" >/dev/null 2>&1
+sleep 0.5
+[ "$(cat "$FAILF")" = 3 ] && [ ! -f "$CACHE" ] &&
+  { pass=$((pass + 1)); printf '  ok    %-26s 3, no cache written\n' "html body is a failure"; } ||
+  { fail=$((fail + 1)); printf '  FAIL  %-26s count=%s cache=%s\n' "html body is a failure" "$(cat "$FAILF")" "$([ -f "$CACHE" ] && echo written || echo absent)"; }
+
+# Success clears the counter, so recovery from an outage is immediate.
+cat >"$FIX/bin/curl" <<'STUB'
+#!/bin/sh
+cat >/dev/null
+out=""; while [ $# -gt 0 ]; do [ "$1" = "-o" ] && out=$2; shift; done
+printf '{"five_hour":{"utilization":62},"seven_day":{"utilization":10}}' >"$out"
+STUB
+chmod +x "$FIX/bin/curl"
+F="$FAILF" node -e 't=Date.now()/1000-7200;require("fs").utimesSync(process.env.F,t,t)'
+refresh_case "success writes cache" "$CACHE" "$RS"
+[ ! -f "$FAILF" ] &&
+  { pass=$((pass + 1)); printf '  ok    %-26s cleared\n' "success clears counter"; } ||
+  { fail=$((fail + 1)); printf '  FAIL  %-26s still %s\n' "success clears counter" "$(cat "$FAILF")"; }
+
+# The Node build drives the same chain identically.
+rm -f "$CACHE" "$FAILF"
+refresh_case "node build refreshes" "$CACHE" "node $CJS"
+
 echo
 echo "$pass passed, $fail failed"
 [ "$fail" -eq 0 ]

@@ -20,6 +20,9 @@ const FIVE_MIN_MS = 300_000
 // Rate-limit windows move slowly, and the reset countdown is computed locally
 // from the cached resets_at, so only the percentage ages between refreshes.
 const USAGE_TTL_MS = 300_000
+// Ceiling for the failure backoff. The endpoint goes down often enough that a
+// fixed retry interval turns an outage into a steady drip of doomed forks.
+const USAGE_MAX_BACKOFF_MS = 3600_000
 const USAGE_LOCK_STALE_MS = 120_000
 // Below this the window is not worth the width; it is the tail that matters.
 const USAGE_SHOW_AT_PCT = 50
@@ -132,20 +135,32 @@ function clock(ms) {
 // write is atomic so a render never sees a half-written file.
 const REFRESH_SH = `
 trap 'rm -f "$LOCK"' EXIT
+# Every exit that leaves the cache unwritten bumps the failure count, which is
+# what the renderer backs off on. Success clears it, so recovery is immediate.
+fail() {
+  n=$(cat "$FAIL" 2>/dev/null)
+  case "$n" in ''|*[!0-9]*) n=0 ;; esac
+  echo $((n + 1)) > "$FAIL"
+  exit 0
+}
 CFG="\${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
 token() { grep -o '"accessToken":"[^"]*"' | head -1 | cut -d'"' -f4; }
 TOK=$(cat "$CFG/.credentials.json" 2>/dev/null | token)
 [ -n "$TOK" ] || TOK=$(security find-generic-password -s 'Claude Code-credentials' -w 2>/dev/null | token)
-[ -n "$TOK" ] || exit 0
+[ -n "$TOK" ] || fail
 TMP="$CACHE.$$"
 # Through a -K config on stdin, not -H: a shell-expanded header would put the
 # token in curl's argv, where /proc/PID/cmdline shows it to any local user.
 curl -sf --max-time 10 -K - \\
-  https://api.anthropic.com/api/oauth/usage -o "$TMP" <<CFG || { rm -f "$TMP"; exit 0; }
+  https://api.anthropic.com/api/oauth/usage -o "$TMP" <<HDR || { rm -f "$TMP"; fail; }
 header = "Authorization: Bearer $TOK"
 header = "anthropic-beta: oauth-2025-04-20"
-CFG
+HDR
+# A 200 carrying an error page or a truncated body would otherwise be cached as
+# a success and served for the full TTL.
+grep -q '"five_hour"' "$TMP" || { rm -f "$TMP"; fail; }
 mv -f "$TMP" "$CACHE"
+rm -f "$FAIL"
 `
 
 const configDir = () =>
@@ -176,14 +191,39 @@ function ageMs(file) {
   }
 }
 
+// Rust's Path::with_extension, which replaces rather than appends.
+const sibling = (cache, ext) =>
+  path.join(
+    path.dirname(cache),
+    path.basename(cache, path.extname(cache)) + ext,
+  )
+
+// How long to wait after n consecutive failures: 5m, 10m, 20m, 40m, then
+// hourly. Zero failures is the ordinary TTL.
+const backoffMs = fails =>
+  Math.min(USAGE_TTL_MS * 2 ** Math.min(fails, 8), USAGE_MAX_BACKOFF_MS)
+
+// Whether enough time has passed since the last attempt. The cache is
+// rewritten on success and the fail file on failure, so the fresher of the two
+// is when the endpoint was last called.
+function shouldRefresh(cache, failFile) {
+  let fails = 0
+  try {
+    const parsed = parseInt(fs.readFileSync(failFile, 'utf8').trim(), 10)
+    if (Number.isInteger(parsed) && parsed >= 0) fails = parsed
+  } catch {
+    /* no failures recorded */
+  }
+  const ages = [ageMs(cache), ageMs(failFile)].filter(age => age !== null)
+  if (!ages.length) return true
+  return Math.min(...ages) >= backoffMs(fails)
+}
+
 // Fire-and-forget refresh. The lock keeps concurrent sessions from stampeding
 // the endpoint; it is taken over if a previous refresh died holding it.
 function spawnRefresh(cache) {
   if (process.env.CLAUDE_STATUSLINE_NO_REFRESH) return
-  const lock = path.join(
-    path.dirname(cache),
-    path.basename(cache, path.extname(cache)) + '.lock',
-  )
+  const lock = sibling(cache, '.lock')
   const age = ageMs(lock)
   if (age !== null) {
     if (age < USAGE_LOCK_STALE_MS) return
@@ -201,7 +241,12 @@ function spawnRefresh(cache) {
   const child = spawn('sh', ['-c', REFRESH_SH], {
     detached: true,
     stdio: 'ignore',
-    env: { ...process.env, CACHE: cache, LOCK: lock },
+    env: {
+      ...process.env,
+      CACHE: cache,
+      LOCK: lock,
+      FAIL: sibling(cache, '.fail'),
+    },
   })
   child.unref()
 }
@@ -211,12 +256,7 @@ function spawnRefresh(cache) {
 // the fetch happened.
 function readUsage() {
   const file = usageCachePath()
-  const age = ageMs(file)
-  if (age === null) {
-    spawnRefresh(file)
-    return null
-  }
-  if (age >= USAGE_TTL_MS) spawnRefresh(file)
+  if (shouldRefresh(file, sibling(file, '.fail'))) spawnRefresh(file)
   try {
     return JSON.parse(fs.readFileSync(file, 'utf8'))
   } catch {
