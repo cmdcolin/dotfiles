@@ -130,41 +130,20 @@ function clock(ms) {
   return `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
-// Refresh the usage cache out of band. Credentials are read here rather than
-// in the renderer so the macOS keychain fallback costs nothing per render. The
-// write is atomic so a render never sees a half-written file.
-const REFRESH_SH = `
-trap 'rm -f "$LOCK"' EXIT
-# Every exit that leaves the cache unwritten bumps the failure count, which is
-# what the renderer backs off on. Success clears it, so recovery is immediate.
-fail() {
-  n=$(cat "$FAIL" 2>/dev/null)
-  case "$n" in ''|*[!0-9]*) n=0 ;; esac
-  echo $((n + 1)) > "$FAIL"
-  exit 0
-}
-CFG="\${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
-token() { grep -o '"accessToken":"[^"]*"' | head -1 | cut -d'"' -f4; }
-TOK=$(cat "$CFG/.credentials.json" 2>/dev/null | token)
-[ -n "$TOK" ] || TOK=$(security find-generic-password -s 'Claude Code-credentials' -w 2>/dev/null | token)
-[ -n "$TOK" ] || fail
-TMP="$CACHE.$$"
-# Through a -K config on stdin, not -H: a shell-expanded header would put the
-# token in curl's argv, where /proc/PID/cmdline shows it to any local user.
-curl -sf --max-time 10 -K - \\
-  https://api.anthropic.com/api/oauth/usage -o "$TMP" <<HDR || { rm -f "$TMP"; fail; }
-header = "Authorization: Bearer $TOK"
-header = "anthropic-beta: oauth-2025-04-20"
-HDR
-# A 200 carrying an error page or a truncated body would otherwise be cached as
-# a success and served for the full TTL.
-grep -q '"five_hour"' "$TMP" || { rm -f "$TMP"; fail; }
-mv -f "$TMP" "$CACHE"
-rm -f "$FAIL"
-`
-
 const configDir = () =>
   process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.claude')
+
+// refresh.sh, which does the fetch. Installed beside the config dir; the
+// override is for running out of a checkout, and for tests.
+function refreshScript() {
+  const script =
+    process.env.CLAUDE_STATUSLINE_REFRESH || path.join(configDir(), 'refresh.sh')
+  try {
+    return fs.statSync(script).isFile() ? script : null
+  } catch {
+    return null
+  }
+}
 
 // Which config dir this session is running under: .claude2 -> claude2.
 function profileLabel() {
@@ -223,6 +202,10 @@ function shouldRefresh(cache, failFile) {
 // the endpoint; it is taken over if a previous refresh died holding it.
 function spawnRefresh(cache) {
   if (process.env.CLAUDE_STATUSLINE_NO_REFRESH) return
+  // Resolved before the lock is taken: a missing script must not leave one
+  // behind, and the stat costs nothing next to the fork it guards.
+  const script = refreshScript()
+  if (!script) return
   const lock = sibling(cache, '.lock')
   const age = ageMs(lock)
   if (age !== null) {
@@ -238,17 +221,26 @@ function spawnRefresh(cache) {
   } catch {
     return
   }
-  const child = spawn('sh', ['-c', REFRESH_SH], {
-    detached: true,
-    stdio: 'ignore',
-    env: {
-      ...process.env,
-      CACHE: cache,
-      LOCK: lock,
-      FAIL: sibling(cache, '.fail'),
-    },
-  })
-  child.unref()
+  try {
+    const child = spawn('sh', [script], {
+      detached: true,
+      stdio: 'ignore',
+      env: {
+        ...process.env,
+        CACHE: cache,
+        LOCK: lock,
+        FAIL: sibling(cache, '.fail'),
+      },
+    })
+    child.unref()
+  } catch {
+    // Nothing will release the lock if the fork itself failed.
+    try {
+      fs.unlinkSync(lock)
+    } catch {
+      /* already gone */
+    }
+  }
 }
 
 // The cached usage payload, refreshing it in the background when stale. A

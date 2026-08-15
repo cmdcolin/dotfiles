@@ -190,38 +190,14 @@ fn clock(ms: i64) -> String {
     format!("{}:{:02}", hour, local.minute())
 }
 
-/// Refresh the usage cache out of band. Credentials are read here rather than
-/// in the renderer so the macOS keychain fallback costs nothing per render. The
-/// write is atomic so a render never sees a half-written file.
-const REFRESH_SH: &str = r#"
-trap 'rm -f "$LOCK"' EXIT
-# Every exit that leaves the cache unwritten bumps the failure count, which is
-# what the renderer backs off on. Success clears it, so recovery is immediate.
-fail() {
-  n=$(cat "$FAIL" 2>/dev/null)
-  case "$n" in ''|*[!0-9]*) n=0 ;; esac
-  echo $((n + 1)) > "$FAIL"
-  exit 0
+/// `refresh.sh`, which does the fetch. Installed beside the config dir; the
+/// override is for running out of a checkout, and for tests.
+fn refresh_script() -> Option<PathBuf> {
+    let path = std::env::var_os("CLAUDE_STATUSLINE_REFRESH")
+        .map(PathBuf::from)
+        .unwrap_or_else(|| config_dir().join("refresh.sh"));
+    path.is_file().then_some(path)
 }
-CFG="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
-token() { grep -o '"accessToken":"[^"]*"' | head -1 | cut -d'"' -f4; }
-TOK=$(cat "$CFG/.credentials.json" 2>/dev/null | token)
-[ -n "$TOK" ] || TOK=$(security find-generic-password -s 'Claude Code-credentials' -w 2>/dev/null | token)
-[ -n "$TOK" ] || fail
-TMP="$CACHE.$$"
-# Through a -K config on stdin, not -H: a shell-expanded header would put the
-# token in curl's argv, where /proc/PID/cmdline shows it to any local user.
-curl -sf --max-time 10 -K - \
-  https://api.anthropic.com/api/oauth/usage -o "$TMP" <<HDR || { rm -f "$TMP"; fail; }
-header = "Authorization: Bearer $TOK"
-header = "anthropic-beta: oauth-2025-04-20"
-HDR
-# A 200 carrying an error page or a truncated body would otherwise be cached as
-# a success and served for the full TTL.
-grep -q '"five_hour"' "$TMP" || { rm -f "$TMP"; fail; }
-mv -f "$TMP" "$CACHE"
-rm -f "$FAIL"
-"#;
 
 fn config_dir() -> PathBuf {
     if let Some(dir) = std::env::var_os("CLAUDE_CONFIG_DIR") {
@@ -289,6 +265,11 @@ fn spawn_refresh(cache: &Path) {
     if std::env::var_os("CLAUDE_STATUSLINE_NO_REFRESH").is_some() {
         return;
     }
+    // Resolved before the lock is taken: a missing script must not leave one
+    // behind, and the stat costs nothing next to the fork it guards.
+    let Some(script) = refresh_script() else {
+        return;
+    };
     let lock = cache.with_extension("lock");
     if let Some(age) = age_secs(&lock) {
         if age < USAGE_LOCK_STALE_SECS {
@@ -304,9 +285,8 @@ fn spawn_refresh(cache: &Path) {
     {
         return;
     }
-    let _ = Command::new("sh")
-        .arg("-c")
-        .arg(REFRESH_SH)
+    let spawned = Command::new("sh")
+        .arg(&script)
         .env("CACHE", cache)
         .env("LOCK", &lock)
         .env("FAIL", cache.with_extension("fail"))
@@ -314,6 +294,10 @@ fn spawn_refresh(cache: &Path) {
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .spawn();
+    // Nothing will release the lock if the fork itself failed.
+    if spawned.is_err() {
+        let _ = std::fs::remove_file(&lock);
+    }
 }
 
 /// The cached usage payload, refreshing it in the background when stale. A

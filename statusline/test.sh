@@ -19,6 +19,8 @@ trap 'rm -rf "$FIX"' EXIT
 export CLAUDE_CONFIG_DIR="$FIX/.claude-test"
 export CLAUDE_STATUSLINE_USAGE_CACHE="$FIX/usage.json"
 export CLAUDE_STATUSLINE_NO_REFRESH=1
+# The checkout's copy, not an installed one, so the suite tests what is here.
+export CLAUDE_STATUSLINE_REFRESH="$PWD/refresh.sh"
 
 [ -x "$RS" ] || {
   echo "no binary at $RS — run: cargo build --release"
@@ -316,6 +318,24 @@ refresh_case "success writes cache" "$CACHE" "$RS"
 # The Node build drives the same chain identically.
 rm -f "$CACHE" "$FAILF"
 refresh_case "node build refreshes" "$CACHE" "node $CJS"
+
+# A missing refresh.sh must not leave a lock behind, or the next 120s of
+# renders are wedged waiting on a refresh that never started.
+rm -f "$CACHE" "$FAILF" "$LOCKF"
+CLAUDE_STATUSLINE_REFRESH="$FIX/nonexistent.sh" sh -c 'printf "%s" "$1" | "$2" >/dev/null' _ "$B" "$RS"
+sleep 0.2
+[ ! -f "$LOCKF" ] &&
+  { pass=$((pass + 1)); printf '  ok    %-26s no stale lock\n' "missing script"; } ||
+  { fail=$((fail + 1)); printf '  FAIL  %-26s lock left behind\n' "missing script"; }
+
+# shellcheck is the point of extracting the script; enforce it when present.
+if command -v shellcheck >/dev/null 2>&1; then
+  if shellcheck "$CLAUDE_STATUSLINE_REFRESH" >/dev/null 2>&1; then
+    pass=$((pass + 1)); printf '  ok    %-26s clean\n' "shellcheck refresh.sh"
+  else
+    fail=$((fail + 1)); printf '  FAIL  %-26s\n' "shellcheck refresh.sh"
+  fi
+fi
 
 echo
 echo "$pass passed, $fail failed"

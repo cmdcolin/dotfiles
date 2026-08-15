@@ -58,14 +58,34 @@ be read in the render path.
 
 The renderer therefore only ever reads a cache file
 (`$TMPDIR/claude-statusline-usage-<profile>.json`, ~2 KB). When that file is
-older than five minutes it forks a detached `curl` to rewrite it and renders the
-stale copy in the meantime. Cost is one `stat` plus a small parse — measured at
-+111 µs against a 33 MB transcript, 653 µs -> 764 µs.
+older than its backoff allows it forks `refresh.sh` detached to rewrite it, and
+renders the stale copy in the meantime. Cost is one `stat` plus a small parse —
+measured at +111 µs against a 33 MB transcript, 653 µs -> 764 µs.
+
+`refresh.sh` is a real file, installed to `$CLAUDE_CONFIG_DIR` beside the
+builds, rather than a string literal inside each of them: embedded, it existed
+twice under two sets of escaping rules, could drift, and `shellcheck` could not
+see it. Both builds fork the same copy, and the suite runs the checkout's.
+`CLAUDE_STATUSLINE_REFRESH` overrides the path. If it is missing, the two
+windows simply do not render and every other field is unaffected.
+
+A pure-Rust fetch was considered and rejected: `ureq` + `rustls` takes the
+binary from 508 KB to 2.0 MB and the tree from 11 crates to 127, and it would
+not remove the duplication anyway — `statusline.cjs` cannot call the binary, so
+it would need its own implementation, leaving two to keep in step instead of
+one. The fork is not avoidable either way: the renderer exits as soon as it has
+written stdout, so a background thread would be killed mid-flight.
 
 Staleness is mostly harmless by construction: the countdown is derived locally
 from the cached `resets_at`, so it stays exact no matter how old the fetch is.
 Only the percentage ages, and a five-minute-old percentage is fine for a window
 that spans five hours.
+
+Failures back off — 5m, 10m, 20m, 40m, then hourly — counted in a file beside
+the cache and cleared on success, so recovery is immediate. The endpoint goes
+down often enough that a fixed interval turns an outage into a doomed fork every
+few minutes for as long as it lasts. A 200 carrying an error page counts as a
+failure too, checked by grepping the body before the atomic `mv`.
 
 Details that are easy to get wrong:
 
@@ -95,13 +115,19 @@ because the suite must never touch the network or real credentials.
 cargo build --release && ./test.sh
 ```
 
-42 cases over generated fixtures. Asserts the Rust and Node builds render
+53 cases over generated fixtures. Asserts the Rust and Node builds render
 byte-identically, and covers what is easy to get wrong: sidechain skipping,
 read-window widening, TTL inherited from an older turn, the 200k->1M promotion,
 both burn-rate sources, and the usage windows either side of their threshold —
 including a stale cache, a corrupt one, and a reset that has already passed. A
 `want` prefixed with `!` asserts absence instead. Fixtures are synthesised per
 run so the suite does not rot when real sessions are deleted.
+
+The refresh cases are the only ones that fork it for real, so they drop
+`CLAUDE_STATUSLINE_NO_REFRESH` and put a stub `curl` on `PATH` with fake
+credentials — still no network — covering failure counting, backoff suppressing
+a retry, backoff expiry letting exactly one through, an HTML body, success
+clearing the counter, and a missing `refresh.sh` leaving no stale lock.
 
 ## Notes
 
