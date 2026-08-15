@@ -1,0 +1,21 @@
+{
+  "cleanupPeriodDays": 365,
+  "model": "opus[1m]",
+  "theme": "dark",
+  "tui": "fullscreen",
+  "autoCompactEnabled": false,
+  "autoDreamEnabled": true,
+  "fileCheckpointingEnabled": false,
+  "promptSuggestionEnabled": false,
+  "skipDangerousModePermissionPrompt": true,
+  "voiceEnabled": true,
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "enabledPlugins": {
+    "cache-ttl-statusline@claude-statusline-widgets": false,
+    "typescript-lsp@claude-plugins-official": false,
+    "rust-analyzer-lsp@claude-plugins-official": false
+  }
+}

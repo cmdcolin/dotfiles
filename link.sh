@@ -21,7 +21,12 @@ for pkg in "$DOTFILES_DIR"/*/; do
   [[ "$name" =~ ^(img|OLD|statusline)$ ]] && continue
 
   while IFS= read -r src; do
-    link "$src" "$HOME/${src#"$pkg"}"
+    rel="${src#"$pkg"}"
+    # A package mirrors $HOME, so everything it links is a dotfile. Anything
+    # else at the package root is tooling that belongs to the package -- setup
+    # scripts, the config they read -- and mirroring it would drop it in $HOME.
+    [[ "$rel" == .* ]] || continue
+    link "$src" "$HOME/$rel"
   done < <(find "$pkg" -type f)
 done
 
