@@ -7,11 +7,21 @@
 
 use chrono::{DateTime, Local, TimeZone, Timelike, Utc};
 use serde_json::Value;
-use std::fs::File;
+use std::fs::{File, OpenOptions};
 use std::io::{Read, Seek, SeekFrom, Write};
+use std::path::{Path, PathBuf};
+use std::process::{Command, Stdio};
+use std::time::SystemTime;
 
 const HOUR_MS: i64 = 3_600_000;
 const FIVE_MIN_MS: i64 = 300_000;
+
+/// Rate-limit windows move slowly, and the reset countdown is computed locally
+/// from the cached `resets_at`, so only the percentage ages between refreshes.
+const USAGE_TTL_SECS: u64 = 300;
+const USAGE_LOCK_STALE_SECS: u64 = 120;
+/// Below this the window is not worth the width; it is the tail that matters.
+const USAGE_SHOW_AT_PCT: i64 = 50;
 
 const GREEN: &str = "32";
 const YELLOW: &str = "33";
@@ -177,6 +187,146 @@ fn clock(ms: i64) -> String {
     format!("{}:{:02}", hour, local.minute())
 }
 
+/// Refresh the usage cache out of band. Credentials are read here rather than
+/// in the renderer so the macOS keychain fallback costs nothing per render, and
+/// the token goes through the environment rather than argv, where `ps` would
+/// show it. The write is atomic so a render never sees a half-written file.
+const REFRESH_SH: &str = r#"
+trap 'rm -f "$LOCK"' EXIT
+CFG="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+token() { grep -o '"accessToken":"[^"]*"' | head -1 | cut -d'"' -f4; }
+TOK=$(cat "$CFG/.credentials.json" 2>/dev/null | token)
+[ -n "$TOK" ] || TOK=$(security find-generic-password -s 'Claude Code-credentials' -w 2>/dev/null | token)
+[ -n "$TOK" ] || exit 0
+TMP="$CACHE.$$"
+export TOK
+curl -sf --max-time 10 \
+  -H "Authorization: Bearer $TOK" \
+  -H 'anthropic-beta: oauth-2025-04-20' \
+  https://api.anthropic.com/api/oauth/usage -o "$TMP" || { rm -f "$TMP"; exit 0; }
+mv -f "$TMP" "$CACHE"
+"#;
+
+fn config_dir() -> PathBuf {
+    if let Some(dir) = std::env::var_os("CLAUDE_CONFIG_DIR") {
+        return PathBuf::from(dir);
+    }
+    PathBuf::from(std::env::var_os("HOME").unwrap_or_default()).join(".claude")
+}
+
+/// Which config dir this session is running under: `.claude2` -> `claude2`.
+fn profile_label() -> Option<String> {
+    let dir = config_dir();
+    let name = dir.file_name()?.to_str()?;
+    let name = name.strip_prefix('.').unwrap_or(name);
+    (!name.is_empty()).then(|| name.to_string())
+}
+
+fn usage_cache_path() -> PathBuf {
+    if let Some(path) = std::env::var_os("CLAUDE_STATUSLINE_USAGE_CACHE") {
+        return PathBuf::from(path);
+    }
+    // Per profile: separate config dirs can be separate accounts.
+    let profile = profile_label().unwrap_or_else(|| "default".to_string());
+    std::env::temp_dir().join(format!("claude-statusline-usage-{profile}.json"))
+}
+
+fn age_secs(path: &Path) -> Option<u64> {
+    let modified = std::fs::metadata(path).ok()?.modified().ok()?;
+    SystemTime::now()
+        .duration_since(modified)
+        .ok()
+        .map(|age| age.as_secs())
+}
+
+/// Fire-and-forget refresh. The lock keeps concurrent sessions from stampeding
+/// the endpoint; it is taken over if a previous refresh died holding it.
+fn spawn_refresh(cache: &Path) {
+    if std::env::var_os("CLAUDE_STATUSLINE_NO_REFRESH").is_some() {
+        return;
+    }
+    let lock = cache.with_extension("lock");
+    if let Some(age) = age_secs(&lock) {
+        if age < USAGE_LOCK_STALE_SECS {
+            return;
+        }
+        let _ = std::fs::remove_file(&lock);
+    }
+    if OpenOptions::new()
+        .write(true)
+        .create_new(true)
+        .open(&lock)
+        .is_err()
+    {
+        return;
+    }
+    let _ = Command::new("sh")
+        .arg("-c")
+        .arg(REFRESH_SH)
+        .env("CACHE", cache)
+        .env("LOCK", &lock)
+        .stdin(Stdio::null())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn();
+}
+
+/// The cached usage payload, refreshing it in the background when stale. A
+/// stale read still renders: the countdown comes from `resets_at`, not from
+/// when the fetch happened.
+fn read_usage() -> Option<Value> {
+    let path = usage_cache_path();
+    match age_secs(&path) {
+        None => {
+            spawn_refresh(&path);
+            return None;
+        }
+        Some(age) if age >= USAGE_TTL_SECS => spawn_refresh(&path),
+        _ => {}
+    }
+    serde_json::from_str(&std::fs::read_to_string(&path).ok()?).ok()
+}
+
+fn until(ms: i64) -> String {
+    let mins = ms / 60_000;
+    let (hours, mins) = (mins / 60, mins % 60);
+    if hours >= 24 {
+        format!("{}d{}h", hours / 24, hours % 24)
+    } else if hours >= 1 {
+        format!("{hours}h{mins}m")
+    } else {
+        format!("{mins}m")
+    }
+}
+
+fn usage_segment(usage: &Value, key: &str, label: &str) -> Option<String> {
+    let window = usage.get(key)?;
+    let pct = window.get("utilization").and_then(Value::as_f64)?.round() as i64;
+    if pct < USAGE_SHOW_AT_PCT {
+        return None;
+    }
+    let color = if pct >= 85 {
+        RED
+    } else if pct >= 65 {
+        YELLOW
+    } else {
+        GREEN
+    };
+    let mut segment = format!("{} {}", dim(label), paint(color, &format!("{pct}%")));
+    let left = window
+        .get("resets_at")
+        .and_then(Value::as_str)
+        .and_then(|at| DateTime::parse_from_rfc3339(at).ok())
+        .map(|at| at.timestamp_millis() - Utc::now().timestamp_millis());
+    if let Some(left) = left {
+        if left > 0 {
+            segment.push(' ');
+            segment.push_str(&dim(&until(left)));
+        }
+    }
+    Some(segment)
+}
+
 fn main() {
     let mut input = String::new();
     if std::io::stdin().read_to_string(&mut input).is_err() {
@@ -185,6 +335,10 @@ fn main() {
     let data: Value = serde_json::from_str(&input).unwrap_or(Value::Null);
 
     let mut parts: Vec<String> = Vec::new();
+
+    if let Some(profile) = profile_label() {
+        parts.push(dim(&profile));
+    }
 
     // Model — trim the verbose "(1M context)" suffix the harness sends.
     let model = data
@@ -291,6 +445,11 @@ fn main() {
                 ));
             }
         }
+    }
+
+    if let Some(usage) = read_usage() {
+        parts.extend(usage_segment(&usage, "five_hour", "5h"));
+        parts.extend(usage_segment(&usage, "seven_day", "7d"));
     }
 
     let sep = dim(" | ");

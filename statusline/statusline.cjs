@@ -6,6 +6,9 @@
 // it. Target is a few ms of CPU per render.
 
 const fs = require('fs')
+const os = require('os')
+const path = require('path')
+const { spawn } = require('child_process')
 
 const RESET = '\x1b[0m'
 const paint = (code, text) => `\x1b[${code}m${text}${RESET}`
@@ -13,6 +16,13 @@ const dim = text => paint(2, text)
 
 const HOUR_MS = 3600_000
 const FIVE_MIN_MS = 300_000
+
+// Rate-limit windows move slowly, and the reset countdown is computed locally
+// from the cached resets_at, so only the percentage ages between refreshes.
+const USAGE_TTL_MS = 300_000
+const USAGE_LOCK_STALE_MS = 120_000
+// Below this the window is not worth the width; it is the tail that matters.
+const USAGE_SHOW_AT_PCT = 50
 
 function readStdin() {
   try {
@@ -117,8 +127,130 @@ function clock(ms) {
   return `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')}`
 }
 
+// Refresh the usage cache out of band. Credentials are read here rather than
+// in the renderer so the macOS keychain fallback costs nothing per render, and
+// the token goes through the environment rather than argv, where `ps` would
+// show it. The write is atomic so a render never sees a half-written file.
+const REFRESH_SH = `
+trap 'rm -f "$LOCK"' EXIT
+CFG="\${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+token() { grep -o '"accessToken":"[^"]*"' | head -1 | cut -d'"' -f4; }
+TOK=$(cat "$CFG/.credentials.json" 2>/dev/null | token)
+[ -n "$TOK" ] || TOK=$(security find-generic-password -s 'Claude Code-credentials' -w 2>/dev/null | token)
+[ -n "$TOK" ] || exit 0
+TMP="$CACHE.$$"
+export TOK
+curl -sf --max-time 10 \\
+  -H "Authorization: Bearer $TOK" \\
+  -H 'anthropic-beta: oauth-2025-04-20' \\
+  https://api.anthropic.com/api/oauth/usage -o "$TMP" || { rm -f "$TMP"; exit 0; }
+mv -f "$TMP" "$CACHE"
+`
+
+const configDir = () =>
+  process.env.CLAUDE_CONFIG_DIR || path.join(os.homedir(), '.claude')
+
+// Which config dir this session is running under: .claude2 -> claude2.
+function profileLabel() {
+  const name = path.basename(configDir()).replace(/^\./, '')
+  return name || null
+}
+
+function usageCachePath() {
+  if (process.env.CLAUDE_STATUSLINE_USAGE_CACHE) {
+    return process.env.CLAUDE_STATUSLINE_USAGE_CACHE
+  }
+  // Per profile: separate config dirs can be separate accounts.
+  return path.join(
+    os.tmpdir(),
+    `claude-statusline-usage-${profileLabel() || 'default'}.json`,
+  )
+}
+
+function ageMs(file) {
+  try {
+    return Date.now() - fs.statSync(file).mtimeMs
+  } catch {
+    return null
+  }
+}
+
+// Fire-and-forget refresh. The lock keeps concurrent sessions from stampeding
+// the endpoint; it is taken over if a previous refresh died holding it.
+function spawnRefresh(cache) {
+  if (process.env.CLAUDE_STATUSLINE_NO_REFRESH) return
+  const lock = path.join(
+    path.dirname(cache),
+    path.basename(cache, path.extname(cache)) + '.lock',
+  )
+  const age = ageMs(lock)
+  if (age !== null) {
+    if (age < USAGE_LOCK_STALE_MS) return
+    try {
+      fs.unlinkSync(lock)
+    } catch {
+      /* another render won the race */
+    }
+  }
+  try {
+    fs.closeSync(fs.openSync(lock, 'wx'))
+  } catch {
+    return
+  }
+  const child = spawn('sh', ['-c', REFRESH_SH], {
+    detached: true,
+    stdio: 'ignore',
+    env: { ...process.env, CACHE: cache, LOCK: lock },
+  })
+  child.unref()
+}
+
+// The cached usage payload, refreshing it in the background when stale. A
+// stale read still renders: the countdown comes from resets_at, not from when
+// the fetch happened.
+function readUsage() {
+  const file = usageCachePath()
+  const age = ageMs(file)
+  if (age === null) {
+    spawnRefresh(file)
+    return null
+  }
+  if (age >= USAGE_TTL_MS) spawnRefresh(file)
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8'))
+  } catch {
+    return null
+  }
+}
+
+function until(ms) {
+  const total = Math.floor(ms / 60_000)
+  const hours = Math.floor(total / 60)
+  const mins = total % 60
+  if (hours >= 24) return `${Math.floor(hours / 24)}d${hours % 24}h`
+  if (hours >= 1) return `${hours}h${mins}m`
+  return `${mins}m`
+}
+
+function usageSegment(usage, key, label) {
+  const window = usage[key]
+  if (!window || typeof window.utilization !== 'number') return null
+  const pct = Math.round(window.utilization)
+  if (pct < USAGE_SHOW_AT_PCT) return null
+  const color = pct >= 85 ? 31 : pct >= 65 ? 33 : 32
+  let segment = `${dim(label)} ${paint(color, `${pct}%`)}`
+  if (window.resets_at) {
+    const left = Date.parse(window.resets_at) - Date.now()
+    if (left > 0) segment += ` ${dim(until(left))}`
+  }
+  return segment
+}
+
 const data = readStdin()
 const parts = []
+
+const profile = profileLabel()
+if (profile) parts.push(dim(profile))
 
 // Model — trim the verbose "(1M context)" suffix the harness sends.
 const model = (data.model && data.model.display_name) || (data.model && data.model.id)
@@ -174,6 +306,16 @@ if (tail && tail.ts) {
     const label = mins >= 1 ? `${mins}m` : `${Math.floor(left / 1000)}s`
     const color = left > 15 * 60_000 ? 32 : left > 5 * 60_000 ? 33 : 31
     parts.push(`${dim('cache')} ${paint(color, label)} ${dim(`(${clock(expiresAt)})`)}`)
+  }
+}
+
+const usage = readUsage()
+if (usage) {
+  for (const segment of [
+    usageSegment(usage, 'five_hour', '5h'),
+    usageSegment(usage, 'seven_day', '7d'),
+  ]) {
+    if (segment) parts.push(segment)
   }
 }
 

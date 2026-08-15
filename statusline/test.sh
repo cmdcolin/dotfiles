@@ -13,6 +13,13 @@ CJS=${CJS:-./statusline.cjs}
 FIX=$(mktemp -d)
 trap 'rm -rf "$FIX"' EXIT
 
+# Pin the profile so the label is not the tester's own config dir, point the
+# usage cache at a fixture, and forbid the background refresh outright: the
+# suite must never touch the network or the real credentials.
+export CLAUDE_CONFIG_DIR="$FIX/.claude-test"
+export CLAUDE_STATUSLINE_USAGE_CACHE="$FIX/usage.json"
+export CLAUDE_STATUSLINE_NO_REFRESH=1
+
 [ -x "$RS" ] || {
   echo "no binary at $RS — run: cargo build --release"
   exit 1
@@ -67,6 +74,12 @@ check() {
 # entry like -180 as one of its own CLI options.
 now_iso() { OFFSET_MIN=$1 node -e 'process.stdout.write(new Date(Date.now() + Number(process.env.OFFSET_MIN) * 60000).toISOString())'; }
 filesize() { wc -c <"$1" | tr -d ' '; }
+
+# Rewrite the usage cache: <5h pct> <5h reset mins> <7d pct> <7d reset mins>.
+usage_cache() {
+  printf '{"five_hour":{"utilization":%s,"resets_at":"%s"},"seven_day":{"utilization":%s,"resets_at":"%s"}}' \
+    "$1" "$(now_iso "$2")" "$3" "$(now_iso "$4")" >"$CLAUDE_STATUSLINE_USAGE_CACHE"
+}
 
 # --- fixtures -------------------------------------------------------------
 line false "$(now_iso 0)" 1000 48898 1h >"$FIX/basic.jsonl"
@@ -134,6 +147,55 @@ check "no model field" '$1.50' '{"transcript_path":"'"$FIX/basic.jsonl"'","cost"
 check "empty object" "" '{}'
 check "malformed json" "" 'not json at all'
 check "empty stdin" "" ''
+
+# --- profile + usage windows ----------------------------------------------
+B=$(payload "$FIX/basic.jsonl" "$O" "$D" 1)
+
+check "profile label" "claude-test |" "$B"
+
+# No cache yet: the windows are simply absent, never a placeholder.
+rm -f "$CLAUDE_STATUSLINE_USAGE_CACHE"
+check "usage absent" "cache" "$B"
+
+# Both windows under the threshold stay hidden — the common case, and the
+# reason the line does not grow for a session that is nowhere near a limit.
+usage_cache 3 110 20 4320
+check "usage below thresh" "cache" "$B"
+
+usage_cache 62 110 20 4320
+check "5h shown" "5h 62%" "$B"
+
+usage_cache 3 110 79 4320
+check "7d shown" "7d 79% 2d" "$B"
+
+usage_cache 91 110 88 4320
+check "both shown" "5h 91%" "$B"
+check "both shown 7d" "7d 88%" "$B"
+
+# Under an hour the countdown drops the hours component entirely. Asserted one
+# minute short, as the cache cases are: the countdown floors, and a fixture
+# minted "47 minutes out" is a hair under that by the time it renders.
+usage_cache 62 47 20 4320
+check "5h minutes only" "5h 62% 46m" "$B"
+
+# A window already past its reset shows no countdown rather than a negative.
+# The 7d window is pushed high here only so a separator follows the 5h one,
+# which is what makes the missing countdown assertable.
+usage_cache 62 -5 79 4320
+check "5h reset passed" "5h 62% |" "$B"
+
+# Stale cache still renders: the countdown is derived from resets_at, so only
+# the percentage ages. Backdated well past USAGE_TTL, which is why the suite
+# sets CLAUDE_STATUSLINE_NO_REFRESH.
+usage_cache 62 110 20 4320
+node -e 'const t=Date.now()/1000-3600;require("fs").utimesSync(process.env.CLAUDE_STATUSLINE_USAGE_CACHE,t,t)'
+check "stale still renders" "5h 62%" "$B"
+
+printf 'not json' >"$CLAUDE_STATUSLINE_USAGE_CACHE"
+check "corrupt cache" "cache" "$B"
+
+printf '{"five_hour":null,"seven_day":{}}' >"$CLAUDE_STATUSLINE_USAGE_CACHE"
+check "null window" "cache" "$B"
 
 echo
 echo "$pass passed, $fail failed"
