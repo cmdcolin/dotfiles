@@ -35,8 +35,10 @@ symlinking, so `statusline` is in link.sh's exclusion list alongside `plugin`.
 - **profile** — the `CLAUDE_CONFIG_DIR` basename with its dot stripped, so
   parallel configs (`~/.claude`, `~/.claude2`) are told apart at a glance.
 - **context** — green/yellow/red at 65% / 85%. The window is 1M when the model
-  id carries `[1m]`, else 200k; if measured usage exceeds that, 1M is assumed
-  anyway.
+  id carries `[1m]` or the display name ends in `(1M context)`, else 200k. If
+  measured usage exceeds the assumed window, 1M is assumed anyway — the count
+  is itself proof the window is bigger, since the API would have rejected the
+  request otherwise.
 - **burn rate** — cost per wall-clock hour, hidden below a minute where the
   division is meaningless. Prefers `cost.total_duration_ms`, but the harness is
   not confirmed to send it, so it falls back to the transcript's own
@@ -115,13 +117,13 @@ because the suite must never touch the network or real credentials.
 cargo build --release && ./test.sh
 ```
 
-53 cases over generated fixtures. Asserts the Rust and Node builds render
+54 cases over generated fixtures. Asserts the Rust and Node builds render
 byte-identically, and covers what is easy to get wrong: sidechain skipping,
-read-window widening, TTL inherited from an older turn, the 200k->1M promotion,
-both burn-rate sources, and the usage windows either side of their threshold —
-including a stale cache, a corrupt one, and a reset that has already passed. A
-`want` prefixed with `!` asserts absence instead. Fixtures are synthesised per
-run so the suite does not rot when real sessions are deleted.
+read-window widening, TTL inherited from an older turn, both 1M signals and the
+200k->1M promotion, both burn-rate sources, and the usage windows either side of
+their threshold — including a stale cache, a corrupt one, and a reset that has
+already passed. A `want` prefixed with `!` asserts absence instead. Fixtures are
+synthesised per run so the suite does not rot when real sessions are deleted.
 
 The refresh cases are the only ones that fork it for real, so they drop
 `CLAUDE_STATUSLINE_NO_REFRESH` and put a stub `curl` on `PATH` with fake

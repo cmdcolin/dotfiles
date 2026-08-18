@@ -393,13 +393,12 @@ fn main() {
             .and_then(Value::as_str)
             .unwrap_or_default()
             .to_lowercase();
-        let mut limit = if id.contains("[1m]") || id.contains("-1m") {
-            1_000_000
-        } else {
-            200_000
-        };
+        let one_m = id.contains("[1m]")
+            || id.contains("-1m")
+            || matches!(model, Some(m) if m.ends_with("(1M context)"));
+        let mut limit = if one_m { 1_000_000 } else { 200_000 };
         if tail.used > limit {
-            limit = 1_000_000; // model id didn't advertise it; trust the count
+            limit = 1_000_000; // neither id nor label advertised it; trust the count
         }
 
         let pct = ((tail.used as f64 / limit as f64) * 100.0).round() as i64;
