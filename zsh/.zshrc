@@ -24,6 +24,7 @@ alias mkenv="python -m venv .venv && source .venv/bin/activate"
 alias aenv="source .venv/bin/activate"
 
 alias y="pnpm"
+alias dx="claude --verbose --model haiku -p --dangerously-skip-permissions"
 alias python="python3"
 alias g="git status"
 alias yy="pnpm lint"
@@ -33,6 +34,7 @@ alias fff="yyy && ff"
 # Stage everything and amend — "oops, forgot a file".
 alias gggg="git add . && git commit --amend --no-edit"
 alias mm='git reset --hard origin/main'
+alias v="vim"
 # Prepends [skip ci] to last commit to prevent CI on push.
 alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
 alias ggl="glances --disable-plugin gpu"
@@ -108,6 +110,9 @@ vaporwave() { ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "${
 vvid() { ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
 vpv() { mpv --speed="${2:-0.66}" --audio-pitch-correction=no "$1"; }
 vp() { yt-dlp -f 'bestaudio[ext=m4a]' -o - "$1" | ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${2:-0.66},aresample=44100"; }
+
+# Resize video to percentage of original (default 50%).
+res() { local scale="${2:-50}"; ffmpeg -i "$1" -vf "scale=iw*${scale}/100:ih*${scale}/100" "${1%.*}_${scale}.${1##*.}"; }
 
 # Keep failed commands in history.
 zshaddhistory() { return 0; }
@@ -225,3 +230,5 @@ cleanup() {
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
