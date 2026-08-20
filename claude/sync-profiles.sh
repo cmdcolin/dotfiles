@@ -28,7 +28,20 @@ for cfg in "$HOME"/.claude "$HOME"/.claude[0-9]; do
   [ -f "$settings" ] || { echo "skip $cfg (no settings.json)"; continue; }
 
   echo "=== $cfg ==="
-  BASE="$BASE" CFG="$cfg" SETTINGS="$settings" DRY="$DRY" python3 - <<'PY'
+
+  # Build first: without a Rust toolchain install.sh only lays down the Node
+  # fallback, and the command written below has to name whichever one exists.
+  if [ -z "$DRY" ]; then
+    CLAUDE_CONFIG_DIR="$cfg" "$DIR/../statusline/install.sh" >/dev/null
+    echo "  statusline installed"
+  fi
+  if [ -x "$cfg/bin/statusline" ]; then
+    cmd="$cfg/bin/statusline"
+  else
+    cmd="node $cfg/statusline.cjs"
+  fi
+
+  BASE="$BASE" CFG="$cfg" CMD="$cmd" SETTINGS="$settings" DRY="$DRY" python3 - <<'PY'
 import json, os, shutil, sys
 
 base = json.load(open(os.environ["BASE"]))
@@ -47,10 +60,7 @@ for k, v in base.items():
         new[k] = v
 
 # Points into this profile, so it cannot come from a shared file.
-new["statusLine"] = {
-    "type": "command",
-    "command": os.path.join(os.environ["CFG"], "bin", "statusline"),
-}
+new["statusLine"] = {"type": "command", "command": os.environ["CMD"]}
 
 changes = [k for k in sorted(set(cur) | set(new)) if cur.get(k) != new.get(k)]
 if not changes:
@@ -70,11 +80,6 @@ with open(path, "w") as f:
     f.write("\n")
 print(f"  written (backup at {os.path.basename(path)}.bak)")
 PY
-
-  if [ -z "$DRY" ]; then
-    CLAUDE_CONFIG_DIR="$cfg" "$DIR/../statusline/install.sh" >/dev/null
-    echo "  statusline installed"
-  fi
 done
 
 echo

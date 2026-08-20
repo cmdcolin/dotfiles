@@ -267,6 +267,21 @@ link_dotfiles() {
   log_success "Dotfiles linked."
 }
 
+# Not part of link.sh: the statusline is compiled and lands in a config dir that
+# varies per profile. sync-profiles.sh builds it into every ~/.claude* and
+# points that profile's settings.json at its own copy. Profiles only exist once
+# Claude has been run, so on a fresh machine this does nothing and wants a
+# re-run afterwards.
+setup_claude_profiles() {
+  log_info "Setting up Claude profiles and statusline..."
+  if ! command -v python3 &>/dev/null; then
+    log_error "python3 not found. Skipping Claude profile sync."
+    return 1
+  fi
+  "$DOTFILES_DIR/claude/sync-profiles.sh"
+  log_success "Claude profiles synced."
+}
+
 main() {
   detect_os
   get_host "$1"
@@ -293,6 +308,7 @@ main() {
 
   install_zprezto
   link_dotfiles
+  setup_claude_profiles || log_info "Continuing without the Claude statusline."
 
   log_success "Environment setup complete!"
   log_info "Please restart your shell or source your shell configuration file (e.g., 'source ~/.zshrc') for all changes to take effect."
