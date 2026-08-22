@@ -145,6 +145,53 @@ function refreshScript() {
   }
 }
 
+// Walks up from `start` looking for `.git`, so a branch shows from any
+// subdirectory of a repo, not just its root. Handles worktrees and
+// submodules, whose `.git` is a file pointing elsewhere via `gitdir: <path>`.
+function findGitDir(start) {
+  let dir = start
+  for (;;) {
+    const candidate = path.join(dir, '.git')
+    let stat
+    try {
+      stat = fs.statSync(candidate)
+    } catch {
+      stat = null
+    }
+    if (stat && stat.isDirectory()) return candidate
+    if (stat && stat.isFile()) {
+      let contents
+      try {
+        contents = fs.readFileSync(candidate, 'utf8').trim()
+      } catch {
+        return null
+      }
+      const match = contents.match(/^gitdir:\s*(.+)$/)
+      if (!match) return null
+      return path.isAbsolute(match[1]) ? match[1] : path.join(dir, match[1])
+    }
+    const parent = path.dirname(dir)
+    if (parent === dir) return null
+    dir = parent
+  }
+}
+
+// Branch name straight from .git/HEAD — no git subprocess. Detached HEAD
+// renders as a short hash instead of the ref line.
+function gitBranch(cwd) {
+  const gitDir = findGitDir(cwd)
+  if (!gitDir) return null
+  let head
+  try {
+    head = fs.readFileSync(path.join(gitDir, 'HEAD'), 'utf8').trim()
+  } catch {
+    return null
+  }
+  const match = head.match(/^ref: refs\/heads\/(.+)$/)
+  if (match) return match[1]
+  return head.length >= 7 ? head.slice(0, 7) : null
+}
+
 // Which config dir this session is running under: .claude2 -> claude2.
 function profileLabel() {
   const name = path.basename(configDir()).replace(/^\./, '')
@@ -291,6 +338,9 @@ const parts = []
 
 const profile = profileLabel()
 if (profile) parts.push(dim(profile))
+
+const branch = data.cwd ? gitBranch(data.cwd) : null
+if (branch) parts.push(paint(35, branch))
 
 // Model — trim the verbose "(1M context)" suffix the harness sends.
 const model = (data.model && data.model.display_name) || (data.model && data.model.id)

@@ -36,11 +36,15 @@ line() {
     "$1" "$2" "$3" "$4" "$([ "$5" = 1h ] && echo "$3" || echo 0)" "$([ "$5" = 5m ] && echo "$3" || echo 0)"
 }
 
-payload() { # transcript id display cost [duration_ms]
+payload() { # transcript id display cost [duration_ms] [cwd]
+  local cwd_json=""
+  [ -n "${6:-}" ] && cwd_json=",\"cwd\":\"$6\""
   if [ -n "${5:-}" ]; then
-    printf '{"transcript_path":"%s","model":{"id":"%s","display_name":"%s"},"cost":{"total_cost_usd":%s,"total_duration_ms":%s}}' "$@"
+    printf '{"transcript_path":"%s","model":{"id":"%s","display_name":"%s"},"cost":{"total_cost_usd":%s,"total_duration_ms":%s}%s}' \
+      "$1" "$2" "$3" "$4" "$5" "$cwd_json"
   else
-    printf '{"transcript_path":"%s","model":{"id":"%s","display_name":"%s"},"cost":{"total_cost_usd":%s}}' "$1" "$2" "$3" "$4"
+    printf '{"transcript_path":"%s","model":{"id":"%s","display_name":"%s"},"cost":{"total_cost_usd":%s}%s}' \
+      "$1" "$2" "$3" "$4" "$cwd_json"
   fi
 }
 
@@ -117,6 +121,18 @@ line false "$(now_iso 0)" 5000 894898 1h >"$FIX/huge.jsonl"
   line false "$(now_iso 0)" 0 49898 none
 } >"$FIX/nocreate.jsonl"
 
+# git branch fixtures: HEAD files are hand-written, not from a real `git init`,
+# since the renderer only ever reads them and never shells out.
+mkdir -p "$FIX/repo/.git" "$FIX/repo/sub/sub2" "$FIX/nogit" "$FIX/detached/.git"
+printf 'ref: refs/heads/main\n' >"$FIX/repo/.git/HEAD"
+printf 'abcdef1234567890abcdef1234567890abcdef12\n' >"$FIX/detached/.git/HEAD"
+
+# linked worktree: a `.git` file pointing at the main repo's
+# `.git/worktrees/<name>`, which holds its own HEAD.
+mkdir -p "$FIX/repo/.git/worktrees/feature" "$FIX/worktree"
+printf 'ref: refs/heads/feature-branch\n' >"$FIX/repo/.git/worktrees/feature/HEAD"
+printf 'gitdir: %s/repo/.git/worktrees/feature\n' "$FIX" >"$FIX/worktree/.git"
+
 farback_size=$(filesize "$FIX/farback.jsonl")
 echo "fixture sizes: farback=$farback_size bytes (window widening $([ "$farback_size" -gt 65536 ] && echo exercised || echo 'NOT exercised'))"
 echo
@@ -150,6 +166,14 @@ check "missing file" '$0.50' "$(payload "/nope.jsonl" "$O" "$D" 0.5)"
 check "zero cost" '$0.00' "$(payload "$FIX/basic.jsonl" "$O" "$D" 0)"
 check "no cost field" "50k/1M" '{"transcript_path":"'"$FIX/basic.jsonl"'","model":{"id":"'"$O"'","display_name":"'"$D"'"}}'
 check "no model field" '$1.50' '{"transcript_path":"'"$FIX/basic.jsonl"'","cost":{"total_cost_usd":1.5}}'
+
+# --- git branch -------------------------------------------------------------
+check "git branch" "main" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo")"
+check "git branch nested" "main" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo/sub/sub2")"
+check "git branch worktree" "feature-branch" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/worktree")"
+check "git branch detached" "abcdef1" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/detached")"
+check "no git repo" "!main" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/nogit")"
+check "no cwd" "!main" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1)"
 check "empty object" "" '{}'
 check "malformed json" "" 'not json at all'
 check "empty stdin" "" ''

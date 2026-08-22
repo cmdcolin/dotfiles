@@ -30,6 +30,7 @@ const GREEN: &str = "32";
 const YELLOW: &str = "33";
 const RED: &str = "31";
 const CYAN: &str = "36";
+const MAGENTA: &str = "35";
 
 fn paint(code: &str, text: &str) -> String {
     format!("\x1b[{code}m{text}\x1b[0m")
@@ -206,6 +207,43 @@ fn config_dir() -> PathBuf {
     PathBuf::from(std::env::var_os("HOME").unwrap_or_default()).join(".claude")
 }
 
+/// Walks up from `start` looking for `.git`, so a branch shows from any
+/// subdirectory of a repo, not just its root. Handles worktrees and
+/// submodules, whose `.git` is a file pointing elsewhere via `gitdir: <path>`.
+fn find_git_dir(start: &Path) -> Option<PathBuf> {
+    let mut dir = start.to_path_buf();
+    loop {
+        let candidate = dir.join(".git");
+        if candidate.is_dir() {
+            return Some(candidate);
+        }
+        if candidate.is_file() {
+            let contents = std::fs::read_to_string(&candidate).ok()?;
+            let gitdir = contents.trim().strip_prefix("gitdir:")?.trim();
+            let gitdir = PathBuf::from(gitdir);
+            return Some(if gitdir.is_absolute() {
+                gitdir
+            } else {
+                dir.join(gitdir)
+            });
+        }
+        if !dir.pop() {
+            return None;
+        }
+    }
+}
+
+/// Branch name straight from `.git/HEAD` — no `git` subprocess. Detached HEAD
+/// renders as a short hash instead of the ref line.
+fn git_branch(cwd: &str) -> Option<String> {
+    let head = std::fs::read_to_string(find_git_dir(Path::new(cwd))?.join("HEAD")).ok()?;
+    let head = head.trim();
+    match head.strip_prefix("ref: refs/heads/") {
+        Some(name) => Some(name.to_string()),
+        None => (head.len() >= 7).then(|| head[..7].to_string()),
+    }
+}
+
 /// Which config dir this session is running under: `.claude2` -> `claude2`.
 fn profile_label() -> Option<String> {
     let dir = config_dir();
@@ -367,6 +405,10 @@ fn main() {
 
     if let Some(profile) = profile_label() {
         parts.push(dim(&profile));
+    }
+
+    if let Some(branch) = data.get("cwd").and_then(Value::as_str).and_then(git_branch) {
+        parts.push(paint(MAGENTA, &branch));
     }
 
     // Model — trim the verbose "(1M context)" suffix the harness sends.

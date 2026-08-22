@@ -1,10 +1,10 @@
 # statusline
 
 Claude Code statusline:
-`profile | model | context | cost + burn rate | cache expiry | rate-limit windows`.
+`profile | branch | model | context | cost + burn rate | cache expiry | rate-limit windows`.
 
 ```
-claude2 | Opus 5 1M | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
+claude2 | main | Opus 5 1M | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
 ```
 
 Replaces the `cache-ttl-statusline` plugin, which spent ~1200 ms per render
@@ -36,6 +36,9 @@ The repo's top-level `install.sh` runs it once per profile through
 
 - **profile** — the `CLAUDE_CONFIG_DIR` basename with its dot stripped, so
   parallel configs (`~/.claude`, `~/.claude2`) are told apart at a glance.
+- **branch** — read straight from `.git/HEAD` under `cwd` (walking up to find
+  it, and following a worktree/submodule's `gitdir:` redirect), never a `git`
+  subprocess. Detached HEAD shows a short hash. Absent outside a git repo.
 - **context** — green/yellow/red at 65% / 85%. The window is 1M when the model
   id carries `[1m]` or the display name ends in `(1M context)`, else 200k. If
   measured usage exceeds the assumed window, 1M is assumed anyway — the count
@@ -52,7 +55,9 @@ The repo's top-level `install.sh` runs it once per profile through
   the reset, coloured on the same 65% / 85% scale. Each is hidden below 50%,
   where it is only taking up width.
 
-No cwd or git branch, deliberately — that would add a subprocess per render.
+No cwd, deliberately — it would add little over the branch name and this
+already reads `.git/HEAD` for that. The branch itself costs a handful of
+`stat`/`read` calls, not a `git` subprocess — see below.
 
 ## Rate-limit windows
 
@@ -119,13 +124,15 @@ because the suite must never touch the network or real credentials.
 cargo build --release && ./test.sh
 ```
 
-54 cases over generated fixtures. Asserts the Rust and Node builds render
+59 cases over generated fixtures. Asserts the Rust and Node builds render
 byte-identically, and covers what is easy to get wrong: sidechain skipping,
 read-window widening, TTL inherited from an older turn, both 1M signals and the
-200k->1M promotion, both burn-rate sources, and the usage windows either side of
+200k->1M promotion, both burn-rate sources, the usage windows either side of
 their threshold — including a stale cache, a corrupt one, and a reset that has
-already passed. A `want` prefixed with `!` asserts absence instead. Fixtures are
-synthesised per run so the suite does not rot when real sessions are deleted.
+already passed — and git branch resolution: a nested subdirectory, a linked
+worktree's `gitdir:` redirect, detached HEAD, and no repo at all. A `want`
+prefixed with `!` asserts absence instead. Fixtures are synthesised per run so
+the suite does not rot when real sessions are deleted.
 
 The refresh cases are the only ones that fork it for real, so they drop
 `CLAUDE_STATUSLINE_NO_REFRESH` and put a stub `curl` on `PATH` with fake
