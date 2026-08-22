@@ -424,6 +424,15 @@ fn main() {
         parts.push(paint(CYAN, &label));
     }
 
+    if let Some(level) = data.pointer("/effort/level").and_then(Value::as_str) {
+        let color = match level {
+            "low" | "medium" => GREEN,
+            "high" => YELLOW,
+            _ => RED, // xhigh, max, and anything future
+        };
+        parts.push(paint(color, level));
+    }
+
     let tail = data
         .get("transcript_path")
         .and_then(Value::as_str)

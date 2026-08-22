@@ -1,10 +1,10 @@
 # statusline
 
 Claude Code statusline:
-`profile | branch | model | context | cost + burn rate | cache expiry | rate-limit windows`.
+`profile | branch | model | effort | context | cost + burn rate | cache expiry | rate-limit windows`.
 
 ```
-claude2 | main | Opus 5 1M | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
+claude2 | main | Opus 5 1M | high | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
 ```
 
 Replaces the `cache-ttl-statusline` plugin, which spent ~1200 ms per render
@@ -39,6 +39,9 @@ The repo's top-level `install.sh` runs it once per profile through
 - **branch** — read straight from `.git/HEAD` under `cwd` (walking up to find
   it, and following a worktree/submodule's `gitdir:` redirect), never a `git`
   subprocess. Detached HEAD shows a short hash. Absent outside a git repo.
+- **effort** — the session's reasoning-effort level (`low`/`medium` green,
+  `high` yellow, `xhigh`/`max` red), read from `effort.level`. Absent when the
+  current model does not support configurable effort.
 - **context** — green/yellow/red at 65% / 85%. The window is 1M when the model
   id carries `[1m]` or the display name ends in `(1M context)`, else 200k. If
   measured usage exceeds the assumed window, 1M is assumed anyway — the count

@@ -346,6 +346,12 @@ if (branch) parts.push(paint(35, branch))
 const model = (data.model && data.model.display_name) || (data.model && data.model.id)
 if (model) parts.push(paint(36, model.replace(/\s*\(1M context\)$/, ' 1M')))
 
+const effortLevel = data.effort && data.effort.level
+if (typeof effortLevel === 'string') {
+  const effortColor = { low: 32, medium: 32, high: 33 }[effortLevel] || 31 // xhigh, max, and anything future
+  parts.push(paint(effortColor, effortLevel))
+}
+
 const tail = data.transcript_path ? readTail(data.transcript_path) : null
 
 if (tail) {

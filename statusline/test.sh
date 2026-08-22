@@ -167,6 +167,15 @@ check "zero cost" '$0.00' "$(payload "$FIX/basic.jsonl" "$O" "$D" 0)"
 check "no cost field" "50k/1M" '{"transcript_path":"'"$FIX/basic.jsonl"'","model":{"id":"'"$O"'","display_name":"'"$D"'"}}'
 check "no model field" '$1.50' '{"transcript_path":"'"$FIX/basic.jsonl"'","cost":{"total_cost_usd":1.5}}'
 
+# --- effort -----------------------------------------------------------------
+effort_payload() { # level
+  printf '{"transcript_path":"%s","model":{"id":"%s","display_name":"%s"},"cost":{"total_cost_usd":1},"effort":{"level":"%s"}}' \
+    "$FIX/basic.jsonl" "$O" "$D" "$1"
+}
+check "effort low" "low" "$(effort_payload low)"
+check "effort high" "high" "$(effort_payload high)"
+check "effort xhigh" "xhigh" "$(effort_payload xhigh)"
+
 # --- git branch -------------------------------------------------------------
 check "git branch" "main" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo")"
 check "git branch nested" "main" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo/sub/sub2")"
