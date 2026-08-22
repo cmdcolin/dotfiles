@@ -25,9 +25,23 @@ fail() {
 token() { grep -o '"accessToken":"[^"]*"' | head -1 | cut -d'"' -f4; }
 
 CFG="${CLAUDE_CONFIG_DIR:-$HOME/.claude}"
+CFG=${CFG%/}
+
+# Every profile but the default keeps its keychain entry under a service name
+# suffixed with the first 8 hex of the sha256 of its config dir, so the bare
+# name read from ~/.claude2 hands back the default profile's account. There is
+# deliberately no fall back to the bare name: no windows at all beats a
+# confident percentage belonging to somebody else's account.
+service() {
+  [ "$CFG" = "$HOME/.claude" ] && { printf 'Claude Code-credentials'; return; }
+  if command -v shasum >/dev/null 2>&1; then h=$(printf '%s' "$CFG" | shasum -a 256)
+  else h=$(printf '%s' "$CFG" | sha256sum); fi
+  printf 'Claude Code-credentials-%s' "$(printf '%s' "$h" | cut -c1-8)"
+}
+
 TOK=$(cat "$CFG/.credentials.json" 2>/dev/null | token)
 [ -n "$TOK" ] ||
-  TOK=$(security find-generic-password -s 'Claude Code-credentials' -w 2>/dev/null | token)
+  TOK=$(security find-generic-password -s "$(service)" -w 2>/dev/null | token)
 [ -n "$TOK" ] || fail
 
 TMP="$CACHE.$$"

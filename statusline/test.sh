@@ -353,6 +353,39 @@ refresh_case "success writes cache" "$CACHE" "$RS"
 rm -f "$CACHE" "$FAILF"
 refresh_case "node build refreshes" "$CACHE" "node $CJS"
 
+# --- keychain service name -------------------------------------------------
+# With no credentials file the token comes from the keychain, whose entry is per
+# profile. The stub answers only the suffixed name this config dir hashes to, so
+# a cache appearing at all is the proof the right profile was asked for.
+rm -f "$CLAUDE_CONFIG_DIR/.credentials.json"
+mk_security() {
+  cat >"$FIX/bin/security" <<STUB
+#!/bin/sh
+svc=""; while [ \$# -gt 0 ]; do [ "\$1" = "-s" ] && svc=\$2; shift; done
+[ "\$svc" = "$1" ] || exit 44
+printf '{"claudeAiOauth":{"accessToken":"keychain-token"}}'
+STUB
+  chmod +x "$FIX/bin/security"
+}
+
+rm -f "$CACHE" "$FAILF" "$LOCKF"
+mk_security "Claude Code-credentials-$(printf '%s' "$CLAUDE_CONFIG_DIR" | shasum -a 256 | cut -c1-8)"
+refresh_case "keychain per profile" "$CACHE" "$RS"
+
+# The bare name is the default profile's. Answering with it from a non-default
+# config dir would report another account's windows, so it must not be a
+# fallback -- the refresh fails instead.
+rm -f "$CACHE" "$FAILF" "$LOCKF"
+mk_security "Claude Code-credentials"
+refresh_case "no bare-name fallback" "$FAILF" "$RS"
+[ ! -f "$CACHE" ] &&
+  { pass=$((pass + 1)); printf '  ok    %-26s no cache written\n' "wrong profile not cached"; } ||
+  { fail=$((fail + 1)); printf '  FAIL  %-26s cache written\n' "wrong profile not cached"; }
+
+rm -f "$FIX/bin/security"
+printf '{"claudeAiOauth":{"accessToken":"fake-token-for-tests"}}' \
+  >"$CLAUDE_CONFIG_DIR/.credentials.json"
+
 # A missing refresh.sh must not leave a lock behind, or the next 120s of
 # renders are wedged waiting on a refresh that never started.
 rm -f "$CACHE" "$FAILF" "$LOCKF"

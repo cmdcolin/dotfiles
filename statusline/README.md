@@ -103,6 +103,13 @@ Details that are easy to get wrong:
 
 - **The cache is per profile.** Separate config dirs can be separate accounts,
   so a shared cache would show one account's usage under the other's name.
+- **So are the credentials.** `$CLAUDE_CONFIG_DIR/.credentials.json` already is,
+  but on macOS the token usually lives in the keychain, where Claude Code names
+  the entry `Claude Code-credentials` for `~/.claude` and suffixes it with the
+  first 8 hex of the sha256 of the config dir for every other profile. Reading
+  the bare name from `~/.claude2` returns the default profile's account — a
+  per-profile cache faithfully recording the wrong account. There is no fall
+  back to the bare name: no windows beats another account's percentages.
 - **Concurrent sessions do not stampede.** The refresh is guarded by an
   `O_EXCL` lock file, taken over only if a previous refresh died holding it —
   this machine runs several sessions at once, each rendering constantly.
@@ -127,7 +134,7 @@ because the suite must never touch the network or real credentials.
 cargo build --release && ./test.sh
 ```
 
-59 cases over generated fixtures. Asserts the Rust and Node builds render
+65 cases over generated fixtures. Asserts the Rust and Node builds render
 byte-identically, and covers what is easy to get wrong: sidechain skipping,
 read-window widening, TTL inherited from an older turn, both 1M signals and the
 200k->1M promotion, both burn-rate sources, the usage windows either side of
@@ -141,7 +148,8 @@ The refresh cases are the only ones that fork it for real, so they drop
 `CLAUDE_STATUSLINE_NO_REFRESH` and put a stub `curl` on `PATH` with fake
 credentials — still no network — covering failure counting, backoff suppressing
 a retry, backoff expiry letting exactly one through, an HTML body, success
-clearing the counter, and a missing `refresh.sh` leaving no stale lock.
+clearing the counter, the keychain service name being the profile's own rather
+than the bare one, and a missing `refresh.sh` leaving no stale lock.
 
 ## Notes
 
