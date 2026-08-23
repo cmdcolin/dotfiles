@@ -31,6 +31,7 @@ const YELLOW: &str = "33";
 const RED: &str = "31";
 const CYAN: &str = "36";
 const MAGENTA: &str = "35";
+const BLUE: &str = "34";
 
 fn paint(code: &str, text: &str) -> String {
     format!("\x1b[{code}m{text}\x1b[0m")
@@ -233,6 +234,28 @@ fn find_git_dir(start: &Path) -> Option<PathBuf> {
     }
 }
 
+/// Directory holding `.git` (dir or file), walking up from `start`. For a
+/// linked worktree this is the worktree's own checkout directory, not the
+/// main repo's — its basename is what `git worktree list` calls it.
+fn find_worktree_root(start: &Path) -> Option<PathBuf> {
+    let mut dir = start.to_path_buf();
+    loop {
+        if dir.join(".git").exists() {
+            return Some(dir);
+        }
+        if !dir.pop() {
+            return None;
+        }
+    }
+}
+
+fn worktree_name(cwd: &str) -> Option<String> {
+    find_worktree_root(Path::new(cwd))?
+        .file_name()?
+        .to_str()
+        .map(|s| s.to_string())
+}
+
 /// Branch name straight from `.git/HEAD` — no `git` subprocess. Detached HEAD
 /// renders as a short hash instead of the ref line.
 fn git_branch(cwd: &str) -> Option<String> {
@@ -407,7 +430,13 @@ fn main() {
         parts.push(dim(&profile));
     }
 
-    if let Some(branch) = data.get("cwd").and_then(Value::as_str).and_then(git_branch) {
+    let cwd = data.get("cwd").and_then(Value::as_str);
+
+    if let Some(name) = cwd.and_then(worktree_name) {
+        parts.push(paint(BLUE, &name));
+    }
+
+    if let Some(branch) = cwd.and_then(git_branch) {
         parts.push(paint(MAGENTA, &branch));
     }
 

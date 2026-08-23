@@ -1,10 +1,10 @@
 # statusline
 
 Claude Code statusline:
-`profile | branch | model | effort | context | cost + burn rate | cache expiry | rate-limit windows`.
+`profile | worktree | branch | model | effort | context | cost + burn rate | cache expiry | rate-limit windows`.
 
 ```
-claude2 | main | Opus 5 1M | high | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
+claude2 | dotfiles | main | Opus 5 1M | high | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
 ```
 
 Replaces the `cache-ttl-statusline` plugin, which spent ~1200 ms per render
@@ -36,6 +36,10 @@ The repo's top-level `install.sh` runs it once per profile through
 
 - **profile** — the `CLAUDE_CONFIG_DIR` basename with its dot stripped, so
   parallel configs (`~/.claude`, `~/.claude2`) are told apart at a glance.
+- **worktree** — basename of the directory holding `.git` (dir or file),
+  walking up from `cwd`. For a linked worktree (e.g.
+  `.claude/worktrees/foo`) this is `foo`, not the main repo's name — the same
+  name `git worktree list` shows. Absent outside a git repo.
 - **branch** — read straight from `.git/HEAD` under `cwd` (walking up to find
   it, and following a worktree/submodule's `gitdir:` redirect), never a `git`
   subprocess. Detached HEAD shows a short hash. Absent outside a git repo.

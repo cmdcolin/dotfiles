@@ -176,6 +176,12 @@ check "effort low" "low" "$(effort_payload low)"
 check "effort high" "high" "$(effort_payload high)"
 check "effort xhigh" "xhigh" "$(effort_payload xhigh)"
 
+# --- worktree name -----------------------------------------------------------
+check "worktree name" "repo" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo")"
+check "worktree name nested" "repo" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo/sub/sub2")"
+check "worktree name linked" "worktree" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/worktree")"
+check "no worktree name" "!repo" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/nogit")"
+
 # --- git branch -------------------------------------------------------------
 check "git branch" "main" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo")"
 check "git branch nested" "main" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo/sub/sub2")"

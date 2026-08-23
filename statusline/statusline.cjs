@@ -176,6 +176,24 @@ function findGitDir(start) {
   }
 }
 
+// Directory holding .git (dir or file), walking up from `start`. For a linked
+// worktree this is the worktree's own checkout directory, not the main
+// repo's — its basename is what `git worktree list` calls it.
+function findWorktreeRoot(start) {
+  let dir = start
+  for (;;) {
+    if (fs.existsSync(path.join(dir, '.git'))) return dir
+    const parent = path.dirname(dir)
+    if (parent === dir) return null
+    dir = parent
+  }
+}
+
+function worktreeName(cwd) {
+  const root = findWorktreeRoot(cwd)
+  return root ? path.basename(root) : null
+}
+
 // Branch name straight from .git/HEAD — no git subprocess. Detached HEAD
 // renders as a short hash instead of the ref line.
 function gitBranch(cwd) {
@@ -338,6 +356,9 @@ const parts = []
 
 const profile = profileLabel()
 if (profile) parts.push(dim(profile))
+
+const worktree = data.cwd ? worktreeName(data.cwd) : null
+if (worktree) parts.push(paint(34, worktree))
 
 const branch = data.cwd ? gitBranch(data.cwd) : null
 if (branch) parts.push(paint(35, branch))
