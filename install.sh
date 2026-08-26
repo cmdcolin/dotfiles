@@ -156,7 +156,7 @@ install_labserver_prebuilts() {
 install_fnm() {
   log_info "Installing FNM (Node Version Manager)..."
   if ! command -v fnm &>/dev/null; then
-    curl -fsSL https://fnm.io/install | bash
+    curl -fsSL https://fnm.vercel.app/install | bash || true
     hash -r
   fi
   command -v fnm &>/dev/null && eval "$(fnm env)"
