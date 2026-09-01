@@ -24,9 +24,9 @@ fi
 # Rust toolchain, and test.sh diffs the two.
 install -m644 "$DIR/statusline.cjs" "$CFG/statusline.cjs"
 
-# Both builds fork this for the usage windows. Without it they render every
-# other field and simply omit those two.
-install -m755 "$DIR/refresh.sh" "$CFG/refresh.sh"
+# Left behind by versions that fetched the rate-limit windows themselves; the
+# harness now sends them on stdin.
+rm -f "$CFG/refresh.sh"
 
 echo
 echo "Installed to $CFG. Add to $CFG/settings.json:"

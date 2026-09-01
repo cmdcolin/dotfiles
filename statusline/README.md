@@ -12,12 +12,6 @@ Replaces the `cache-ttl-statusline` plugin, which spent ~1200 ms per render
 transcripts reach 40 MB). With several Claude sessions sharing a machine that
 cost was multiplied per session, which is what pinned a core.
 
-| | 44 KB transcript | 42 MB transcript |
-|---|---|---|
-| old plugin | 1237 ms | 1166 ms |
-| Node fallback | 21 ms | 38 ms |
-| Rust | 0.9 ms | 0.9 ms |
-
 ## Install
 
 ```sh
@@ -31,6 +25,25 @@ the `settings.json` snippet. It does not edit settings.json itself.
 symlinking, so `statusline` is in link.sh's exclusion list alongside `plugin`.
 The repo's top-level `install.sh` runs it once per profile through
 `claude/sync-profiles.sh`, which also writes the `statusLine` setting.
+
+## Where the data comes from
+
+Almost all of it is in the JSON the harness writes to stdin: `context_window`
+(including `context_window_size`), `prompt_cache.expires_at`, `rate_limits`,
+and `cost`. A render is one JSON parse plus a handful of `stat` calls for the
+three fields that are not in the payload — the profile label, the peer name and
+the git branch. The transcript is never opened.
+
+That is worth stating because it was not always so. Earlier versions rebuilt
+`context` and `cache` by seeking backwards through the transcript for the last
+`usage` record, and fetched `rate_limits` from `api.anthropic.com` in a forked
+`refresh.sh`, with a cache file, an `O_EXCL` lock, a failure backoff and
+per-profile keychain lookups — roughly 300 lines and a shell script to keep two
+implementations of a token read in step. All of it is now one field each.
+
+Verified against 31 payloads captured from live sessions on 2.1.257. The three
+fields are recent; on a harness that does not send them they simply do not
+render, and everything else is unaffected.
 
 ## Fields
 
@@ -48,98 +61,32 @@ The repo's top-level `install.sh` runs it once per profile through
   `<project>-<suffix>`, so a name starting with the worktree name replaces that
   field instead of repeating it — a renamed session (`reviewer`) renders
   alongside it as `dotfiles | reviewer`. Absent when the registry has no entry,
-  which is how a non-interactive or older harness renders.
+  which is how a non-interactive harness renders.
 - **branch** — read straight from `.git/HEAD` under `cwd` (walking up to find
   it, and following a worktree/submodule's `gitdir:` redirect), never a `git`
   subprocess. Detached HEAD shows a short hash. Absent outside a git repo.
 - **effort** — the session's reasoning-effort level (`low`/`medium` green,
   `high` yellow, `xhigh`/`max` red), read from `effort.level`. Absent when the
   current model does not support configurable effort.
-- **context** — green/yellow/red at 65% / 85%. The window is 1M when the model
-  id carries `[1m]` or the display name ends in `(1M context)`, else 200k. If
-  measured usage exceeds the assumed window, 1M is assumed anyway — the count
-  is itself proof the window is bigger, since the API would have rejected the
-  request otherwise.
-- **burn rate** — cost per wall-clock hour, hidden below a minute where the
-  division is meaningless. Prefers `cost.total_duration_ms`, but the harness is
-  not confirmed to send it, so it falls back to the transcript's own
-  first-to-last timestamp span. That fallback measures elapsed time, so idling
-  lowers the rate and a resumed session counts the gap since it started.
-- **cache** — countdown and wall-clock expiry, from whichever
-  `ephemeral_{1h,5m}_input_tokens` bucket the session actually used.
+- **context** — green/yellow/red at 65% / 85%, against the harness's own
+  `context_window_size`. Deliberately not `context_window.used_percentage`,
+  which counts input alone: output rolls into the next request, so adding it
+  tracks what the window is about to hold. Taking the size as given also fixes
+  a model whose name advertises nothing — Fable 5.1 is a 1M window with no
+  `[1m]` in its id and no `(1M context)` in its display name, and the old
+  sniffing scored it against 200k until usage overshot.
+- **burn rate** — `total_cost_usd` over `total_duration_ms`, hidden below a
+  minute where the division is meaningless.
+- **cache** — countdown and wall-clock expiry from `prompt_cache.expires_at`.
+  Absent until the session has written a cache block, so a cold or
+  just-resumed session shows no cache field rather than a placeholder.
 - **rate-limit windows** — `5h` and `7d` plan utilisation with a countdown to
   the reset, coloured on the same 65% / 85% scale. Each is hidden below 50%,
-  where it is only taking up width.
+  where it is only taking up width. A window already past its reset keeps the
+  percentage and drops the countdown, which would otherwise render negative.
 
 No cwd, deliberately — it would add little over the branch name and this
-already reads `.git/HEAD` for that. The branch itself costs a handful of
-`stat`/`read` calls, not a `git` subprocess — see below.
-
-## Rate-limit windows
-
-Every other field is computed from stdin and the transcript. These two are not:
-utilisation exists only behind `api.anthropic.com/api/oauth/usage`, so it cannot
-be read in the render path.
-
-The renderer therefore only ever reads a cache file
-(`$TMPDIR/claude-statusline-usage-<profile>.json`, ~2 KB). When that file is
-older than its backoff allows it forks `refresh.sh` detached to rewrite it, and
-renders the stale copy in the meantime. Cost is one `stat` plus a small parse —
-measured at +111 µs against a 33 MB transcript, 653 µs -> 764 µs.
-
-`refresh.sh` is a real file, installed to `$CLAUDE_CONFIG_DIR` beside the
-builds, rather than a string literal inside each of them: embedded, it existed
-twice under two sets of escaping rules, could drift, and `shellcheck` could not
-see it. Both builds fork the same copy, and the suite runs the checkout's.
-`CLAUDE_STATUSLINE_REFRESH` overrides the path. If it is missing, the two
-windows simply do not render and every other field is unaffected.
-
-A pure-Rust fetch was considered and rejected: `ureq` + `rustls` takes the
-binary from 508 KB to 2.0 MB and the tree from 11 crates to 127, and it would
-not remove the duplication anyway — `statusline.cjs` cannot call the binary, so
-it would need its own implementation, leaving two to keep in step instead of
-one. The fork is not avoidable either way: the renderer exits as soon as it has
-written stdout, so a background thread would be killed mid-flight.
-
-Staleness is mostly harmless by construction: the countdown is derived locally
-from the cached `resets_at`, so it stays exact no matter how old the fetch is.
-Only the percentage ages, and a five-minute-old percentage is fine for a window
-that spans five hours.
-
-Failures back off — 5m, 10m, 20m, 40m, then hourly — counted in a file beside
-the cache and cleared on success, so recovery is immediate. The endpoint goes
-down often enough that a fixed interval turns an outage into a doomed fork every
-few minutes for as long as it lasts. A 200 carrying an error page counts as a
-failure too, checked by grepping the body before the atomic `mv`.
-
-Details that are easy to get wrong:
-
-- **The cache is per profile.** Separate config dirs can be separate accounts,
-  so a shared cache would show one account's usage under the other's name.
-- **So are the credentials.** `$CLAUDE_CONFIG_DIR/.credentials.json` already is,
-  but on macOS the token usually lives in the keychain, where Claude Code names
-  the entry `Claude Code-credentials` for `~/.claude` and suffixes it with the
-  first 8 hex of the sha256 of the config dir for every other profile. Reading
-  the bare name from `~/.claude2` returns the default profile's account — a
-  per-profile cache faithfully recording the wrong account. There is no fall
-  back to the bare name: no windows beats another account's percentages.
-- **Concurrent sessions do not stampede.** The refresh is guarded by an
-  `O_EXCL` lock file, taken over only if a previous refresh died holding it —
-  this machine runs several sessions at once, each rendering constantly.
-- **The token never reaches argv.** Credentials are read inside the forked
-  shell (file, then the macOS keychain) and reach `curl` through a `-K` config
-  on stdin. A shell-expanded `-H "Authorization: Bearer $TOK"` would put the
-  token in `curl`'s argv, which `/proc/PID/cmdline` shows to any local user.
-- **A window past its reset is dropped, not frozen.** If the refresh is failing
-  — expired token, no `curl`, no network — the cache eventually describes a
-  window that has already rolled over. Rendering nothing beats rendering a
-  confident `7d 80%` over a window that is actually empty.
-- **The write is atomic** — fetch to a temp file, then `mv` — so a render can
-  never see a half-written cache.
-
-`CLAUDE_STATUSLINE_USAGE_CACHE` overrides the cache path and
-`CLAUDE_STATUSLINE_NO_REFRESH` disables the fetch outright; `test.sh` sets both,
-because the suite must never touch the network or real credentials.
+already reads `.git/HEAD` for that.
 
 ## Tests
 
@@ -147,34 +94,21 @@ because the suite must never touch the network or real credentials.
 cargo build --release && ./test.sh
 ```
 
-74 cases over generated fixtures. Asserts the Rust and Node builds render
-byte-identically, and covers what is easy to get wrong: sidechain skipping,
-read-window widening, TTL inherited from an older turn, both 1M signals and the
-200k->1M promotion, both burn-rate sources, the usage windows either side of
-their threshold — including a stale cache, a corrupt one, and a reset that has
-already passed — git branch resolution — a nested subdirectory, a linked
-worktree's `gitdir:` redirect, detached HEAD, and no repo at all — and the peer
-name, including the worktree field it absorbs, a renamed session that does not
-absorb it, and a `session_id` with no registry entry. A `want`
-prefixed with `!` asserts absence instead. Fixtures are synthesised per run so
-the suite does not rot when real sessions are deleted.
+54 cases over synthesised payloads. Asserts the Rust and Node builds render
+byte-identically, and covers what is easy to get wrong: the context ceiling
+taken from the payload rather than sniffed, output counted toward the window, a
+zero size that would divide by zero, both burn-rate boundaries, a cache block
+that is absent and one already expired, the usage windows either side of their
+threshold and past their reset, git branch resolution (a nested subdirectory, a
+linked worktree's `gitdir:` redirect, detached HEAD, no repo at all), and the
+peer name — the worktree field it absorbs, a renamed session that does not
+absorb it, and a `session_id` with no registry entry. A `want` prefixed with
+`!` asserts absence instead.
 
-The refresh cases are the only ones that fork it for real, so they drop
-`CLAUDE_STATUSLINE_NO_REFRESH` and put a stub `curl` on `PATH` with fake
-credentials — still no network — covering failure counting, backoff suppressing
-a retry, backoff expiry letting exactly one through, an HTML body, success
-clearing the counter, the keychain service name being the profile's own rather
-than the bare one, and a missing `refresh.sh` leaving no stale lock.
+`test.sh` pins `CLAUDE_CONFIG_DIR` at a fixture directory, so the suite never
+reads the tester's own profile.
 
 ## Notes
-
-Transcripts reach tens of MB, so the newest usage record is found by seeking
-64 KB from the end and walking backwards, widening to 1 MB then 8 MB only if
-nothing is found. That is why the 42 MB case costs no more than the 44 KB one.
-
-Sidechain (subagent) entries are skipped — their token counts belong to the
-subagent's context window, not the main thread's, so including them makes the
-meter lurch whenever an agent is spawned.
 
 `statusline.cjs` is a dependency-free Node implementation kept as a fallback for
 machines without a Rust toolchain. Output is byte-identical; it is slower only
