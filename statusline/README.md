@@ -1,10 +1,10 @@
 # statusline
 
 Claude Code statusline:
-`profile | worktree | branch | model | effort | context | cost + burn rate | cache expiry | rate-limit windows`.
+`profile | worktree/peer name | branch | model | effort | context | cost + burn rate | cache expiry | rate-limit windows`.
 
 ```
-claude2 | dotfiles | main | Opus 5 1M | high | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
+claude2 | dotfiles-4f | main | Opus 5 1M | high | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
 ```
 
 Replaces the `cache-ttl-statusline` plugin, which spent ~1200 ms per render
@@ -39,7 +39,16 @@ The repo's top-level `install.sh` runs it once per profile through
 - **worktree** — basename of the directory holding `.git` (dir or file),
   walking up from `cwd`. For a linked worktree (e.g.
   `.claude/worktrees/foo`) this is `foo`, not the main repo's name — the same
-  name `git worktree list` shows. Absent outside a git repo.
+  name `git worktree list` shows. Absent outside a git repo, and absorbed by
+  the peer name below when that already opens with it.
+- **peer name** — the address other sessions message this one by, e.g.
+  `SendMessage({to: "dotfiles-4f"})`. The harness keeps a registry of live
+  sessions at `$CLAUDE_CONFIG_DIR/sessions/<pid>.json`; the entry whose
+  `sessionId` matches stdin's `session_id` holds the name. Names are derived as
+  `<project>-<suffix>`, so a name starting with the worktree name replaces that
+  field instead of repeating it — a renamed session (`reviewer`) renders
+  alongside it as `dotfiles | reviewer`. Absent when the registry has no entry,
+  which is how a non-interactive or older harness renders.
 - **branch** — read straight from `.git/HEAD` under `cwd` (walking up to find
   it, and following a worktree/submodule's `gitdir:` redirect), never a `git`
   subprocess. Detached HEAD shows a short hash. Absent outside a git repo.
@@ -138,13 +147,15 @@ because the suite must never touch the network or real credentials.
 cargo build --release && ./test.sh
 ```
 
-65 cases over generated fixtures. Asserts the Rust and Node builds render
+74 cases over generated fixtures. Asserts the Rust and Node builds render
 byte-identically, and covers what is easy to get wrong: sidechain skipping,
 read-window widening, TTL inherited from an older turn, both 1M signals and the
 200k->1M promotion, both burn-rate sources, the usage windows either side of
 their threshold — including a stale cache, a corrupt one, and a reset that has
-already passed — and git branch resolution: a nested subdirectory, a linked
-worktree's `gitdir:` redirect, detached HEAD, and no repo at all. A `want`
+already passed — git branch resolution — a nested subdirectory, a linked
+worktree's `gitdir:` redirect, detached HEAD, and no repo at all — and the peer
+name, including the worktree field it absorbs, a renamed session that does not
+absorb it, and a `session_id` with no registry entry. A `want`
 prefixed with `!` asserts absence instead. Fixtures are synthesised per run so
 the suite does not rot when real sessions are deleted.
 

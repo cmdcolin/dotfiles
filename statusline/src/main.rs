@@ -249,6 +249,21 @@ fn find_worktree_root(start: &Path) -> Option<PathBuf> {
     }
 }
 
+/// The name peers address this session by (`SendMessage`), from the registry
+/// the harness keeps at `$CLAUDE_CONFIG_DIR/sessions/<pid>.json`. Ours is the
+/// entry whose `sessionId` matches; a handful of small files, so the scan
+/// costs less than resolving which pid is the harness's.
+fn session_name(session_id: &str) -> Option<String> {
+    std::fs::read_dir(config_dir().join("sessions"))
+        .ok()?
+        .flatten()
+        .filter(|entry| entry.path().extension().is_some_and(|ext| ext == "json"))
+        .filter_map(|entry| std::fs::read_to_string(entry.path()).ok())
+        .filter_map(|text| serde_json::from_str::<Value>(&text).ok())
+        .find(|entry| entry.get("sessionId").and_then(Value::as_str) == Some(session_id))
+        .and_then(|entry| entry.get("name").and_then(Value::as_str).map(String::from))
+}
+
 fn worktree_name(cwd: &str) -> Option<String> {
     find_worktree_root(Path::new(cwd))?
         .file_name()?
@@ -432,8 +447,24 @@ fn main() {
 
     let cwd = data.get("cwd").and_then(Value::as_str);
 
-    if let Some(name) = cwd.and_then(worktree_name) {
-        parts.push(paint(BLUE, &name));
+    let worktree = cwd.and_then(worktree_name);
+    // The peer name already opens with the project basename ("dotfiles-4f"),
+    // so it stands in for the worktree field rather than repeating it.
+    let peer = data
+        .get("session_id")
+        .and_then(Value::as_str)
+        .and_then(session_name);
+    let covers_worktree = |name: &String, worktree: &String| {
+        name.strip_prefix(worktree.as_str())
+            .is_some_and(|rest| rest.is_empty() || rest.starts_with('-'))
+    };
+    if let Some(worktree) = &worktree {
+        if !peer.as_ref().is_some_and(|name| covers_worktree(name, worktree)) {
+            parts.push(paint(BLUE, worktree));
+        }
+    }
+    if let Some(name) = &peer {
+        parts.push(paint(BLUE, name));
     }
 
     if let Some(branch) = cwd.and_then(git_branch) {

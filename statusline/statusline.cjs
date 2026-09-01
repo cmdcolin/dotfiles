@@ -189,6 +189,35 @@ function findWorktreeRoot(start) {
   }
 }
 
+// The name peers address this session by (SendMessage), from the registry the
+// harness keeps at $CLAUDE_CONFIG_DIR/sessions/<pid>.json. Ours is the entry
+// whose sessionId matches; a handful of small files, so the scan costs less
+// than resolving which pid is the harness's.
+function sessionName(sessionId) {
+  let files
+  try {
+    files = fs.readdirSync(path.join(configDir(), 'sessions'))
+  } catch {
+    return null
+  }
+  for (const file of files) {
+    if (file.endsWith('.json')) {
+      let entry
+      try {
+        entry = JSON.parse(
+          fs.readFileSync(path.join(configDir(), 'sessions', file), 'utf8'),
+        )
+      } catch {
+        continue
+      }
+      if (entry && entry.sessionId === sessionId) {
+        return typeof entry.name === 'string' ? entry.name : null
+      }
+    }
+  }
+  return null
+}
+
 function worktreeName(cwd) {
   const root = findWorktreeRoot(cwd)
   return root ? path.basename(root) : null
@@ -358,7 +387,16 @@ const profile = profileLabel()
 if (profile) parts.push(dim(profile))
 
 const worktree = data.cwd ? worktreeName(data.cwd) : null
-if (worktree) parts.push(paint(34, worktree))
+// The peer name already opens with the project basename ("dotfiles-4f"), so it
+// stands in for the worktree field rather than repeating it.
+const peer = data.session_id ? sessionName(data.session_id) : null
+const coversWorktree =
+  peer !== null &&
+  worktree !== null &&
+  peer.startsWith(worktree) &&
+  (peer.length === worktree.length || peer[worktree.length] === '-')
+if (worktree && !coversWorktree) parts.push(paint(34, worktree))
+if (peer) parts.push(paint(34, peer))
 
 const branch = data.cwd ? gitBranch(data.cwd) : null
 if (branch) parts.push(paint(35, branch))

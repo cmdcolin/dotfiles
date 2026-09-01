@@ -133,6 +133,18 @@ mkdir -p "$FIX/repo/.git/worktrees/feature" "$FIX/worktree"
 printf 'ref: refs/heads/feature-branch\n' >"$FIX/repo/.git/worktrees/feature/HEAD"
 printf 'gitdir: %s/repo/.git/worktrees/feature\n' "$FIX" >"$FIX/worktree/.git"
 
+# session registry: the harness writes one <pid>.json per live session, and the
+# peer name in it is the address SendMessage uses.
+mkdir -p "$CLAUDE_CONFIG_DIR/sessions"
+session_entry() { # <pid> <sessionId> <name>
+  printf '{"pid":%s,"sessionId":"%s","name":"%s","cwd":"%s"}' "$1" "$2" "$3" "$FIX/repo" \
+    >"$CLAUDE_CONFIG_DIR/sessions/$1.json"
+}
+session_entry 111 aaaa-1111 repo-4f
+session_entry 222 bbbb-2222 reviewer
+# a stray non-json file in the dir must not derail the scan
+printf 'not json\n' >"$CLAUDE_CONFIG_DIR/sessions/111.key"
+
 farback_size=$(filesize "$FIX/farback.jsonl")
 echo "fixture sizes: farback=$farback_size bytes (window widening $([ "$farback_size" -gt 65536 ] && echo exercised || echo 'NOT exercised'))"
 echo
@@ -181,6 +193,19 @@ check "worktree name" "repo" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/
 check "worktree name nested" "repo" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo/sub/sub2")"
 check "worktree name linked" "worktree" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/worktree")"
 check "no worktree name" "!repo" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/nogit")"
+
+# --- peer name --------------------------------------------------------------
+# The address other sessions message this one by. It opens with the project
+# basename, so it replaces the worktree field instead of repeating it.
+peer_payload() { # sessionId
+  printf '{"transcript_path":"%s","model":{"id":"%s","display_name":"%s"},"cost":{"total_cost_usd":1},"cwd":"%s","session_id":"%s"}' \
+    "$FIX/basic.jsonl" "$O" "$D" "$FIX/repo" "$1"
+}
+check "peer name" "claude-test | repo-4f |" "$(peer_payload aaaa-1111)"
+check "peer name absorbs wt" "!repo | repo-4f" "$(peer_payload aaaa-1111)"
+check "renamed peer keeps wt" "repo | reviewer |" "$(peer_payload bbbb-2222)"
+check "unknown session id" "claude-test | repo |" "$(peer_payload cccc-3333)"
+check "no session id" "claude-test | repo |" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo")"
 
 # --- git branch -------------------------------------------------------------
 check "git branch" "main" "$(payload "$FIX/basic.jsonl" "$O" "$D" 1 "" "$FIX/repo")"
