@@ -22,7 +22,7 @@ Builds and installs to `$CLAUDE_CONFIG_DIR` (default `~/.claude`), then prints
 the `settings.json` snippet. It does not edit settings.json itself.
 
 `install.sh` is not run by `link.sh` — this needs compiling rather than
-symlinking, so `statusline` is in link.sh's exclusion list alongside `plugin`.
+symlinking, so `statusline` is link.sh's one excluded directory.
 The repo's top-level `install.sh` runs it once per profile through
 `claude/sync-profiles.sh`, which also writes the `statusLine` setting.
 
