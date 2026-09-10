@@ -171,7 +171,11 @@ install_pnpm_and_node() {
   fi
   log_info "Installing Node via pnpm..."
   pnpm runtime set node lts -g
-  log_success "pnpm and Node installed."
+  # pnpm's node package ships the node binary alone, so npm and npx have to be
+  # installed separately. Their shims land in PNPM_HOME/bin and run on the node
+  # above.
+  pnpm add -g npm
+  log_success "pnpm, Node and npm installed."
 }
 
 install_uv_and_yt_dlp() {
