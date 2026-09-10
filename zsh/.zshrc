@@ -83,11 +83,9 @@ typeset -U path
 
 path=("$HOME/.local/bin" $path)
 
-FNM_PATH="$HOME/.local/share/fnm"
-[[ -d "$FNM_PATH" ]] && path=("$FNM_PATH" $path)
-command -v fnm &>/dev/null && eval "$(fnm env --shell zsh)"
-
-# after fnm so the standalone pnpm wins over corepack's shim
+# pnpm owns the global node: `pnpm runtime set node <major> -g` drops a node
+# symlink in $PNPM_HOME/bin. pnpm itself is the standalone binary with node
+# bundled, so nothing here needs a node on PATH to bootstrap.
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PNPM_HOME="$HOME/Library/pnpm"
 else

@@ -28,9 +28,12 @@ get_host() {
 setup_environment() {
   log_info "Setting up environment..."
   mkdir -p "$HOME/.local/bin"
-  # Freshly installed tools land here; put it on PATH now so later steps in this
-  # same run can call them without a shell restart.
-  export PATH="$HOME/.local/bin:$HOME/.local/share/fnm:$PATH"
+  # Freshly installed tools land in these; put them on PATH now so later steps
+  # in this same run can call them without a shell restart. The pnpm dir has to
+  # match .zshrc's PNPM_HOME.
+  [[ "$OS" == "mac" ]] && PNPM_HOME="$HOME/Library/pnpm" || PNPM_HOME="$HOME/.local/share/pnpm"
+  export PNPM_HOME
+  export PATH="$HOME/.local/bin:$PNPM_HOME/bin:$PATH"
   log_success "Local bin directory created."
 }
 
@@ -43,7 +46,7 @@ setup_macos_deps_via_brew() {
   log_info "Installing essential macOS tools via Homebrew..."
   # No fzf: install_fzf clones ~/.fzf for its own binary and the ~/.fzf.zsh
   # that .zshrc sources, so a brew copy is a second, unused fzf on PATH.
-  brew install git neovim ripgrep fnm zoxide tmux gh fd jq wget htop uv miniserve
+  brew install git neovim ripgrep zoxide tmux gh fd jq wget htop uv miniserve
   log_success "macOS dependencies installed via Homebrew."
 }
 
@@ -152,14 +155,23 @@ install_labserver_prebuilts() {
   install_prebuilt_binary ajeetdsouza/zoxide zoxide || true
 }
 
-install_fnm() {
-  log_info "Installing FNM (Node Version Manager)..."
-  if ! command -v fnm &>/dev/null; then
-    curl -fsSL https://fnm.vercel.app/install | bash || true
+# pnpm is the standalone binary (node bundled), so it installs without a node
+# present and then provides the global node itself — no separate version
+# manager. It keeps one global version rather than a switchable set; no project
+# here pins a node version, so that is enough.
+install_pnpm_and_node() {
+  log_info "Installing pnpm..."
+  if ! command -v pnpm &>/dev/null; then
+    curl -fsSL https://get.pnpm.io/install.sh | sh -
     hash -r
   fi
-  command -v fnm &>/dev/null && eval "$(fnm env)"
-  log_success "FNM installed."
+  if ! command -v pnpm &>/dev/null; then
+    log_error "pnpm not on PATH after install. Skipping node."
+    return 1
+  fi
+  log_info "Installing Node via pnpm..."
+  pnpm runtime set node lts -g
+  log_success "pnpm and Node installed."
 }
 
 install_uv_and_yt_dlp() {
@@ -299,7 +311,7 @@ main() {
   else
     install_labserver_prebuilts
   fi
-  install_fnm
+  install_pnpm_and_node || log_info "Continuing without pnpm/Node."
   install_uv_and_yt_dlp
   install_fzf
   install_neovim || log_info "Continuing without Neovim."
