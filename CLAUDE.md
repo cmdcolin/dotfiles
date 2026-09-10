@@ -17,7 +17,7 @@ To "activate" these dotfiles, use `link.sh`. This creates symbolic links from th
 ./link.sh
 ```
 
-Every file under each top-level dir (except `img/` and `OLD/`) is mirrored into
+Every file under each top-level dir is mirrored into
 `$HOME` at the same relative path — so `zsh/.zshrc` becomes `~/.zshrc` and
 `claude/.claude/CLAUDE.md` becomes `~/.claude/CLAUDE.md`.
 

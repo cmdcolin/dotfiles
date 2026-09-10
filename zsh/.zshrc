@@ -28,16 +28,11 @@ alias dx="claude --verbose --model haiku -p --dangerously-skip-permissions"
 alias python="python3"
 alias g="git status"
 alias yy="pnpm lint"
-alias yyy="pnpm lint --fix"
 alias ttt="pnpm typecheck --noEmit --watch"
-alias fff="yyy && ff"
-# Stage everything and amend — "oops, forgot a file".
-alias gggg="git add . && git commit --amend --no-edit"
 alias mm='git reset --hard origin/main'
 alias v="vim"
 # Prepends [skip ci] to last commit to prevent CI on push.
 alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
-alias ggl="glances --disable-plugin gpu"
 # Branches sorted by most recently committed.
 alias bb="git branch --sort=-committerdate | fzf | xargs git checkout"
 
@@ -48,17 +43,13 @@ if [[ "$OSTYPE" == "linux-gnu"* ]]; then
   # (not `pbcopy() { }`) avoids zsh's "defining function based on alias"
   # parse error when prezto's alias is already in scope, since it's parsed
   # unambiguously as a function definition regardless of any existing alias.
-  if command -v xclip &>/dev/null || command -v xsel &>/dev/null; then
-    chromeclip() { pbpaste | sed 's/^[^:]*:[0-9]* //' | pbcopy; }
-    fireclip() { pbpaste | sed '/^home\//d; /^\[webpack-dev-server\]/d; /^\[HMR\]/d; /^Download the React DevTools/d; /^https:\/\/react.dev/d; s/ home\/[^ ]*:[0-9]\+:[0-9]\+$//' | pbcopy; }
-  else
+  if ! command -v xclip &>/dev/null && ! command -v xsel &>/dev/null; then
     # No X display (labserver): OSC 52 hands the text to the local terminal.
     function pbcopy { printf '\033]52;c;%s\a' "$(base64 | tr -d '\n')" >/dev/tty; }
   fi
 
   alias ww="watch -n.1 \"grep '^[c]pu MHz' /proc/cpuinfo\""
   alias sau="sudo apt update && sudo apt upgrade"
-  alias eee="PKG_CONFIG_PATH=/usr/lib/x86_64-linux-gnu/pkgconfig/ cargo run"
 
   command -v gpg-connect-agent &>/dev/null && gpg-connect-agent updatestartuptty /bye &>/dev/null
 
@@ -68,7 +59,6 @@ fi
 alias claude2='CLAUDE_CONFIG_DIR=~/.claude2 claude'
 alias claude3='CLAUDE_CONFIG_DIR=~/.claude3 claude'
 alias ll="ls -l"
-alias hh="htop"
 alias qq="exit"
 alias ee="cargo run"
 alias ss="pnpm start"
@@ -77,38 +67,8 @@ alias p="z"
 alias ff="pnpm format"
 alias pserver='miniserve .'
 
-# Delete build/dependency dirs under the given paths (cwd if none), after
-# showing what will go. A function, not an alias: with an alias the paths land
-# after `-X rm -rf` and become arguments to rm, so `clean_all ~/src/foo` would
-# delete all of foo. -I because these dirs are gitignored in exactly the repos
-# worth cleaning; --prune so a nested node_modules isn't listed under its own
-# parent.
-clean_all() {
-  local -a targets found
-  targets=("$@")
-  (($#targets)) || targets=(.)
-
-  # Split on NUL, then drop the empty trailing field in a separate step — the
-  # nested ${(@)${(0)...}:#} form parses but never applies the :# filter.
-  found=("${(0)$(fd -H -I --prune -t d '^(node_modules|\.next|dist|target|\.venv)$' -0 "${targets[@]}")}")
-  found=("${(@)found:#}")
-  if ! (($#found)); then
-    print "clean_all: nothing to remove under ${(j:, :)targets}"
-    return 0
-  fi
-
-  print -rl -- "$found[@]"
-  print -n "clean_all: remove these $#found dir(s), $(du -shc "$found[@]" 2>/dev/null | tail -1 | cut -f1) total? [y/N] "
-  local reply
-  read -r reply
-  [[ "$reply" == [yY]* ]] || { print "clean_all: aborted"; return 1 }
-  rm -rf -- "$found[@]"
-}
-
-# Pitch-down/slow-down audio and video.
+# Pitch-down/slow-down audio.
 vaporwave() { ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
-vvid() { ffmpeg -i "$1" -filter_complex "[0:v]setpts=1/${2:-0.66}*PTS[v];[0:a]asetrate=44100*${2:-0.66},aresample=44100[a]" -map "[v]" -map "[a]" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
-vpv() { mpv --speed="${2:-0.66}" --audio-pitch-correction=no "$1"; }
 vp() { yt-dlp -f 'bestaudio[ext=m4a]' -o - "$1" | ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${2:-0.66},aresample=44100"; }
 
 # Resize video to percentage of original (default 50%).

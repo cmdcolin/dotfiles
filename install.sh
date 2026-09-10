@@ -43,7 +43,7 @@ setup_macos_deps_via_brew() {
   log_info "Installing essential macOS tools via Homebrew..."
   # No fzf: install_fzf clones ~/.fzf for its own binary and the ~/.fzf.zsh
   # that .zshrc sources, so a brew copy is a second, unused fzf on PATH.
-  brew install git neovim git-delta ripgrep fnm zoxide tmux gh fd jq wget htop uv miniserve
+  brew install git neovim ripgrep fnm zoxide tmux gh fd jq wget htop uv miniserve
   log_success "macOS dependencies installed via Homebrew."
 }
 
@@ -106,7 +106,7 @@ install_rust_and_cargo_tools() {
   log_info "Installing Cargo tools..."
   local tools=(ruplacer typos-cli cargo-update)
   # No apt packages for these; on mac brew already supplied them.
-  [[ "$OS" == "mac" ]] || tools+=(git-delta ripgrep miniserve)
+  [[ "$OS" == "mac" ]] || tools+=(ripgrep miniserve)
   cargo install --locked "${tools[@]}" || log_info "Some Cargo tools failed to install, might be optional."
   log_success "Rust and Cargo tools installed."
 }
@@ -150,7 +150,6 @@ install_labserver_prebuilts() {
   install_prebuilt_binary BurntSushi/ripgrep rg || true
   install_prebuilt_binary sharkdp/fd fd || true
   install_prebuilt_binary ajeetdsouza/zoxide zoxide || true
-  install_prebuilt_binary dandavison/delta delta || true
 }
 
 install_fnm() {

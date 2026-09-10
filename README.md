@@ -57,5 +57,3 @@ OSC 52, so there's no way to pull the local clipboard into a remote `pbpaste`.
 - Music: [fml9000](https://github.com/cmdcolin/fml9000) or [ytshuffle](https://cmdcolin.github.io/ytshuffle/)
 
 Some keybindings are set up to avoid RSI — lots of double-tap commands to avoid hand contortion. More here: https://cmdcolin.github.io/posts/2022-07-08-pinky
-
-[older stuff](./OLD)

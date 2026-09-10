@@ -18,7 +18,7 @@ link() {
 for pkg in "$DOTFILES_DIR"/*/; do
   name=$(basename "$pkg")
   # statusline is built, not symlinked — see statusline/install.sh
-  [[ "$name" =~ ^(img|OLD|statusline)$ ]] && continue
+  [[ "$name" == statusline ]] && continue
 
   while IFS= read -r src; do
     rel="${src#"$pkg"}"
