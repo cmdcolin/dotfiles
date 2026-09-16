@@ -28,6 +28,8 @@ alias dx="claude --verbose --model haiku -p --dangerously-skip-permissions"
 alias python="python3"
 alias g="git status"
 alias yy="pnpm lint"
+alias ppp="make push-docx && git push"
+alias gggg="git add . && git commit --amend --no-edit"
 alias ttt="pnpm typecheck --noEmit --watch"
 alias mm='git reset --hard origin/main'
 alias v="vim"
@@ -190,3 +192,4 @@ export CLAUDE_CODE_MAX_OUTPUT_TOKENS=100000
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+

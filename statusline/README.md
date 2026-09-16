@@ -7,6 +7,8 @@ Claude Code statusline:
 claude2 | dotfiles-4f | main | Opus 5 1M | high | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
 ```
 
+![statusline screenshot](screenshot.png)
+
 Replaces the `cache-ttl-statusline` plugin, which spent ~1200 ms per render
 (2.7 MB JS bundle re-parsed every time, plus a full transcript parse — and
 transcripts reach 40 MB). With several Claude sessions sharing a machine that
