@@ -36,11 +36,6 @@ function compact(n) {
   return String(n)
 }
 
-function clock(ms) {
-  const d = new Date(ms)
-  return `${d.getHours() % 12 || 12}:${String(d.getMinutes()).padStart(2, '0')}`
-}
-
 function until(ms) {
   const total = Math.floor(ms / 60_000)
   const hours = Math.floor(total / 60)
@@ -237,15 +232,14 @@ if (typeof cost === 'number') {
 // just-resumed session renders no cache field rather than a placeholder.
 const expiresAt = data.prompt_cache && data.prompt_cache.expires_at
 if (typeof expiresAt === 'number') {
-  const expiresMs = expiresAt * 1000
-  const left = expiresMs - Date.now()
+  const left = expiresAt * 1000 - Date.now()
   if (left <= 0) {
     parts.push(paint(31, 'cache expired'))
   } else {
     const mins = Math.floor(left / 60_000)
     const label = mins >= 1 ? `${mins}m` : `${Math.floor(left / 1000)}s`
     const color = left > 15 * 60_000 ? 32 : left > 5 * 60_000 ? 33 : 31
-    parts.push(`${dim('cache')} ${paint(color, label)} ${dim(`(${clock(expiresMs)})`)}`)
+    parts.push(paint(color, label))
   }
 }
 
@@ -258,4 +252,4 @@ if (data.rate_limits) {
   }
 }
 
-process.stdout.write(parts.join(dim(' | ')))
+process.stdout.write(parts.join(dim(' · ')))

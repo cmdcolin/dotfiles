@@ -5,7 +5,7 @@
 //! expiry and rate-limit windows included. The three exceptions are cheap file
 //! reads, so a render is a JSON parse and a handful of `stat` calls.
 
-use chrono::{Local, TimeZone, Timelike, Utc};
+use chrono::Utc;
 use serde_json::Value;
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
@@ -61,17 +61,6 @@ fn compact(n: i64) -> String {
 
 fn int(v: &Value, key: &str) -> i64 {
     v.get(key).and_then(Value::as_i64).unwrap_or(0)
-}
-
-fn clock(ms: i64) -> String {
-    let Some(local) = Local.timestamp_millis_opt(ms).single() else {
-        return String::new();
-    };
-    let hour = match local.hour() % 12 {
-        0 => 12,
-        h => h,
-    };
-    format!("{}:{:02}", hour, local.minute())
 }
 
 fn until(ms: i64) -> String {
@@ -319,8 +308,7 @@ fn main() {
         .pointer("/prompt_cache/expires_at")
         .and_then(Value::as_i64)
     {
-        let expires_ms = expires_at * 1000;
-        let left = expires_ms - Utc::now().timestamp_millis();
+        let left = expires_at * 1000 - Utc::now().timestamp_millis();
         if left <= 0 {
             parts.push(paint(RED, "cache expired"));
         } else {
@@ -337,12 +325,7 @@ fn main() {
             } else {
                 RED
             };
-            parts.push(format!(
-                "{} {} {}",
-                dim("cache"),
-                paint(color, &label),
-                dim(&format!("({})", clock(expires_ms)))
-            ));
+            parts.push(paint(color, &label));
         }
     }
 
@@ -351,6 +334,6 @@ fn main() {
         parts.extend(usage_segment(limits, "seven_day", "7d"));
     }
 
-    let sep = dim(" | ");
+    let sep = dim(" · ");
     let _ = std::io::stdout().write_all(parts.join(&sep).as_bytes());
 }

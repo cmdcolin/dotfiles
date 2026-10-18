@@ -133,11 +133,11 @@ check "effort high" "high" "$(effort_payload high)"
 check "effort xhigh" "xhigh" "$(effort_payload xhigh)"
 
 # --- prompt cache ---------------------------------------------------------
-check "cache countdown" "cache 59m" "$(payload "$O" "$D" 50000 $M 1 "" 60)"
-check "cache near expiry" "cache 2m" "$(payload "$O" "$D" 50000 $M 1 "" 3)"
+check "cache countdown" "· 59m" "$(payload "$O" "$D" 50000 $M 1 "" 60)"
+check "cache near expiry" "· 2m" "$(payload "$O" "$D" 50000 $M 1 "" 3)"
 check "cache expired" "cache expired" "$(payload "$O" "$D" 50000 $M 1 "" -5)"
 # Absent before the session has written a cache block: no field, no placeholder.
-check "cache absent" "!cache" "$(payload "$O" "$D" 50000 $M 1)"
+check "cache absent" "!59m" "$(payload "$O" "$D" 50000 $M 1)"
 
 # --- worktree + peer name -------------------------------------------------
 check "worktree name" "repo" "$(payload "$O" "$D" 50000 $M 1 "" "" "$FIX/repo")"
@@ -151,11 +151,11 @@ peer_payload() { # sessionId
   printf '{"model":{"id":"%s","display_name":"%s"},"cost":{"total_cost_usd":1},"cwd":"%s","session_id":"%s"}' \
     "$O" "$D" "$FIX/repo" "$1"
 }
-check "peer name" "claude-test | repo-4f |" "$(peer_payload aaaa-1111)"
-check "peer name absorbs wt" "!repo | repo-4f" "$(peer_payload aaaa-1111)"
-check "renamed peer keeps wt" "repo | reviewer |" "$(peer_payload bbbb-2222)"
-check "unknown session id" "claude-test | repo |" "$(peer_payload cccc-3333)"
-check "no session id" "claude-test | repo |" "$(payload "$O" "$D" 50000 $M 1 "" "" "$FIX/repo")"
+check "peer name" "claude-test · repo-4f ·" "$(peer_payload aaaa-1111)"
+check "peer name absorbs wt" "!repo · repo-4f" "$(peer_payload aaaa-1111)"
+check "renamed peer keeps wt" "repo · reviewer ·" "$(peer_payload bbbb-2222)"
+check "unknown session id" "claude-test · repo ·" "$(peer_payload cccc-3333)"
+check "no session id" "claude-test · repo ·" "$(payload "$O" "$D" 50000 $M 1 "" "" "$FIX/repo")"
 
 # --- git branch -----------------------------------------------------------
 check "git branch" "main" "$(payload "$O" "$D" 50000 $M 1 "" "" "$FIX/repo")"
@@ -166,11 +166,11 @@ check "no git repo" "!main" "$(payload "$O" "$D" 50000 $M 1 "" "" "$FIX/nogit")"
 check "no cwd" "!main" "$(payload "$O" "$D" 50000 $M 1)"
 
 # --- degenerate input -----------------------------------------------------
-check "profile label" "claude-test |" "$(payload "$O" "$D" 50000 $M 1)"
+check "profile label" "claude-test ·" "$(payload "$O" "$D" 50000 $M 1)"
 check "short model" "F5.1" "$(payload 'claude-fable-5-1' 'Fable 5.1' 50000 $M 1)"
 check "unshaped model" "custom-model" "$(payload 'x' 'custom-model' 50000 $M 1)"
 for dir in .claude:c .claude2:c2 .claude3:c3; do
-  CLAUDE_CONFIG_DIR="$FIX/${dir%%:*}" check "profile ${dir%%:*}" "${dir##*:} |" "$(payload "$O" "$D" 50000 $M 1)"
+  CLAUDE_CONFIG_DIR="$FIX/${dir%%:*}" check "profile ${dir%%:*}" "${dir##*:} ·" "$(payload "$O" "$D" 50000 $M 1)"
 done
 check "empty object" "" '{}'
 check "malformed json" "" 'not json at all'
