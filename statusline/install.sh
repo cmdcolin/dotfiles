@@ -31,7 +31,7 @@ rm -f "$CFG/refresh.sh"
 echo
 echo "Installed to $CFG. Add to $CFG/settings.json:"
 echo
-echo "  \"statusLine\": { \"type\": \"command\", \"command\": \"$command\" }"
+echo "  \"statusLine\": { \"type\": \"command\", \"command\": \"$command\", \"refreshInterval\": 30 }"
 echo
 echo "This script deliberately does not edit settings.json for you."
 echo "If cache-ttl-statusline@claude-statusline-widgets is installed, disable it:"

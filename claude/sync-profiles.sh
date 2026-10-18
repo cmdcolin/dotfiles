@@ -60,7 +60,11 @@ for k, v in base.items():
         new[k] = v
 
 # Points into this profile, so it cannot come from a shared file.
-new["statusLine"] = {"type": "command", "command": os.environ["CMD"]}
+new["statusLine"] = {
+    "type": "command",
+    "command": os.environ["CMD"],
+    "refreshInterval": 30,
+}
 
 changes = [k for k in sorted(set(cur) | set(new)) if cur.get(k) != new.get(k)]
 if not changes:

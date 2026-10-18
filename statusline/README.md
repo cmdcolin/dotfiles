@@ -28,6 +28,9 @@ symlinking, so `statusline` is link.sh's one excluded directory.
 The repo's top-level `install.sh` runs it once per profile through
 `claude/sync-profiles.sh`, which also writes the `statusLine` setting.
 
+`refreshInterval: 30` makes Claude Code re-run the statusline every 30 s.
+Without it, an idle session stops re-rendering and `ttl` freezes.
+
 ## Where the data comes from
 
 Almost all of it is in the JSON the harness writes to stdin: `context_window`
