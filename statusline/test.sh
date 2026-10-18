@@ -106,7 +106,7 @@ check "200k window" "50k/200k 25%" "$(payload 'claude-opus-5' 'Opus 5' 50000 $K 
 check "size not sniffed" "500k/1M 50%" "$(payload 'claude-fable-5-1' 'Fable 5.1' 500000 $M 1)"
 check "high context" "900k/1M 90%" "$(payload "$O" "$D" 900000 $M 1)"
 check "empty window" "0/1M 0%" "$(payload "$O" "$D" 0 $M 1)"
-check "model suffix" "Opus 5 1M" "$(payload "$O" "$D" 50000 $M 1)"
+check "model suffix" "O5 1M" "$(payload "$O" "$D" 50000 $M 1)"
 # A zero or missing size would divide by zero; the field is simply dropped.
 check "zero size" "!/0" "$(payload "$O" "$D" 50000 0 1)"
 check "no window field" '$1.50' '{"model":{"id":"'"$O"'"},"cost":{"total_cost_usd":1.5}}'
@@ -167,6 +167,11 @@ check "no cwd" "!main" "$(payload "$O" "$D" 50000 $M 1)"
 
 # --- degenerate input -----------------------------------------------------
 check "profile label" "claude-test |" "$(payload "$O" "$D" 50000 $M 1)"
+check "short model" "F5.1" "$(payload 'claude-fable-5-1' 'Fable 5.1' 50000 $M 1)"
+check "unshaped model" "custom-model" "$(payload 'x' 'custom-model' 50000 $M 1)"
+for dir in .claude:c .claude2:c2 .claude3:c3; do
+  CLAUDE_CONFIG_DIR="$FIX/${dir%%:*}" check "profile ${dir%%:*}" "${dir##*:} |" "$(payload "$O" "$D" 50000 $M 1)"
+done
 check "empty object" "" '{}'
 check "malformed json" "" 'not json at all'
 check "empty stdin" "" ''

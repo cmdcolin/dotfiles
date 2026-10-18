@@ -118,10 +118,18 @@ function gitBranch(cwd) {
   return head.length >= 7 ? head.slice(0, 7) : null
 }
 
-// Which config dir this session is running under: .claude2 -> claude2.
+// Which config dir this session is running under: .claude2 -> c2. Other names
+// (.claude-memory) keep their full form.
 function profileLabel() {
   const name = path.basename(configDir()).replace(/^\./, '')
-  return name || null
+  if (!name) return null
+  const m = name.match(/^claude(\d*)$/)
+  return m ? `c${m[1]}` : name
+}
+
+// Opus 5 -> O5, Fable 5.1 -> F5.1; a name not shaped "<Word> <digit>..." passes through.
+function shortModel(name) {
+  return name.replace(/^([A-Za-z])[A-Za-z]* (?=\d)/, '$1')
 }
 
 // The name peers address this session by (SendMessage), from the registry the
@@ -189,7 +197,10 @@ if (branch) parts.push(paint(35, branch))
 
 // Model — trim the verbose "(1M context)" suffix the harness sends.
 const model = (data.model && data.model.display_name) || (data.model && data.model.id)
-if (model) parts.push(paint(36, model.replace(/\s*\(1M context\)$/, ' 1M')))
+if (model) {
+  const base = model.replace(/ \(1M context\)$/, '')
+  parts.push(paint(36, shortModel(base) + (base === model ? '' : ' 1M')))
+}
 
 const effortLevel = data.effort && data.effort.level
 if (typeof effortLevel === 'string') {

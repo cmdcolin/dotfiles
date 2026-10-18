@@ -152,12 +152,33 @@ fn git_branch(cwd: &str) -> Option<String> {
     }
 }
 
-/// Which config dir this session is running under: `.claude2` -> `claude2`.
+/// Which config dir this session is running under: `.claude2` -> `c2`. Other
+/// names (`.claude-memory`) keep their full form.
 fn profile_label() -> Option<String> {
     let dir = config_dir();
     let name = dir.file_name()?.to_str()?;
     let name = name.strip_prefix('.').unwrap_or(name);
-    (!name.is_empty()).then(|| name.to_string())
+    if name.is_empty() {
+        return None;
+    }
+    match name.strip_prefix("claude") {
+        Some(n) if n.chars().all(|c| c.is_ascii_digit()) => Some(format!("c{n}")),
+        _ => Some(name.to_string()),
+    }
+}
+
+/// `Opus 5` -> `O5`, `Fable 5.1` -> `F5.1`; a name not shaped "<Word> <digit>…"
+/// passes through.
+fn short_model(name: &str) -> String {
+    match name.split_once(' ') {
+        Some((word, rest))
+            if word.chars().all(|c| c.is_ascii_alphabetic())
+                && rest.starts_with(|c: char| c.is_ascii_digit()) =>
+        {
+            format!("{}{rest}", &word[..1])
+        }
+        _ => name.to_string(),
+    }
 }
 
 /// The name peers address this session by (`SendMessage`), from the registry
@@ -238,8 +259,8 @@ fn main() {
         .or_else(|| data.pointer("/model/id").and_then(Value::as_str));
     if let Some(model) = model {
         let label = match model.strip_suffix(" (1M context)") {
-            Some(base) => format!("{base} 1M"),
-            None => model.to_string(),
+            Some(base) => format!("{} 1M", short_model(base)),
+            None => short_model(model),
         };
         parts.push(paint(CYAN, &label));
     }
