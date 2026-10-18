@@ -1,10 +1,10 @@
 # statusline
 
 Claude Code statusline:
-`profile | worktree/peer name | branch | model | effort | context | cost + burn rate | cache expiry | rate-limit windows`.
+`profile · worktree/peer name · branch · model · effort · context · cost + burn rate · cache expiry · rate-limit windows`.
 
 ```
-c2 | dotfiles-4f | main | O5 1M | high | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
+c2 · dotfiles-4f · main · O5 1M · high · 104k/1M 10% · $1.23 $4.60/h · 59m · 7d 79% 3d11h
 ```
 
 ![statusline screenshot](screenshot.png)
@@ -66,7 +66,7 @@ render, and everything else is unaffected.
   `sessionId` matches stdin's `session_id` holds the name. Names are derived as
   `<project>-<suffix>`, so a name starting with the worktree name replaces that
   field instead of repeating it — a renamed session (`reviewer`) renders
-  alongside it as `dotfiles | reviewer`. Absent when the registry has no entry,
+  alongside it as `dotfiles · reviewer`. Absent when the registry has no entry,
   which is how a non-interactive harness renders.
 - **branch** — read straight from `.git/HEAD` under `cwd` (walking up to find
   it, and following a worktree/submodule's `gitdir:` redirect), never a `git`
@@ -83,7 +83,8 @@ render, and everything else is unaffected.
   sniffing scored it against 200k until usage overshot.
 - **burn rate** — `total_cost_usd` over `total_duration_ms`, hidden below a
   minute where the division is meaningless.
-- **cache** — countdown and wall-clock expiry from `prompt_cache.expires_at`.
+- **cache** — countdown from `prompt_cache.expires_at`, bare (`59m`) and
+  coloured green/yellow/red as it nears expiry; `cache expired` once past.
   Absent until the session has written a cache block, so a cold or
   just-resumed session shows no cache field rather than a placeholder.
 - **rate-limit windows** — `5h` and `7d` plan utilisation with a countdown to
