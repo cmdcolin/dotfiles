@@ -133,8 +133,8 @@ check "effort high" "high" "$(effort_payload high)"
 check "effort xhigh" "xhigh" "$(effort_payload xhigh)"
 
 # --- prompt cache ---------------------------------------------------------
-check "cache countdown" "· 59m" "$(payload "$O" "$D" 50000 $M 1 "" 60)"
-check "cache near expiry" "· 2m" "$(payload "$O" "$D" 50000 $M 1 "" 3)"
+check "cache countdown" "· ttl 59m" "$(payload "$O" "$D" 50000 $M 1 "" 60)"
+check "cache near expiry" "· ttl 2m" "$(payload "$O" "$D" 50000 $M 1 "" 3)"
 check "cache expired" "cache expired" "$(payload "$O" "$D" 50000 $M 1 "" -5)"
 # Absent before the session has written a cache block: no field, no placeholder.
 check "cache absent" "!59m" "$(payload "$O" "$D" 50000 $M 1)"

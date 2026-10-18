@@ -4,7 +4,7 @@ Claude Code statusline:
 `profile · worktree/peer name · branch · model · effort · context · cost + burn rate · cache expiry · rate-limit windows`.
 
 ```
-c2 · dotfiles-4f · main · O5 1M · high · 104k/1M 10% · $1.23 $4.60/h · 59m · 7d 79% 3d11h
+c2 · dotfiles-4f · main · O5 1M · high · 104k/1M 10% · $1.23 $4.60/h · ttl 59m · 7d 79% 3d11h
 ```
 
 ![statusline screenshot](screenshot.png)
@@ -83,7 +83,7 @@ render, and everything else is unaffected.
   sniffing scored it against 200k until usage overshot.
 - **burn rate** — `total_cost_usd` over `total_duration_ms`, hidden below a
   minute where the division is meaningless.
-- **cache** — countdown from `prompt_cache.expires_at`, bare (`59m`) and
+- **cache** — countdown from `prompt_cache.expires_at` (`ttl 59m`),
   coloured green/yellow/red as it nears expiry; `cache expired` once past.
   Absent until the session has written a cache block, so a cold or
   just-resumed session shows no cache field rather than a placeholder.

@@ -325,7 +325,7 @@ fn main() {
             } else {
                 RED
             };
-            parts.push(paint(color, &label));
+            parts.push(format!("{} {}", dim("ttl"), paint(color, &label)));
         }
     }
 

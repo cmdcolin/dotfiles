@@ -239,7 +239,7 @@ if (typeof expiresAt === 'number') {
     const mins = Math.floor(left / 60_000)
     const label = mins >= 1 ? `${mins}m` : `${Math.floor(left / 1000)}s`
     const color = left > 15 * 60_000 ? 32 : left > 5 * 60_000 ? 33 : 31
-    parts.push(paint(color, label))
+    parts.push(`${dim('ttl')} ${paint(color, label)}`)
   }
 }
 
