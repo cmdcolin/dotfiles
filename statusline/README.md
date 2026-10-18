@@ -4,7 +4,7 @@ Claude Code statusline:
 `profile | worktree/peer name | branch | model | effort | context | cost + burn rate | cache expiry | rate-limit windows`.
 
 ```
-claude2 | dotfiles-4f | main | Opus 5 1M | high | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
+c2 | dotfiles-4f | main | O5 1M | high | 104k/1M 10% | $1.23 $4.60/h | cache 59m (4:21) | 7d 79% 3d11h
 ```
 
 ![statusline screenshot](screenshot.png)
@@ -50,7 +50,11 @@ render, and everything else is unaffected.
 ## Fields
 
 - **profile** — the `CLAUDE_CONFIG_DIR` basename with its dot stripped, so
-  parallel configs (`~/.claude`, `~/.claude2`) are told apart at a glance.
+  parallel configs are told apart at a glance: `~/.claude` is `c`, `~/.claude2`
+  is `c2`. Any other name (`.claude-memory`) shows in full.
+- **model** — the display name with its first word cut to an initial and the
+  `(1M context)` suffix turned into `1M`: `Opus 5 (1M context)` is `O5 1M`,
+  `Fable 5.1` is `F5.1`. A name not shaped "word, space, digit" shows as sent.
 - **worktree** — basename of the directory holding `.git` (dir or file),
   walking up from `cwd`. For a linked worktree (e.g.
   `.claude/worktrees/foo`) this is `foo`, not the main repo's name — the same
@@ -96,7 +100,7 @@ already reads `.git/HEAD` for that.
 cargo build --release && ./test.sh
 ```
 
-54 cases over synthesised payloads. Asserts the Rust and Node builds render
+59 cases over synthesised payloads. Asserts the Rust and Node builds render
 byte-identically, and covers what is easy to get wrong: the context ceiling
 taken from the payload rather than sniffed, output counted toward the window, a
 zero size that would divide by zero, both burn-rate boundaries, a cache block
