@@ -238,7 +238,10 @@ fn main() {
     }
 
     if let Some(branch) = cwd.and_then(git_branch) {
-        parts.push(paint(MAGENTA, &branch));
+        let repeats = |name: &String| branch == *name || branch.ends_with(&format!("-{name}"));
+        if !peer.iter().chain(worktree.iter()).any(repeats) {
+            parts.push(paint(MAGENTA, &branch));
+        }
     }
 
     // Model — trim the verbose "(1M context)" suffix the harness sends.

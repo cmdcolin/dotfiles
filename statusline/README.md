@@ -73,7 +73,9 @@ render, and everything else is unaffected.
   which is how a non-interactive harness renders.
 - **branch** — read straight from `.git/HEAD` under `cwd` (walking up to find
   it, and following a worktree/submodule's `gitdir:` redirect), never a `git`
-  subprocess. Detached HEAD shows a short hash. Absent outside a git repo.
+  subprocess. Detached HEAD shows a short hash. Absent outside a git repo, and
+  hidden when it equals or ends in `-<name>` of the worktree or peer name
+  (`worktree-warm-conjuring-sprout`).
 - **effort** — the session's reasoning-effort level (`low`/`medium` green,
   `high` yellow, `xhigh`/`max` red), read from `effort.level`. Absent when the
   current model does not support configurable effort.

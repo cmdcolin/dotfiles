@@ -188,7 +188,8 @@ if (worktree && !coversWorktree) parts.push(paint(34, worktree))
 if (peer) parts.push(paint(34, peer))
 
 const branch = data.cwd ? gitBranch(data.cwd) : null
-if (branch) parts.push(paint(35, branch))
+const repeatsBranch = (name) => name && (branch === name || branch.endsWith(`-${name}`))
+if (branch && !repeatsBranch(peer) && !repeatsBranch(worktree)) parts.push(paint(35, branch))
 
 // Model — trim the verbose "(1M context)" suffix the harness sends.
 const model = (data.model && data.model.display_name) || (data.model && data.model.id)
