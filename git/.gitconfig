@@ -6,6 +6,14 @@
   date = short
 [pull]
   rebase = true
+[rebase]
+  autoStash = true
+[fetch]
+  prune = true
+[merge]
+  conflictStyle = zdiff3
+[diff]
+  algorithm = histogram
 [push]
   autoSetupRemote = true
 [credential]
