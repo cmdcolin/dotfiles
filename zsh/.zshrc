@@ -25,11 +25,16 @@ alias aenv="source .venv/bin/activate"
 
 alias y="pnpm"
 alias dx="claude --verbose --model haiku -p --dangerously-skip-permissions"
+alias pur="pnpm upgrade --recursive"
+alias purr="pnpm upgrade --interactive --recursive --latest"
+alias gm="git commit -m"
+alias ga="git add ."
 alias python="python3"
 alias g="git status"
 alias yy="pnpm lint"
 alias ppp="make push-docx && git push"
 alias gggg="git add . && git commit --amend --no-edit"
+alias hh="htop"
 alias ttt="pnpm typecheck --noEmit --watch"
 alias mm='git reset --hard origin/main'
 alias v="vim"
@@ -70,8 +75,18 @@ alias ff="pnpm format"
 alias pserver='miniserve .'
 
 # Pitch-down/slow-down audio.
-vaporwave() { ffmpeg -i "$1" -af "asetrate=44100*${2:-0.66},aresample=44100" "${1%.*}.vwave${2:-0.66}.${1##*.}"; }
+vaporwave() {
+  local f="${2:-0.66}" sr
+  sr=$(ffprobe -v error -select_streams a:0 -show_entries stream=sample_rate -of csv=p=0 "$1")
+  ffmpeg -i "$1" -vf "setpts=PTS/${f},scale=trunc(iw/2)*2:trunc(ih/2)*2,format=yuv420p" -af "asetrate=${sr}*${f},aresample=${sr}" \
+    -c:v libx264 -c:a aac -movflags +faststart "${1%.*}.vwave${f}.mp4"
+}
 vp() { yt-dlp -f 'bestaudio[ext=m4a]' -o - "$1" | ffplay -hide_banner -loglevel error -i pipe:0 -af "asetrate=44100*${2:-0.66},aresample=44100"; }
+vpv() {
+  local f="${2:-0.66}"
+  ffmpeg -v error -i "$(yt-dlp -g -f 'bv*[height<=720]' "$1")" -i "$(yt-dlp -g -f ba "$1")" -c copy -f matroska pipe:1 |
+    ffplay -hide_banner -loglevel error -i pipe:0 -vf "setpts=PTS/${f}" -af "aresample=48000,asetrate=48000*${f},aresample=48000"
+}
 
 # Resize video to percentage of original (default 50%).
 res() { local scale="${2:-50}"; ffmpeg -i "$1" -vf "scale=iw*${scale}/100:ih*${scale}/100" "${1%.*}_${scale}.${1##*.}"; }
