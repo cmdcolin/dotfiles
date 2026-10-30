@@ -20,13 +20,14 @@ cost was multiplied per session, which is what pinned a core.
 ./install.sh
 ```
 
-Builds and installs to `$CLAUDE_CONFIG_DIR` (default `~/.claude`), then prints
-the `settings.json` snippet. It does not edit settings.json itself.
+Builds `~/.local/bin/statusline`, copies the Node fallback to
+`~/.local/share/statusline/`, and prints the command to put in `statusLine`.
+Every profile shares the one build; the binary reads the profile from
+`CLAUDE_CONFIG_DIR`.
 
-`install.sh` is not run by `link.sh` — this needs compiling rather than
-symlinking, so `statusline` is link.sh's one excluded directory.
-The repo's top-level `install.sh` runs it once per profile through
-`claude/sync-profiles.sh`, which also writes the `statusLine` setting.
+`link.sh` skips this directory, since it needs compiling rather than
+symlinking. `claude/sync-profiles.sh` runs `install.sh` and writes the
+`statusLine` setting into every profile.
 
 `refreshInterval: 30` makes Claude Code re-run the statusline every 30 s.
 Without it, an idle session stops re-rendering and `ttl` freezes.

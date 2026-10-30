@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Push settings.base.json into every ~/.claude* profile and install the
-# statusline into each.
+# Push settings.base.json into every ~/.claude* profile and point each at the
+# shared statusline build.
 #
 # The profiles exist to run several Claude sessions side by side, so anything
 # that is a preference rather than a per-profile fact should be identical in
@@ -11,8 +11,8 @@
 # Merge rule: the base file is authoritative for the keys it defines, and keys
 # it does not mention are left alone. That keeps genuinely per-profile settings
 # -- effortLevel, credentials, survey state -- without having to list them.
-# statusLine is the exception, rewritten per profile because it names a path
-# inside that profile.
+# statusLine is written here rather than in the base file because the command
+# depends on whether the Rust build succeeded.
 #
 # Re-runnable. Pass --dry-run to see the diff without writing.
 set -euo pipefail
@@ -22,26 +22,27 @@ BASE="$DIR/settings.base.json"
 DRY=""
 [ "${1:-}" = "--dry-run" ] && DRY=1
 
+if [ -n "$DRY" ]; then
+  cmd="$HOME/.local/bin/statusline"
+  [ -x "$cmd" ] || cmd="node $HOME/.local/share/statusline/statusline.cjs"
+else
+  cmd=$("$DIR/../statusline/install.sh")
+  echo "statusline installed: $cmd"
+fi
+
 for cfg in "$HOME"/.claude "$HOME"/.claude[0-9]; do
   [ -d "$cfg" ] || continue
   settings="$cfg/settings.json"
-  [ -f "$settings" ] || { echo "skip $cfg (no settings.json)"; continue; }
+  [ -f "$settings" ] || {
+    echo "skip $cfg (no settings.json)"
+    continue
+  }
 
   echo "=== $cfg ==="
+  # Per-profile copies from before the statusline moved to ~/.local.
+  [ -n "$DRY" ] || rm -f "$cfg/bin/statusline" "$cfg/statusline.cjs" "$cfg/refresh.sh"
 
-  # Build first: without a Rust toolchain install.sh only lays down the Node
-  # fallback, and the command written below has to name whichever one exists.
-  if [ -z "$DRY" ]; then
-    CLAUDE_CONFIG_DIR="$cfg" "$DIR/../statusline/install.sh" >/dev/null
-    echo "  statusline installed"
-  fi
-  if [ -x "$cfg/bin/statusline" ]; then
-    cmd="$cfg/bin/statusline"
-  else
-    cmd="node $cfg/statusline.cjs"
-  fi
-
-  BASE="$BASE" CFG="$cfg" CMD="$cmd" SETTINGS="$settings" DRY="$DRY" python3 - <<'PY'
+  BASE="$BASE" CMD="$cmd" SETTINGS="$settings" DRY="$DRY" python3 - <<'PY'
 import json, os, shutil, sys
 
 base = json.load(open(os.environ["BASE"]))
@@ -59,7 +60,6 @@ for k, v in base.items():
     else:
         new[k] = v
 
-# Points into this profile, so it cannot come from a shared file.
 new["statusLine"] = {
     "type": "command",
     "command": os.environ["CMD"],
