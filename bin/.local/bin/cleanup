@@ -1,0 +1,57 @@
+#!/usr/bin/env zsh
+# Reclaim disk on Ubuntu. Safe by default; --tmp and --docker are opt-in and
+# destructive. /tmp is tmpfs size=16G mounted usrquota, so filling it surfaces
+# as "disk quota exceeded" (EDQUOT), not "no space left" — check it first.
+
+do_tmp=0 do_docker=0
+for a in "$@"; do
+  case $a in
+    --tmp) do_tmp=1 ;;
+    --docker) do_docker=1 ;;
+    --all) do_tmp=1; do_docker=1 ;;
+    *) print -u2 "usage: cleanup [--tmp] [--docker] [--all]"; exit 1 ;;
+  esac
+done
+before=$(df -B1 --output=avail / | tail -1)
+df -h / /tmp | grep -v Filesystem
+
+print "\n== package manager stores =="
+command -v pnpm &>/dev/null && pnpm store prune
+command -v npm &>/dev/null && npm cache clean --force
+command -v yarn &>/dev/null && yarn cache clean
+command -v uv &>/dev/null && uv cache prune
+command -v pip &>/dev/null && pip cache purge
+command -v go &>/dev/null && go clean -cache -modcache
+
+print "\n== user caches =="
+# R CMD check and puppeteer scratch dirs; these regrow, never worth keeping
+rm -rf ~/.cache/rcheck/*(N) ~/.cache/pptr-tmp/*(N) ~/.cache/thumbnails(N)
+
+print "\n== system =="
+sudo journalctl --vacuum-size=500M
+sudo apt-get clean
+sudo apt-get autoremove -y
+sudo rm -rf /var/crash/*(N)
+# snap keeps every superseded revision until told otherwise
+sudo snap set system refresh.retain=2
+snap list --all 2>/dev/null | awk '/disabled/{print $1, $3}' |
+  while read -r name rev; do sudo snap remove "$name" --revision="$rev"; done
+
+if (( do_tmp )); then
+  print "\n== /tmp (entries untouched for 3+ days) =="
+  # -mtime is on the top-level entry, so live sessions and sockets are skipped
+  find /tmp -xdev -mindepth 1 -maxdepth 1 -mtime +3 \
+    ! -name '.X11-unix' ! -name '.ICE-unix' ! -name '.font-unix' \
+    ! -name '.XIM-unix' ! -name '.Test-unix' ! -name 'systemd-private-*' \
+    ! -name 'snap-private-*' -print -exec rm -rf {} + 2>/dev/null
+fi
+
+if (( do_docker )) && command -v docker &>/dev/null; then
+  print "\n== docker (unused images — these have to be re-pulled) =="
+  docker system df
+  docker system prune -a -f
+fi
+
+after=$(df -B1 --output=avail / | tail -1)
+print "\n== freed $(( (after - before) / 1024 / 1024 ))MB on / =="
+df -h / /tmp | grep -v Filesystem

@@ -4,8 +4,9 @@
 
 - `zsh/.zshrc` — shell config; OS-specific bits live inside `if [[ "$OSTYPE" == "linux-gnu"* ]]` / `darwin` blocks
 - `zsh/.zpreztorc` — zprezto config
+- `bin/.local/bin/` — standalone zsh scripts (`upall`, `cleanup`) kept out of `.zshrc`
 - `tmux/.tmux.conf` — tmux config; branch on OS with `if-shell 'uname -s | grep -q Darwin'`, never `%if "#{==:#(uname -s),Darwin}"` — `#()` evaluates to empty during config parsing, so that form silently takes the else branch
-- `statusline/` — Claude Code statusline (Rust, with a Node fallback). Built rather than symlinked, so `link.sh` skips it; `install.sh` runs it via `claude/sync-profiles.sh`, which builds it into every `~/.claude*` profile and points that profile's settings.json at its own copy. See its README.
+- `statusline/` — Claude Code statusline (Rust, with a Node fallback). Built rather than symlinked, so `link.sh` skips it; `install.sh` runs it via `claude/sync-profiles.sh`, which builds it once into `~/.local/bin` and points every `~/.claude*` profile's settings.json at it. See its README.
 
 Labserver is a shared machine — avoid apt/brew/cargo installs and anything requiring xclip or a display when adding to `.zshrc`.
 
@@ -31,10 +32,10 @@ relative path — so `zsh/.zshrc` becomes `~/.zshrc` and
 ## Installation
 
 ```sh
-./install.sh [mac|ubuntu|labserver]
+./install.sh [labserver]
 ```
 
-- Installs basic dev tools (brew, apt, cargo, fnm, uv, etc.)
+- Installs basic dev tools (brew, apt, cargo, pnpm, uv, etc.)
 - Sets up Zsh Prezto
 - Runs `link.sh` automatically
 

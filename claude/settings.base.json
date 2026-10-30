@@ -1,6 +1,6 @@
 {
   "cleanupPeriodDays": 365,
-  "model": "opus[1m]",
+  "model": "opus",
   "theme": "dark",
   "tui": "fullscreen",
   "autoCompactEnabled": false,
@@ -8,6 +8,12 @@
   "fileCheckpointingEnabled": false,
   "promptSuggestionEnabled": false,
   "skipDangerousModePermissionPrompt": true,
+  "permissions": {
+    "defaultMode": "bypassPermissions"
+  },
+  "env": {
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "100000"
+  },
   "voiceEnabled": true,
   "voice": {
     "enabled": true,

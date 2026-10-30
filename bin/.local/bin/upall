@@ -1,0 +1,18 @@
+#!/usr/bin/env zsh
+# Update every toolchain and package manager on this machine.
+
+if command -v rustup &>/dev/null; then
+  rustup update && cargo install-update -a --locked
+fi
+# --bin, not --all: --all appends a source line to ~/.zshrc, which is a symlink
+# into this repo.
+if [[ -d ~/.fzf/.git ]]; then
+  (cd ~/.fzf && git pull) && ~/.fzf/install --bin
+fi
+command -v uv &>/dev/null && uv self update && uv tool upgrade yt-dlp
+nvim --headless -c 'lua vim.pack.update(nil, {force=true})' -c 'qa'
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  brew update && brew upgrade && brew cleanup
+elif command -v apt &>/dev/null; then
+  sudo apt update && sudo apt upgrade -y && sudo apt autoremove -y
+fi
