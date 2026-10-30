@@ -15,14 +15,9 @@ log_error() { echo "❌ ERROR: $*" >&2; }
 detect_os() {
   OS="linux"
   [[ "$OSTYPE" == "darwin"* ]] && OS="mac"
-  log_info "Detected OS: $OS"
-}
-
-get_host() {
-  HOST="${1:-}"
-  if [[ -z "$HOST" ]]; then
-    [[ "$OS" == "mac" ]] && HOST="mac" || HOST="ubuntu"
-  fi
+  LABSERVER=0
+  [[ "${1:-}" == labserver ]] && LABSERVER=1
+  log_info "Detected OS: $OS (labserver: $LABSERVER)"
 }
 
 setup_environment() {
@@ -44,8 +39,8 @@ setup_macos_deps_via_brew() {
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   fi
   log_info "Installing essential macOS tools via Homebrew..."
-  # No fzf: install_fzf clones ~/.fzf for its own binary and the ~/.fzf.zsh
-  # that .zshrc sources, so a brew copy is a second, unused fzf on PATH.
+  # No fzf: install_fzf clones ~/.fzf, which upall keeps current, so a brew
+  # copy would be a second, unused fzf on PATH.
   brew install git neovim ripgrep zoxide tmux gh fd jq wget htop uv miniserve
   log_success "macOS dependencies installed via Homebrew."
 }
@@ -71,7 +66,7 @@ ensure_pinentry_tty_userlocal() {
 
 setup_linux_deps_via_apt() {
   log_info "Attempting to install Linux dependencies via apt..."
-  if [[ "$HOST" == "labserver" ]]; then
+  if ((LABSERVER)); then
     log_info "⚠️  Labserver: skipping sudo apt, using user-local installs only"
     ensure_pinentry_tty_userlocal
     return 0
@@ -86,7 +81,7 @@ setup_linux_deps_via_apt() {
   sudo apt update
   # One package at a time: gh isn't in every release's repos, and a
   # single missing name would otherwise abort the whole install.
-  for pkg in build-essential curl git htop zoxide tmux gh jq wget ninja-build gettext cmake unzip fd-find fzf ripgrep xclip pinentry-tty; do
+  for pkg in build-essential curl git htop zoxide tmux gh jq wget ninja-build gettext cmake unzip fd-find ripgrep xclip pinentry-tty; do
     sudo apt install -y "$pkg" || log_error "apt: $pkg unavailable, skipping."
   done
   if [[ -f /usr/bin/fdfind ]]; then
@@ -108,8 +103,8 @@ install_rust_and_cargo_tools() {
   [[ -f "$HOME/.cargo/env" ]] && source "$HOME/.cargo/env"
   log_info "Installing Cargo tools..."
   local tools=(ruplacer typos-cli cargo-update)
-  # No apt packages for these; on mac brew already supplied them.
-  [[ "$OS" == "mac" ]] || tools+=(ripgrep miniserve)
+  # No apt package for miniserve; on mac brew already supplied it.
+  [[ "$OS" == "mac" ]] || tools+=(miniserve)
   cargo install --locked "${tools[@]}" || log_info "Some Cargo tools failed to install, might be optional."
   log_success "Rust and Cargo tools installed."
 }
@@ -197,8 +192,8 @@ install_uv_and_yt_dlp() {
 }
 
 install_fzf() {
-  # brew/apt provide fzf; the git clone is only for hosts with no package manager.
-  if command -v fzf &>/dev/null || [[ -d ~/.fzf ]]; then
+  # The clone, not apt or brew: apt's fzf can predate `fzf --zsh`, which .zshrc uses.
+  if [[ -d ~/.fzf ]]; then
     log_info "FZF already installed. Skipping."
     return 0
   fi
@@ -214,7 +209,7 @@ install_neovim() {
     return 0
   fi
 
-  if [[ "$HOST" == "labserver" ]]; then
+  if ((LABSERVER)); then
     log_info "Installing Neovim pre-built binary..."
     local version tarball install_dir
     version=$(curl -s "https://api.github.com/repos/neovim/neovim/releases/latest" | grep '"tag_name"' | cut -d'"' -f4)
@@ -249,7 +244,7 @@ install_neovim() {
 }
 
 install_fonts() {
-  if [[ "$OS" == "linux" ]] && [[ "$HOST" != "labserver" ]]; then
+  if [[ "$OS" == "linux" ]] && ((!LABSERVER)); then
     log_info "Installing fonts..."
     mkdir -p "$FONTS_DIR"
     for font in CascadiaCode JetBrainsMono; do
@@ -282,11 +277,8 @@ link_dotfiles() {
   log_success "Dotfiles linked."
 }
 
-# Not part of link.sh: the statusline is compiled and lands in a config dir that
-# varies per profile. sync-profiles.sh builds it into every ~/.claude* and
-# points that profile's settings.json at its own copy. Profiles only exist once
-# Claude has been run, so on a fresh machine this does nothing and wants a
-# re-run afterwards.
+# Profiles only exist once Claude has been run, so on a fresh machine this
+# writes no settings and wants a re-run afterwards.
 setup_claude_profiles() {
   log_info "Setting up Claude profiles and statusline..."
   if ! command -v python3 &>/dev/null; then
@@ -298,8 +290,7 @@ setup_claude_profiles() {
 }
 
 main() {
-  detect_os
-  get_host "$1"
+  detect_os "${1:-}"
   setup_environment
 
   # A step that reports it is skipping returns non-zero; under set -e that would
@@ -310,7 +301,7 @@ main() {
     setup_linux_deps_via_apt || log_info "Continuing without apt packages."
   fi
 
-  if [[ "$HOST" != "labserver" ]]; then
+  if ((!LABSERVER)); then
     install_rust_and_cargo_tools
   else
     install_labserver_prebuilts

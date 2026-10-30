@@ -5,9 +5,8 @@ tmux, zsh, git, etc. Neovim config is separate: https://github.com/cmdcolin/myse
 ## install
 
 ```bash
-./install.sh         # Auto-detects OS
-./install.sh mac     # macOS
-./install.sh ubuntu  # Ubuntu/Linux
+./install.sh            # macOS or Ubuntu, auto-detected
+./install.sh labserver  # shared box: no sudo, user-local binaries only
 ```
 
 Or just link configs without installing packages:
@@ -51,8 +50,8 @@ OSC 52, so there's no way to pull the local clipboard into a remote `pbpaste`.
 ## setup
 
 - Machine: Dell laptop 32gb/512GB (primary), MacBook Pro (secondary)
-- OS: Ubuntu 24.10 / macOS
-- Editor: neovim (kickstart.nvim)
+- OS: Ubuntu / macOS
+- Editor: neovim ([mysetup.nvim](https://github.com/cmdcolin/mysetup.nvim))
 - Browser: Firefox + Dark Reader + uBlock
 - Music: [fml9000](https://github.com/cmdcolin/fml9000) or [ytshuffle](https://cmdcolin.github.io/ytshuffle/)
 
