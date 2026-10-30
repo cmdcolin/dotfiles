@@ -30,12 +30,19 @@ for pkg in "$DOTFILES_DIR"/*/; do
   done < <(find "$pkg" -type f)
 done
 
-# Drop links into this repo whose target is gone (e.g. the deleted hosts/ dir).
+# Drop dangling links into this repo. Packages nest their files, so search the
+# dirs they link into, not just the top of $HOME.
+dangling() { find "$@" -type l ! -exec test -e {} \; -print 2>/dev/null; }
 while IFS= read -r stale; do
   if [[ "$(readlink "$stale")" == "$DOTFILES_DIR"/* ]]; then
     rm "$stale"
     echo "removed dangling link $stale"
   fi
-done < <(find "$HOME" -maxdepth 1 -type l ! -exec test -e {} \; -print)
+done < <(
+  dangling "$HOME" -maxdepth 1
+  for d in "$HOME"/.config "$HOME"/.local/bin "$HOME"/.claude "$HOME"/.gnupg; do
+    [[ -d "$d" ]] && dangling "$d" -maxdepth 3
+  done
+)
 
 echo "✅ Done!"
