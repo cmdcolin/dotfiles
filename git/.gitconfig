@@ -18,6 +18,8 @@
   autoSetupRemote = true
 [credential]
   helper = cache
+[credential "https://github.com"]
+  helper = !command -v gh >/dev/null && gh auth git-credential
 [core]
   editor = nvim
 [init]

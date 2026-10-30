@@ -250,7 +250,7 @@ install_fonts() {
     for font in CascadiaCode JetBrainsMono; do
       if [[ ! -d "$FONTS_DIR/$font" ]]; then
         log_info "Downloading ${font} font..."
-        wget -qO "/tmp/${font}.zip" "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font}.zip"
+        curl -fsSL -o "/tmp/${font}.zip" "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/${font}.zip"
         unzip -o "/tmp/${font}.zip" -d "$FONTS_DIR" && rm "/tmp/${font}.zip"
       fi
     done

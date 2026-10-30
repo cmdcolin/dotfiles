@@ -1,6 +1,12 @@
 [[ $- != *i* ]] && return
 
-command -v tmux &>/dev/null && [[ -z "$TMUX" ]] && exec tmux
+# Reuse a detached default-named session before starting another, so closed
+# terminals don't pile up sessions. Named ones (dispatch, worktrees) are left be.
+if command -v tmux &>/dev/null && [[ -z "$TMUX" ]]; then
+  detached=$(tmux ls -F '#{session_attached} #{session_name}' 2>/dev/null | awk '$1 == 0 && $2 ~ /^[0-9]+$/ { print $2; exit }')
+  [[ -n "$detached" ]] && exec tmux attach -t "$detached"
+  exec tmux
+fi
 
 [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]] && source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 
@@ -19,7 +25,7 @@ alias vim="nvim"
 alias zz="source ~/.zshrc"
 alias rmf="rm -rf"
 
-alias mkenv="python -m venv .venv && source .venv/bin/activate"
+alias mkenv="uv venv && source .venv/bin/activate"
 alias aenv="source .venv/bin/activate"
 
 alias y="pnpm"
@@ -35,7 +41,7 @@ alias ppp="make push-docx && git push"
 alias gggg="git add . && git commit --amend --no-edit"
 alias hh="htop"
 alias ttt="pnpm typecheck --noEmit --watch"
-alias mm='git reset --hard origin/main'
+alias mm='git fetch origin && git reset --hard origin/main'
 alias v="vim"
 # Prepends [skip ci] to last commit to prevent CI on push.
 alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%B)"'
