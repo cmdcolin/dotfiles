@@ -13,11 +13,8 @@ fi
 export EDITOR="nvim"
 export GPG_TTY=$TTY
 
-# Prompt (zprezto sorin theme) runs git-info on every precmd, which refreshes
-# the index and briefly takes .git/index.lock — this races other git processes
-# (e.g. Claude Code) running in the same repo. Optional locks off skips that
-# stat-refresh lock for read-only ops like status/diff without affecting real
-# writes like commit/add.
+# The prompt's git status would otherwise take .git/index.lock on every
+# command, racing other git processes (e.g. Claude Code) in the same repo.
 export GIT_OPTIONAL_LOCKS=0
 
 alias e="nvim"
@@ -49,14 +46,10 @@ alias skipci='git commit --amend --no-edit -m "[skip ci] $(git log -1 --pretty=%
 alias bb="git branch --sort=-committerdate | fzf | xargs git checkout"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-  # prezto's utility module already aliases pbcopy/pbpaste to xclip or xsel,
-  # whichever it finds, so we only need to handle the case it can't: no
-  # clipboard tool at all (labserver, no X display). `function pbcopy { }`
-  # (not `pbcopy() { }`) avoids zsh's "defining function based on alias"
-  # parse error when prezto's alias is already in scope, since it's parsed
-  # unambiguously as a function definition regardless of any existing alias.
+  # prezto aliases pbcopy to xclip/xsel when present. Without either
+  # (labserver), OSC 52 hands the text to the local terminal. `function pbcopy`
+  # rather than `pbcopy()` so an existing alias can't break the parse.
   if ! command -v xclip &>/dev/null && ! command -v xsel &>/dev/null; then
-    # No X display (labserver): OSC 52 hands the text to the local terminal.
     function pbcopy { printf '\033]52;c;%s\a' "$(base64 | tr -d '\n')" >/dev/tty; }
   fi
 
@@ -96,18 +89,13 @@ vpv() {
 # Resize video to percentage of original (default 50%).
 res() { local scale="${2:-50}"; ffmpeg -i "$1" -vf "scale=iw*${scale}/100:ih*${scale}/100" "${1%.*}_${scale}.${1##*.}"; }
 
-# Keep failed commands in history.
-zshaddhistory() { return 0; }
-
-# Keep $path unique so re-sourcing (zz) doesn't stack duplicate entries. Dedupe
-# keeps the first occurrence, so prepending an existing dir just moves it front.
+# Unique entries, so re-sourcing (zz) moves a dir to the front instead of
+# stacking duplicates.
 typeset -U path
 
 path=("$HOME/.local/bin" $path)
 
-# pnpm owns the global node: `pnpm runtime set node <major> -g` drops a node
-# symlink in $PNPM_HOME/bin. pnpm itself is the standalone binary with node
-# bundled, so nothing here needs a node on PATH to bootstrap.
+# pnpm provides the global node (`pnpm runtime set node <major> -g`).
 if [[ "$OSTYPE" == "darwin"* ]]; then
   export PNPM_HOME="$HOME/Library/pnpm"
 else

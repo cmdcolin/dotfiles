@@ -16,3 +16,4 @@ zstyle ':prezto:load' pmodule \
 
 zstyle ':prezto:module:editor' key-bindings 'emacs'
 zstyle ':prezto:module:prompt' theme 'sorin'
+zstyle ':prezto:module:history' histsize 100000

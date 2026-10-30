@@ -150,10 +150,8 @@ install_labserver_prebuilts() {
   install_prebuilt_binary ajeetdsouza/zoxide zoxide || true
 }
 
-# pnpm is the standalone binary (node bundled), so it installs without a node
-# present and then provides the global node itself — no separate version
-# manager. It keeps one global version rather than a switchable set; no project
-# here pins a node version, so that is enough.
+# The standalone pnpm bundles its own node, then provides the global node, so
+# no separate version manager is needed.
 install_pnpm_and_node() {
   log_info "Installing pnpm..."
   if ! command -v pnpm &>/dev/null; then
@@ -166,9 +164,7 @@ install_pnpm_and_node() {
   fi
   log_info "Installing Node via pnpm..."
   pnpm runtime set node lts -g
-  # pnpm's node package ships the node binary alone, so npm and npx have to be
-  # installed separately. Their shims land in PNPM_HOME/bin and run on the node
-  # above.
+  # pnpm's node ships without npm/npx.
   pnpm add -g npm
   log_success "pnpm, Node and npm installed."
 }
@@ -178,10 +174,7 @@ install_uv_and_yt_dlp() {
   if ! command -v uv &>/dev/null; then
     curl -LsSf https://astral.sh/uv/install.sh | sh
     hash -r
-  else
-    log_info "UV already installed. Update is usually handled by 'uv tool install'."
   fi
-
   if ! command -v uv &>/dev/null; then
     log_error "uv not on PATH after install. Skipping yt-dlp."
     return 0
@@ -211,20 +204,15 @@ install_neovim() {
 
   if ((LABSERVER)); then
     log_info "Installing Neovim pre-built binary..."
-    local version tarball install_dir
-    version=$(curl -s "https://api.github.com/repos/neovim/neovim/releases/latest" | grep '"tag_name"' | cut -d'"' -f4)
-    if [[ -z "$version" ]]; then
-      log_error "Could not resolve latest Neovim release (rate limited?)."
+    local install_dir="$HOME/.local/nvim"
+    rm -rf "$install_dir" && mkdir -p "$install_dir"
+    if ! curl -fsSL "https://github.com/neovim/neovim/releases/latest/download/nvim-linux-x86_64.tar.gz" |
+      tar -xz -C "$install_dir" --strip-components=1; then
+      log_error "Neovim download failed."
       return 1
     fi
-    tarball="nvim-linux-x86_64.tar.gz"
-    install_dir="$HOME/.local/nvim"
-    curl -sSL "https://github.com/neovim/neovim/releases/download/${version}/${tarball}" -o "/tmp/${tarball}"
-    rm -rf "$install_dir" && mkdir -p "$install_dir"
-    tar -xzf "/tmp/${tarball}" -C "$install_dir" --strip-components=1
-    rm "/tmp/${tarball}"
     ln -sf "$install_dir/bin/nvim" "$HOME/.local/bin/nvim"
-    log_success "Neovim ${version} installed."
+    log_success "Neovim $("$install_dir/bin/nvim" --version | head -1) installed."
     return 0
   fi
 
